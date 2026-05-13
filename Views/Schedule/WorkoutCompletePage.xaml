@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Schedule.WorkoutCompletePage"
+             x:DataType="vm:WorkoutCompleteViewModel"
+             Title="Workout Complete">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <!-- Congratulations Header -->
+                <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                    <Label Text="Workout Complete!"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource Primary}" />
+                    <Label Text="How did it go? Log your feedback below."
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+
+                <!-- Duration Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Duration" Style="{StaticResource SectionHeader}" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Entry Grid.Column="0"
+                                   Placeholder="How many minutes?"
+                                   Text="{Binding DurationMinutesText}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next"
+                                   FontSize="18" />
+                            <Label Grid.Column="1"
+                                   Text="min"
+                                   FontSize="18"
+                                   VerticalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </Grid>
+                        <Label Text="{Binding DurationError}"
+                               FontSize="12"
+                               TextColor="#F44336"
+                               IsVisible="{Binding HasDurationError}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Difficulty Rating Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Difficulty Rating" Style="{StaticResource SectionHeader}" />
+                        <Label Text="{Binding DifficultyLabel}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Primary}" />
+
+                        <!-- Star Rating -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                            <!-- Star 1 -->
+                            <Border StrokeThickness="0"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    StrokeShape="RoundRectangle 8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding SetDifficultyCommand}"
+                                        CommandParameter="1" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding Star1Filled, Converter={StaticResource BoolToColorConverter}}"
+                                       FontSize="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star1Filled}" Value="True">
+                                            <Setter Property="Text" Value="&#x2605;" />
+                                            <Setter Property="TextColor" Value="#FFD700" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star1Filled}" Value="False">
+                                            <Setter Property="Text" Value="&#x2606;" />
+                                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+
+                            <!-- Star 2 -->
+                            <Border StrokeThickness="0"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    StrokeShape="RoundRectangle 8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding SetDifficultyCommand}"
+                                        CommandParameter="2" />
+                                </Border.GestureRecognizers>
+                                <Label FontSize="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star2Filled}" Value="True">
+                                            <Setter Property="Text" Value="&#x2605;" />
+                                            <Setter Property="TextColor" Value="#FFD700" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star2Filled}" Value="False">
+                                            <Setter Property="Text" Value="&#x2606;" />
+                                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+
+                            <!-- Star 3 -->
+                            <Border StrokeThickness="0"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    StrokeShape="RoundRectangle 8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding SetDifficultyCommand}"
+                                        CommandParameter="3" />
+                                </Border.GestureRecognizers>
+                                <Label FontSize="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star3Filled}" Value="True">
+                                            <Setter Property="Text" Value="&#x2605;" />
+                                            <Setter Property="TextColor" Value="#FFD700" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star3Filled}" Value="False">
+                                            <Setter Property="Text" Value="&#x2606;" />
+                                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+
+                            <!-- Star 4 -->
+                            <Border StrokeThickness="0"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    StrokeShape="RoundRectangle 8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding SetDifficultyCommand}"
+                                        CommandParameter="4" />
+                                </Border.GestureRecognizers>
+                                <Label FontSize="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star4Filled}" Value="True">
+                                            <Setter Property="Text" Value="&#x2605;" />
+                                            <Setter Property="TextColor" Value="#FFD700" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star4Filled}" Value="False">
+                                            <Setter Property="Text" Value="&#x2606;" />
+                                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+
+                            <!-- Star 5 -->
+                            <Border StrokeThickness="0"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    StrokeShape="RoundRectangle 8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding SetDifficultyCommand}"
+                                        CommandParameter="5" />
+                                </Border.GestureRecognizers>
+                                <Label FontSize="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star5Filled}" Value="True">
+                                            <Setter Property="Text" Value="&#x2605;" />
+                                            <Setter Property="TextColor" Value="#FFD700" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Star5Filled}" Value="False">
+                                            <Setter Property="Text" Value="&#x2606;" />
+                                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+                        </HorizontalStackLayout>
+
+                        <!-- Difficulty Description -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="24">
+                            <Label Text="Easy" FontSize="11" TextColor="{StaticResource Gray500}" />
+                            <Label Text="Hard" FontSize="11" TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Calories Estimate Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="Estimated Calories Burned"
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray500}" />
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <Label Text="{Binding EstimatedCaloriesBurned}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Label Text="kcal"
+                                   FontSize="16"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,4"
+                                   TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                        <Label Text="Based on duration and difficulty"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray300}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Notes Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Notes (optional)" Style="{StaticResource SectionHeader}" />
+                        <Editor Placeholder="How did the workout feel? Any observations?"
+                                Text="{Binding Notes}"
+                                HeightRequest="100"
+                                AutoSize="TextChanges" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom Buttons -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,2*"
+              ColumnSpacing="12"
+              Padding="20,8,20,20">
+            <Button Grid.Column="0"
+                    Text="Skip"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Save Workout"
+                    Command="{Binding SaveCompletionCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Onboarding"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Onboarding.HealthScreeningPage"
+             x:DataType="vm:HealthScreeningViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <Label Text="Health Screening"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                <Label Text="Let us know about any medical conditions or injuries so we can create a safe program for you."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+
+                <!-- Medical Conditions Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Medical Conditions" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Select any conditions that apply to you."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+
+                        <!-- Selected Conditions Chips -->
+                        <FlexLayout Wrap="Wrap"
+                                    Direction="Row"
+                                    JustifyContent="Start"
+                                    AlignItems="Center"
+                                    BindableLayout.ItemsSource="{Binding SelectedConditions}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Border StrokeShape="RoundRectangle 16"
+                                            Stroke="{StaticResource Primary}"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                            Padding="12,6"
+                                            Margin="4">
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="{Binding .}"
+                                                   FontSize="13"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                            <Label Text="x"
+                                                   FontSize="13"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource Gray500}">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HealthScreeningViewModel}}, Path=RemoveConditionCommand}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+
+                        <Button Text="+ Add Condition"
+                                Command="{Binding AddConditionCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="14"
+                                HeightRequest="40" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Injury Areas Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Injury Areas" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Select any areas where you have current or past injuries."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+
+                        <!-- Selected Injuries Chips -->
+                        <FlexLayout Wrap="Wrap"
+                                    Direction="Row"
+                                    JustifyContent="Start"
+                                    AlignItems="Center"
+                                    BindableLayout.ItemsSource="{Binding SelectedInjuries}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Border StrokeShape="RoundRectangle 16"
+                                            Stroke="{StaticResource Primary}"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                            Padding="12,6"
+                                            Margin="4">
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="{Binding .}"
+                                                   FontSize="13"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                            <Label Text="x"
+                                                   FontSize="13"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource Gray500}">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HealthScreeningViewModel}}, Path=RemoveInjuryCommand}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+
+                        <Button Text="+ Add Injury Area"
+                                Command="{Binding AddInjuryCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="14"
+                                HeightRequest="40" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
+            <Button Text="Back"
+                    Command="{Binding PreviousCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Grid.Column="0" />
+            <Button Text="Next"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

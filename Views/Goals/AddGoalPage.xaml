@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Goals.AddGoalPage"
+             x:DataType="vm:AddGoalViewModel"
+             Title="Create Goal">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <Label Text="Create New Goal"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <!-- Category & Title Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Goal Information" Style="{StaticResource SectionHeader}" />
+
+                        <!-- Category -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Goal Category"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Picker ItemsSource="{Binding GoalCategories}"
+                                    SelectedItem="{Binding SelectedCategory}"
+                                    Title="Select category" />
+                        </VerticalStackLayout>
+
+                        <!-- Title -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Goal Title *"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="e.g., Lose 10kg, Run 5k, Bench press 100kg"
+                                   Text="{Binding GoalTitle}"
+                                   ReturnType="Next" />
+                            <Label Text="{Binding TitleError}"
+                                   FontSize="12"
+                                   TextColor="#F44336"
+                                   IsVisible="{Binding HasTitleError}" />
+                        </VerticalStackLayout>
+
+                        <!-- Description -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Description (optional)"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Editor Placeholder="Describe your goal in more detail..."
+                                    Text="{Binding GoalDescription}"
+                                    HeightRequest="80"
+                                    AutoSize="TextChanges" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Target Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Target" Style="{StaticResource SectionHeader}" />
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Target Value *"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Entry Placeholder="e.g., 75"
+                                       Text="{Binding TargetValue}"
+                                       Keyboard="Numeric"
+                                       ReturnType="Next" />
+                                <Label Text="{Binding TargetError}"
+                                       FontSize="12"
+                                       TextColor="#F44336"
+                                       IsVisible="{Binding HasTargetError}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" WidthRequest="100">
+                                <Label Text="Unit"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Entry Placeholder="e.g., kg"
+                                       Text="{Binding TargetUnit}"
+                                       ReturnType="Next" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Start Value -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Current/Start Value"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="Your current value (auto-populated when possible)"
+                                   Text="{Binding StartValue}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Timeframe Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Timeframe" Style="{StaticResource SectionHeader}" />
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Goal Duration"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Picker ItemsSource="{Binding GoalTimeframes}"
+                                    SelectedItem="{Binding SelectedTimeframe}"
+                                    Title="Select timeframe" />
+                        </VerticalStackLayout>
+
+                        <!-- Deadline Toggle -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="Set a deadline"
+                                   FontSize="14"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Switch Grid.Column="1"
+                                    IsToggled="{Binding HasDeadline}"
+                                    OnColor="{StaticResource Primary}" />
+                        </Grid>
+
+                        <!-- Deadline Picker -->
+                        <DatePicker Date="{Binding DeadlineDate}"
+                                    MinimumDate="{Binding MinimumDate}"
+                                    IsVisible="{Binding HasDeadline}"
+                                    Format="MMMM dd, yyyy" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Milestones Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Milestones (optional)" Style="{StaticResource SectionHeader}" />
+                            <Button Grid.Column="1"
+                                    Text="+ Add"
+                                    Command="{Binding AddMilestoneCommand}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Primary}"
+                                    FontSize="14"
+                                    Padding="4,0" />
+                        </Grid>
+
+                        <Label Text="Add up to 3 milestones to track intermediate progress."
+                               FontSize="12"
+                               TextColor="{StaticResource Gray500}"
+                               IsVisible="{Binding HasMilestones, Converter={StaticResource InverseBool}}" />
+
+                        <CollectionView ItemsSource="{Binding MilestoneEntries}"
+                                        IsVisible="{Binding HasMilestones}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MilestoneEntryItem">
+                                    <Frame Style="{StaticResource CardFrame}"
+                                           Margin="0,4"
+                                           Padding="12">
+                                        <Grid ColumnDefinitions="*,80,Auto" ColumnSpacing="8" RowDefinitions="Auto">
+                                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                                <Label Text="{Binding Placeholder}"
+                                                       FontSize="11"
+                                                       TextColor="{StaticResource Gray500}" />
+                                                <Entry Placeholder="Milestone title"
+                                                       Text="{Binding Title}"
+                                                       FontSize="14"
+                                                       ReturnType="Next" />
+                                            </VerticalStackLayout>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                                <Label Text="Target"
+                                                       FontSize="11"
+                                                       TextColor="{StaticResource Gray500}" />
+                                                <Entry Placeholder="Value"
+                                                       Text="{Binding TargetValueText}"
+                                                       Keyboard="Numeric"
+                                                       FontSize="14"
+                                                       ReturnType="Next" />
+                                            </VerticalStackLayout>
+                                            <Button Grid.Column="2"
+                                                    Text="X"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddGoalViewModel}}, Path=RemoveMilestoneCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="#F44336"
+                                                    FontSize="14"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36"
+                                                    VerticalOptions="Center" />
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom Buttons -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="12"
+              Padding="20,8,20,20">
+            <Button Grid.Column="0"
+                    Text="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Create Goal"
+                    Command="{Binding CreateGoalCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+    </Grid>
+</ContentPage>

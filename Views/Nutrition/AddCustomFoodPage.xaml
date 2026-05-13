@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.AddCustomFoodPage"
+             x:DataType="vm:AddCustomFoodViewModel"
+             Title="Add Custom Food">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <Label Text="Add Custom Food"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <!-- Basic Info Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Basic Information" Style="{StaticResource SectionHeader}" />
+
+                        <!-- Name -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Food Name *"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="e.g., Chicken Breast"
+                                   Text="{Binding FoodName}"
+                                   ReturnType="Next" />
+                            <Label Text="{Binding NameError}"
+                                   FontSize="12"
+                                   TextColor="#F44336"
+                                   IsVisible="{Binding HasNameError}" />
+                        </VerticalStackLayout>
+
+                        <!-- Brand -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Brand (optional)"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="e.g., Tyson"
+                                   Text="{Binding Brand}"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Category -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Category"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Picker ItemsSource="{Binding FoodCategories}"
+                                    SelectedItem="{Binding SelectedCategory}"
+                                    Title="Select category" />
+                        </VerticalStackLayout>
+
+                        <!-- Barcode -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Barcode (optional)"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="Enter barcode number"
+                                   Text="{Binding Barcode}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Nutrition Per 100g Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Nutrition per 100g" Style="{StaticResource SectionHeader}" />
+
+                        <!-- Calories -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Calories (kcal) *"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="e.g., 165"
+                                   Text="{Binding CaloriesPer100g}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                            <Label Text="{Binding CaloriesError}"
+                                   FontSize="12"
+                                   TextColor="#F44336"
+                                   IsVisible="{Binding HasCaloriesError}" />
+                        </VerticalStackLayout>
+
+                        <!-- Protein -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Protein (g)"
+                                   FontSize="14"
+                                   TextColor="#2196F3" />
+                            <Entry Placeholder="e.g., 31"
+                                   Text="{Binding ProteinPer100g}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Carbs -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Carbohydrates (g)"
+                                   FontSize="14"
+                                   TextColor="#FF9800" />
+                            <Entry Placeholder="e.g., 0"
+                                   Text="{Binding CarbsPer100g}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Fat -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Fat (g)"
+                                   FontSize="14"
+                                   TextColor="#F44336" />
+                            <Entry Placeholder="e.g., 3.6"
+                                   Text="{Binding FatPer100g}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Fiber -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Fiber (g)"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="e.g., 0"
+                                   Text="{Binding FiberPer100g}"
+                                   Keyboard="Numeric"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Serving Size Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Default Serving" Style="{StaticResource SectionHeader}" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Serving Size (g)"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Entry Placeholder="100"
+                                       Text="{Binding DefaultServingSize}"
+                                       Keyboard="Numeric"
+                                       ReturnType="Next" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Serving Label"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Entry Placeholder="e.g., 1 cup, 100g"
+                                       Text="{Binding DefaultServingLabel}"
+                                       ReturnType="Done" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom Buttons -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="12"
+              Padding="20,8,20,20">
+            <Button Grid.Column="0"
+                    Text="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Save Food"
+                    Command="{Binding SaveFoodCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Goals.GoalDetailPage"
+             x:DataType="vm:GoalDetailViewModel"
+             Title="Goal Detail">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Goal Header -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding GoalTitle}"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                <HorizontalStackLayout Spacing="12">
+                    <Frame BackgroundColor="{Binding StatusColor}"
+                           Padding="10,4"
+                           CornerRadius="12"
+                           HasShadow="False">
+                        <Label Text="{Binding StatusName}"
+                               FontSize="12"
+                               TextColor="{StaticResource White}" />
+                    </Frame>
+                    <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}"
+                           Padding="10,4"
+                           CornerRadius="12"
+                           HasShadow="False">
+                        <Label Text="{Binding CategoryName}"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource White}}" />
+                    </Frame>
+                    <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}"
+                           Padding="10,4"
+                           CornerRadius="12"
+                           HasShadow="False">
+                        <Label Text="{Binding TimeframeName}"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource White}}" />
+                    </Frame>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Description -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasDescription}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Description" Style="{StaticResource SectionHeader}" />
+                    <Label Text="{Binding GoalDescription}"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Progress Card -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Progress" Style="{StaticResource SectionHeader}" />
+
+                    <Label Text="{Binding ProgressText}"
+                           FontSize="36"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource Primary}" />
+
+                    <ProgressBar Progress="{Binding ProgressBarValue}"
+                                 ProgressColor="{StaticResource Primary}"
+                                 HeightRequest="12" />
+
+                    <!-- Value Details -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="{Binding StartValueText}"
+                                   FontSize="13"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="{Binding CurrentValueText}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                            <Label Text="{Binding TargetValueText}"
+                                   FontSize="13"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Progress Chart -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasChart}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Progress Chart" Style="{StaticResource SectionHeader}" />
+                    <micro:ChartView Chart="{Binding ProgressChart}"
+                                     HeightRequest="200" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Update Progress Section -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding IsActive}"
+                   BorderColor="{StaticResource Primary}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Update Progress" Style="{StaticResource SectionHeader}" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Entry Grid.Column="0"
+                               Placeholder="{Binding TargetUnit, StringFormat='Enter value ({0})'}"
+                               Text="{Binding UpdateValueText}"
+                               Keyboard="Numeric"
+                               ReturnCommand="{Binding UpdateProgressCommand}"
+                               ReturnType="Done" />
+                        <Button Grid.Column="1"
+                                Text="Update"
+                                Command="{Binding UpdateProgressCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Padding="20,0"
+                                HeightRequest="44" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Milestones Section -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasMilestones}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Milestones" Style="{StaticResource SectionHeader}" />
+
+                    <CollectionView ItemsSource="{Binding Milestones}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MilestoneDisplayItem">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      Padding="0,8"
+                                      ColumnSpacing="12">
+                                    <Image Grid.Column="0"
+                                           Source="{Binding StatusIcon}"
+                                           WidthRequest="24"
+                                           HeightRequest="24"
+                                           VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                        <Label Text="{Binding TargetValueText}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray500}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding ReachedDateText}"
+                                           FontSize="12"
+                                           TextColor="#4CAF50"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding IsReached}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Dates Section -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Details" Style="{StaticResource SectionHeader}" />
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                            <Label Text="Created"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding CreatedDateText}"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                            <Label Text="Deadline"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding DeadlineText}"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Action Buttons -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsActive}">
+                <Label Text="Actions" Style="{StaticResource SectionHeader}" />
+                <Button Text="Complete Goal"
+                        Command="{Binding CompleteGoalCommand}"
+                        BackgroundColor="#4CAF50"
+                        TextColor="{StaticResource White}" />
+                <Button Text="Pause Goal"
+                        Command="{Binding PauseGoalCommand}"
+                        Style="{StaticResource SecondaryButton}" />
+                <Button Text="Abandon Goal"
+                        Command="{Binding AbandonGoalCommand}"
+                        BackgroundColor="#F44336"
+                        TextColor="{StaticResource White}" />
+            </VerticalStackLayout>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

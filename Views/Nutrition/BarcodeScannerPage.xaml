@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.BarcodeScannerPage"
+             x:DataType="vm:BarcodeScannerViewModel"
+             Title="Scan Barcode"
+             Shell.PresentationMode="ModalAnimated">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Camera Preview Area -->
+        <Grid Grid.Row="0"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark=Black}">
+
+            <!-- Placeholder for ZXing Camera View -->
+            <!-- In production, replace this with:
+                 <zxing:CameraBarcodeReaderView x:Name="BarcodeReader"
+                     IsDetecting="{Binding IsScanning}"
+                     IsTorchOn="{Binding IsTorchOn}" />
+            -->
+            <BoxView Color="Black" Opacity="0.3" />
+
+            <!-- Scan Overlay Frame -->
+            <Border StrokeThickness="3"
+                    Stroke="{StaticResource Primary}"
+                    WidthRequest="250"
+                    HeightRequest="250"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource Primary}"
+                            Offset="0,0"
+                            Radius="20"
+                            Opacity="0.3" />
+                </Border.Shadow>
+                <Grid />
+            </Border>
+
+            <!-- Scan Status Label -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}"
+                   CornerRadius="20"
+                   Padding="16,8"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   Margin="0,0,0,40"
+                   HasShadow="True">
+                <Label Text="{Binding ScanStatusText}"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                       HorizontalTextAlignment="Center" />
+            </Frame>
+
+            <!-- Processing Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsProcessing}"
+                               IsVisible="{Binding IsProcessing}"
+                               Color="{StaticResource Primary}"
+                               WidthRequest="60"
+                               HeightRequest="60"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+
+            <!-- Top Controls -->
+            <HorizontalStackLayout HorizontalOptions="End"
+                                   VerticalOptions="Start"
+                                   Margin="20"
+                                   Spacing="12">
+                <Button Text="Torch"
+                        Command="{Binding ToggleTorchCommand}"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                        CornerRadius="20"
+                        Padding="16,8"
+                        FontSize="14" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- Bottom Controls -->
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="20"
+                             Spacing="12"
+                             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark=#1C1C1E}">
+
+            <!-- Found Food Info -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding FoodFound}"
+                   BorderColor="{StaticResource Primary}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="{Binding FoundFoodName}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Label Text="{Binding FoundFoodCalories}"
+                           FontSize="14"
+                           TextColor="{StaticResource Primary}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Action Buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource SecondaryButton}" />
+                <Button Grid.Column="1"
+                        Text="Scan Again"
+                        Command="{Binding ResetScannerCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        IsVisible="{Binding IsScanning, Converter={StaticResource InverseBool}}" />
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

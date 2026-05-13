@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Goals.GoalsOverviewPage"
+             x:DataType="vm:GoalsOverviewViewModel"
+             Title="Goals">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <!-- Page Header -->
+                <Label Text="Goals"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <!-- Summary Stats -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Frame Style="{StaticResource CardFrame}" Grid.Column="0">
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="{Binding ActiveGoalCount}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                            <Label Text="Active Goals"
+                                   FontSize="12"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource CardFrame}" Grid.Column="1">
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="{Binding CompletedGoalCount}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="#4CAF50" />
+                            <Label Text="Completed"
+                                   FontSize="12"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- No Goals State -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding HasGoals, Converter={StaticResource InverseBool}}">
+                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center" Padding="0,20">
+                        <Label Text="No Active Goals"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Label Text="Set goals to track your progress and stay motivated on your health journey."
+                               FontSize="14"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalTextAlignment="Center"
+                               Margin="20,0" />
+                        <Button Text="Create Your First Goal"
+                                Command="{Binding AddGoalCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="20,8" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Active Goals List -->
+                <Label Text="Active Goals"
+                       Style="{StaticResource SectionHeader}"
+                       IsVisible="{Binding HasGoals}" />
+
+                <CollectionView ItemsSource="{Binding ActiveGoals}"
+                                IsVisible="{Binding HasGoals}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:GoalDisplayItem">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsOverviewViewModel}}, Path=GoToGoalDetailCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout Spacing="8">
+                                    <!-- Title Row -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                        <Image Grid.Column="0"
+                                               Source="{Binding CategoryIcon}"
+                                               WidthRequest="28"
+                                               HeightRequest="28"
+                                               VerticalOptions="Center" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding CategoryName}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource Gray500}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2"
+                                               Text="{Binding ProgressText}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Progress Bar -->
+                                    <ProgressBar Progress="{Binding ProgressBarValue}"
+                                                 ProgressColor="{StaticResource Primary}"
+                                                 HeightRequest="8" />
+
+                                    <!-- Details Row -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                                            <Label Text="{Binding CurrentValueText}"
+                                                   FontSize="13"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding TargetValueText}"
+                                                   FontSize="13"
+                                                   TextColor="{StaticResource Gray500}" />
+                                        </HorizontalStackLayout>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding DeadlineText}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray500}" />
+                                    </Grid>
+
+                                    <!-- Timeframe Badge -->
+                                    <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}"
+                                           Padding="8,4"
+                                           CornerRadius="8"
+                                           HasShadow="False"
+                                           HorizontalOptions="Start">
+                                        <Label Text="{Binding TimeframeName}"
+                                               FontSize="11"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource White}}" />
+                                    </Frame>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Add Goal Button -->
+        <Button Text="+ Add Goal"
+                Grid.Row="1"
+                Command="{Binding AddGoalCommand}"
+                IsVisible="{Binding HasGoals}"
+                Style="{StaticResource PrimaryButton}"
+                Margin="20,8,20,20" />
+    </Grid>
+</ContentPage>

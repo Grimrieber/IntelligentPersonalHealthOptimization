@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Onboarding"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Onboarding.SecuritySetupPage"
+             x:DataType="vm:SecuritySetupViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <Label Text="Security Setup"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                <Label Text="Protect your health data with a PIN and security question. Your data is encrypted on-device."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+
+                <!-- PIN Entry -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Create PIN" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Choose a 4-6 digit PIN to protect your app."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="PIN" FontSize="13" FontAttributes="Bold" />
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                    Padding="12,4">
+                                <Entry Text="{Binding Pin}"
+                                       Placeholder="Enter PIN (4-6 digits)"
+                                       IsPassword="True"
+                                       Keyboard="Numeric"
+                                       MaxLength="6"
+                                       ReturnType="Next" />
+                            </Border>
+                            <Label Text="{Binding PinLengthDisplay}"
+                                   FontSize="11"
+                                   TextColor="{StaticResource Gray400}"
+                                   HorizontalOptions="End" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Confirm PIN" FontSize="13" FontAttributes="Bold" />
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                    Padding="12,4">
+                                <Entry Text="{Binding ConfirmPin}"
+                                       Placeholder="Re-enter PIN"
+                                       IsPassword="True"
+                                       Keyboard="Numeric"
+                                       MaxLength="6"
+                                       ReturnType="Next" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- PIN match indicator -->
+                        <Label Text="PINs match"
+                               TextColor="Green"
+                               FontSize="13"
+                               IsVisible="{Binding IsPinMatching}" />
+                        <Label Text="PINs do not match"
+                               TextColor="Red"
+                               FontSize="13"
+                               IsVisible="{Binding ShowPinMismatch}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Security Question -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Security Question" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="This will be used to recover your account if you forget your PIN."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Question" FontSize="13" FontAttributes="Bold" />
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                    Padding="12,4">
+                                <Picker Title="Select a Security Question"
+                                        ItemsSource="{Binding SecurityQuestions}"
+                                        SelectedItem="{Binding SelectedSecurityQuestion}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Answer" FontSize="13" FontAttributes="Bold" />
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                    Padding="12,4">
+                                <Entry Text="{Binding SecurityAnswer}"
+                                       Placeholder="Your answer"
+                                       ReturnType="Done" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Validation Message -->
+                <Label Text="{Binding ValidationMessage}"
+                       TextColor="Red"
+                       FontSize="13"
+                       IsVisible="{Binding ValidationMessage, Converter={StaticResource IsNotEmptyConverter}}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
+            <Button Text="Back"
+                    Command="{Binding PreviousCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Grid.Column="0" />
+            <Button Text="Next"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

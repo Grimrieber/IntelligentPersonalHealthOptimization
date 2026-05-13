@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.DashboardPage"
+             x:DataType="vm:DashboardViewModel"
+             Title="Dashboard">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Greeting + Streak -->
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Text="{Binding Greeting}"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"
+                       VerticalOptions="Center" />
+                <Frame Grid.Column="1"
+                       BackgroundColor="{StaticResource Primary}"
+                       Padding="12,8"
+                       CornerRadius="16"
+                       HasShadow="False"
+                       VerticalOptions="Center">
+                    <Label Text="{Binding StreakText}"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                </Frame>
+            </Grid>
+
+            <!-- Quick Stats Row -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="0" Padding="12,8">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Weight" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding CurrentWeight}" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="1" Padding="12,8">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Completed" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding WorkoutsCompletedText}" FontSize="18" FontAttributes="Bold" TextColor="#4CAF50" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="2" Padding="12,8">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Missed" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding WorkoutsMissedText}" FontSize="18" FontAttributes="Bold" TextColor="#F44336" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Today's Workout Card -->
+            <Frame Style="{StaticResource CardFrame}" BorderColor="{StaticResource Primary}">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                    <Label Text="Today's Workout"
+                           FontSize="12"
+                           TextColor="{StaticResource Gray500}"
+                           Grid.Row="0" Grid.Column="0" />
+                    <Label Text="{Binding LastAssessmentScore}"
+                           FontSize="11"
+                           TextColor="{StaticResource Gray500}"
+                           Grid.Row="0" Grid.Column="1" />
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="4" Margin="0,4,0,0">
+                        <Label Text="{Binding TodaysWorkoutName}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Label Text="{Binding TodaysWorkoutDetails}"
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Row="1" Grid.Column="1"
+                            Text="Start"
+                            Command="{Binding StartTodaysWorkoutCommand}"
+                            IsVisible="{Binding HasTodaysWorkout}"
+                            Style="{StaticResource PrimaryButton}"
+                            WidthRequest="80"
+                            HeightRequest="40"
+                            FontSize="14"
+                            VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+
+            <!-- Nutrition Summary Card -->
+            <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasNutritionData}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Today's Nutrition" Style="{StaticResource SectionHeader}" />
+                        <Label Text="Log Food"
+                               TextColor="{StaticResource Primary}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               Grid.Column="1"
+                               VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LogFoodCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <!-- Calories -->
+                    <VerticalStackLayout Spacing="4">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Calories" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding CaloriesText}" FontSize="13" FontAttributes="Bold" Grid.Column="1" />
+                        </Grid>
+                        <ProgressBar Progress="{Binding CaloriesProgress}" ProgressColor="{StaticResource Primary}" />
+                    </VerticalStackLayout>
+
+                    <!-- Macros Row -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <!-- Protein -->
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Protein" FontSize="11" TextColor="{StaticResource Gray500}" />
+                            <ProgressBar Progress="{Binding ProteinProgress}" ProgressColor="#2196F3" />
+                            <Label FontSize="11" TextColor="#2196F3" FontAttributes="Bold">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0}g / {1}g">
+                                        <Binding Path="ProteinConsumed" />
+                                        <Binding Path="ProteinTarget" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                        <!-- Carbs -->
+                        <VerticalStackLayout Spacing="2" Grid.Column="1">
+                            <Label Text="Carbs" FontSize="11" TextColor="{StaticResource Gray500}" />
+                            <ProgressBar Progress="{Binding CarbsProgress}" ProgressColor="#FF9800" />
+                            <Label FontSize="11" TextColor="#FF9800" FontAttributes="Bold">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0}g / {1}g">
+                                        <Binding Path="CarbsConsumed" />
+                                        <Binding Path="CarbsTarget" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                        <!-- Fat -->
+                        <VerticalStackLayout Spacing="2" Grid.Column="2">
+                            <Label Text="Fat" FontSize="11" TextColor="{StaticResource Gray500}" />
+                            <ProgressBar Progress="{Binding FatProgress}" ProgressColor="#F44336" />
+                            <Label FontSize="11" TextColor="#F44336" FontAttributes="Bold">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0}g / {1}g">
+                                        <Binding Path="FatConsumed" />
+                                        <Binding Path="FatTarget" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Active Goals Card -->
+            <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasActiveGoals}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Active Goals" Style="{StaticResource SectionHeader}" />
+                        <Label Text="View All"
+                               TextColor="{StaticResource Primary}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               Grid.Column="1"
+                               VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewGoalsCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding ActiveGoals}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:GoalSummaryItem">
+                                <Grid ColumnDefinitions="*,50" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                    <Label Text="{Binding Title}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           Grid.Row="0" Grid.Column="0" />
+                                    <Label Text="{Binding ProgressText}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="End"
+                                           Grid.Row="0" Grid.Column="1" />
+                                    <ProgressBar Progress="{Binding ProgressBarValue}"
+                                                 ProgressColor="{StaticResource Primary}"
+                                                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Active Program Card -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Active Program" Style="{StaticResource SectionHeader}" />
+                    <Label Text="{Binding ActiveProgramName}" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="{Binding ActiveProgramPhase}" FontSize="13" TextColor="{StaticResource Gray500}" />
+                    <Button Text="View Workout"
+                            Command="{Binding ViewWorkoutCommand}"
+                            IsVisible="{Binding HasActiveProgram}"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="14"
+                            HeightRequest="40"
+                            Margin="0,4,0,0" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Quick Actions -->
+            <Label Text="Quick Actions" Style="{StaticResource SectionHeader}" />
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Button Text="Log Food"
+                        Command="{Binding LogFoodCommand}"
+                        Style="{StaticResource SecondaryButton}"
+                        FontSize="14"
+                        HeightRequest="44"
+                        Grid.Column="0" />
+                <Button Text="Log Progress"
+                        Command="{Binding LogProgressCommand}"
+                        Style="{StaticResource SecondaryButton}"
+                        FontSize="14"
+                        HeightRequest="44"
+                        Grid.Column="1" />
+                <Button Text="View Goals"
+                        Command="{Binding ViewGoalsCommand}"
+                        Style="{StaticResource SecondaryButton}"
+                        FontSize="14"
+                        HeightRequest="44"
+                        Grid.Column="2" />
+            </Grid>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.NutritionAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.NutritionAssessment.NutriAssessIntroPage"
+             x:DataType="vm:NutriAssessIntroViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <Label Text="Nutrition Assessment"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                <Label Text="This assessment collects your body measurements, diet preferences, eating patterns, and goals. All steps are selection-based — just tap to choose. Your results will be used to create personalized nutrition targets."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="What to Expect" FontSize="18" FontAttributes="Bold" />
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="12">
+                            <Label Text="1." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="0" />
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                <Label Text="Body Measurements" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="Circumference measurements for body composition" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+
+                            <Label Text="2." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="1" />
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                                <Label Text="Diet Plan" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="Select your diet type, allergies, and preferences" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+
+                            <Label Text="3." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="2" />
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                                <Label Text="Food Frequency" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="How often you eat various food groups" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+
+                            <Label Text="4." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="3" />
+                            <VerticalStackLayout Grid.Row="3" Grid.Column="1">
+                                <Label Text="Eating Patterns" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="Your meal regularity and eating behaviors" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+
+                            <Label Text="5." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="4" />
+                            <VerticalStackLayout Grid.Row="4" Grid.Column="1">
+                                <Label Text="Motivation &amp; Barriers" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="What drives you and what challenges you face" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+
+                            <Label Text="6." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="5" />
+                            <VerticalStackLayout Grid.Row="5" Grid.Column="1">
+                                <Label Text="Nutrition Goals" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="Select your primary goal, focus areas, and timeline" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Reassessment banner -->
+                <Frame Style="{StaticResource CardFrame}"
+                       BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}"
+                       BorderColor="{AppThemeBinding Light=#4CAF50, Dark=#66BB6A}"
+                       IsVisible="{Binding IsReassessment}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Previous Answers Loaded"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#2E7D32, Dark=#A5D6A7}" />
+                        <Label Text="Your previous assessment data has been loaded. Review each step and update anything that has changed."
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light=#388E3C, Dark=#81C784}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}"
+                       BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3E2723}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Tip" FontSize="14" FontAttributes="Bold" />
+                        <Label Text="You can skip any measurements you're unable to take. The assessment adapts to the data you provide."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
+            <Button Text="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Grid.Column="0" />
+            <Button Text="Begin Assessment"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

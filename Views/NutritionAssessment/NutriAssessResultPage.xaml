@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.NutritionAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.NutritionAssessment.NutriAssessResultPage"
+             x:DataType="vm:NutriAssessResultViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <Label Text="Assessment Results"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                <Label Text="Here's a summary of your nutrition assessment. These results will personalize your nutrition plan."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+
+                <!-- Diet Plan Card -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Diet Plan" FontSize="18" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="0">
+                                <Label Text="{Binding DietTypeDisplay}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Diet Type" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="1">
+                                <Label Text="{Binding MealsPerDayDisplay}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Meal Frequency" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <VerticalStackLayout Spacing="2" IsVisible="{Binding HasProteinShakes}">
+                            <Label Text="Protein Shakes" FontSize="13" FontAttributes="Bold" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding ProteinShakeDisplay}"
+                                   FontSize="16" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4" IsVisible="{Binding HasAllergies}">
+                            <Label Text="Restrictions:" FontSize="13" FontAttributes="Bold" TextColor="{StaticResource Gray500}" />
+                            <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start"
+                                        BindableLayout.ItemsSource="{Binding AllergyDisplayItems}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border StrokeShape="RoundRectangle 12"
+                                                Stroke="{StaticResource Gray400}"
+                                                Padding="8,4" Margin="2">
+                                            <Label Text="{Binding .}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Body Composition Card -->
+                <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasBodyCompData}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Body Composition" FontSize="18" FontAttributes="Bold" />
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="0">
+                                <Label Text="{Binding BodyFatDisplay}"
+                                       FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Body Fat" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="1">
+                                <Label Text="{Binding WaistDisplay}"
+                                       FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Waist" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="2">
+                                <Label Text="{Binding HipsDisplay}"
+                                       FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Hips" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Label Text="{Binding CircumferenceSummary}"
+                               FontSize="12" TextColor="{StaticResource Gray500}" HorizontalTextAlignment="Center" />
+
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{StaticResource Gray400}"
+                                BackgroundColor="{AppThemeBinding Light=#FFF8E1, Dark=#3E2723}"
+                                Padding="12,8"
+                                IsVisible="{Binding HasBodyCompData}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="&#x26A0;" FontSize="14" VerticalOptions="Start" Grid.Column="0" />
+                                <Label Text="{Binding BodyFatDisclaimer}"
+                                       FontSize="11" TextColor="{StaticResource Gray500}" FontAttributes="Italic"
+                                       LineBreakMode="WordWrap" Grid.Column="1" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Dietary Patterns Card -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Dietary Patterns" FontSize="18" FontAttributes="Bold" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="0">
+                                <Label Text="{Binding FrequentFoodCount}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Regular Foods" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="1">
+                                <Label Text="{Binding ProcessedFoodCount}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="OrangeRed" />
+                                <Label Text="Processed (often/daily)" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Label Text="{Binding DietarySummary}" FontSize="13" TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Eating Patterns Card -->
+                <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasEatingPatterns}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Eating Patterns" FontSize="18" FontAttributes="Bold" />
+                        <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start" AlignItems="Start"
+                                    BindableLayout.ItemsSource="{Binding EatingPatternDisplayItems}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Border StrokeShape="RoundRectangle 12"
+                                            Stroke="{StaticResource Primary}"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                            Padding="10,5" Margin="3"
+                                            FlexLayout.Basis="Auto" FlexLayout.Shrink="0">
+                                        <Label Text="{Binding .}" FontSize="12" LineBreakMode="NoWrap"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Readiness Card -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Motivation &amp; Readiness" FontSize="18" FontAttributes="Bold" />
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="0">
+                                <Label Text="{Binding ReadinessDisplay}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Readiness" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="1">
+                                <Label Text="{Binding MotivationCount}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Motivations" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="2">
+                                <Label Text="{Binding ChallengeCount}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="OrangeRed" />
+                                <Label Text="Challenges" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Label Text="{Binding ConfidenceLevel, StringFormat='Confidence: {0}/10'}"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                        <Label Text="{Binding ReadinessInterpretation}"
+                               FontSize="13" TextColor="{StaticResource Gray500}" FontAttributes="Italic" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Goals Card -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Your Nutrition Goals" FontSize="18" FontAttributes="Bold" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="{Binding PrimaryGoalDisplay}"
+                                       FontSize="18" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Primary Goal" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="{Binding TimelineDisplay}"
+                                       FontSize="18" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Timeline" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <VerticalStackLayout Spacing="2" IsVisible="{Binding HasTargetWeight}">
+                            <Label Text="Target Weight" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding TargetWeightDisplay}"
+                                   FontSize="18" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4" IsVisible="{Binding HasFocusAreas}">
+                            <Label Text="Focus Areas:" FontSize="13" FontAttributes="Bold" TextColor="{StaticResource Gray500}" />
+                            <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start"
+                                        BindableLayout.ItemsSource="{Binding FocusAreaDisplayItems}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border StrokeShape="RoundRectangle 12"
+                                                Stroke="{StaticResource Primary}"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                                Padding="10,5" Margin="3">
+                                            <Label Text="{Binding .}" FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="2" IsVisible="{Binding HasExercisePlan}">
+                            <Label Text="Planned Exercise" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding ExercisePlanDisplay}"
+                                   FontSize="16" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                            <Label Text="{Binding ExerciseCaloriesDisplay}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Safety Warning -->
+                <Frame Style="{StaticResource CardFrame}"
+                       BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3E2723}"
+                       BorderColor="#FF9800"
+                       IsVisible="{Binding ShowSafetyWarning}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="&#x26A0; Unsafe Rate of Change"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}" />
+                        <Label Text="{Binding SafetyWarningText}"
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light=#BF360C, Dark=#FFCC80}"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Macro Targets Card -->
+                <Frame Style="{StaticResource CardFrame}"
+                       BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Recommended Nutrition Targets"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                        <Label Text="{Binding CaloriesDisplay}"
+                               FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="0">
+                                <Label Text="{Binding RecommendedProteinG, StringFormat='{0}g'}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Protein" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="1">
+                                <Label Text="{Binding RecommendedCarbsG, StringFormat='{0}g'}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Carbs" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="2">
+                                <Label Text="{Binding RecommendedFatG, StringFormat='{0}g'}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="Fat" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Label Text="{Binding MacroNote}"
+                               FontSize="11" TextColor="{StaticResource Gray500}" FontAttributes="Italic" />
+
+                        <Label Text="These targets will update your nutrition dashboard."
+                               FontSize="11" TextColor="{StaticResource Gray500}" FontAttributes="Italic" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Meal Breakdown Card -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Daily Meal Breakdown" FontSize="18" FontAttributes="Bold" />
+                        <Label Text="{Binding MealsPerDayDisplay, StringFormat='Based on {0}'}"
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+
+                        <VerticalStackLayout Spacing="6"
+                                             BindableLayout.ItemsSource="{Binding MealBreakdownItems}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MealCalorieItem">
+                                    <Border StrokeShape="RoundRectangle 8"
+                                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                            Padding="12,10">
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="2">
+                                            <Label Text="{Binding MealName}" FontSize="15" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" />
+                                            <Label Text="{Binding CaloriesDisplay}" FontSize="15" FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                                   Grid.Column="1" Grid.Row="0" />
+                                            <Label Text="{Binding MacrosDisplay}" FontSize="12"
+                                                   TextColor="{StaticResource Gray500}"
+                                                   Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
+            <Button Text="Back"
+                    Command="{Binding PreviousCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Grid.Column="0" />
+            <Button Text="Complete"
+                    Command="{Binding CompleteCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

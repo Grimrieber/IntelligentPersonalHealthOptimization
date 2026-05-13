@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Assessment.AssessmentResultPage"
+             x:DataType="vm:AssessmentResultViewModel"
+             Title="Results">
+
+    <Grid>
+        <!-- Loading indicator -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+        <!-- Results content - hidden while loading -->
+        <ScrollView IsVisible="{Binding IsBusy, Converter={StaticResource InverseBool}}">
+            <VerticalStackLayout Padding="24" Spacing="16">
+
+                <Label Text="Assessment Results"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
+
+                <!-- Overall Score -->
+                <Frame Style="{StaticResource CardFrame}" Padding="24">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Overall Movement Score"
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray500}" />
+                        <Label Text="{Binding OverallScore, StringFormat='{0}/100'}"
+                               FontSize="48"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="{Binding ScoreDescription}"
+                               FontSize="14"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Test Scores -->
+                <Label Text="Test Breakdown" Style="{StaticResource SectionHeader}" />
+                <CollectionView ItemsSource="{Binding TestScores}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:TestScoreItem">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding TestName}" FontSize="14" VerticalOptions="Center" />
+                                    <Label Text="{Binding ScoreDisplay}" Grid.Column="1"
+                                           FontSize="18" FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Compensations Found -->
+                <Label Text="Compensations Detected" Style="{StaticResource SectionHeader}" />
+                <CollectionView ItemsSource="{Binding CompensationExplanations}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CompensationExplanation">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding CompensationName}"
+                                           FontSize="15" FontAttributes="Bold" />
+                                    <Label Text="{Binding Explanation}"
+                                           FontSize="13" TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding TestName, StringFormat='Detected during: {0}'}"
+                                           FontSize="11" TextColor="{StaticResource Gray400}" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Generate Program -->
+                <Button Text="Generate My Program"
+                        Command="{Binding GenerateProgramCommand}"
+                        IsVisible="{Binding ProgramGenerated, Converter={StaticResource InverseBool}}"
+                        Style="{StaticResource PrimaryButton}"
+                        Margin="0,16,0,0" />
+
+                <!-- Program Generated -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding ProgramGenerated}"
+                       BackgroundColor="{AppThemeBinding Light=#D4EDDA, Dark=#1B4332}">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Program Generated!" FontSize="20" FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding GeneratedProgramName}" FontSize="16"
+                               HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                        <Button Text="View My Program"
+                                Command="{Binding ViewProgramCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0,8,0,0" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

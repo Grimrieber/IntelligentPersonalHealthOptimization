@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.AddFoodEntryPage"
+             x:DataType="vm:AddFoodEntryViewModel"
+             Title="Add Food">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <!-- Search Section -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Search Food" Style="{StaticResource SectionHeader}" />
+                        <Entry Placeholder="Search foods..."
+                               Text="{Binding SearchQuery}"
+                               ReturnType="Search"
+                               ClearButtonVisibility="WhileEditing" />
+
+                        <!-- Quick Actions -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Grid.Column="0"
+                                    Text="Scan Barcode"
+                                    Command="{Binding ScanBarcodeCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="13" />
+                            <Button Grid.Column="1"
+                                    Text="Add Custom Food"
+                                    Command="{Binding AddCustomFoodCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="13" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Search Results -->
+                <VerticalStackLayout IsVisible="{Binding HasSearched}" Spacing="8">
+                    <Label Text="Search Results" Style="{StaticResource SectionHeader}" />
+
+                    <!-- No Results -->
+                    <Label Text="No foods found. Try a different search or add a custom food."
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="{Binding HasSearchResults, Converter={StaticResource InverseBool}}" />
+
+                    <!-- Results List -->
+                    <CollectionView ItemsSource="{Binding SearchResults}"
+                                    IsVisible="{Binding HasSearchResults}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:FoodSearchResult">
+                                <Frame Style="{StaticResource CardFrame}" Margin="0,2">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddFoodEntryViewModel}}, Path=SelectFoodCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="{Binding DisplayName}"
+                                                   FontSize="15"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding DefaultServingLabel, StringFormat='Serving: {0}'}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource Gray500}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding CaloriesDisplay}"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Selected Food Details -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding IsFoodSelected}"
+                       BorderColor="{StaticResource Primary}">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="{Binding SelectedFood.DisplayName}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Button Grid.Column="1"
+                                    Text="X"
+                                    Command="{Binding ClearSelectionCommand}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Gray500}"
+                                    FontSize="16"
+                                    WidthRequest="40"
+                                    HeightRequest="40" />
+                        </Grid>
+
+                        <!-- Serving Size -->
+                        <Label Text="Serving Size (grams)"
+                               FontSize="14"
+                               TextColor="{StaticResource Gray500}" />
+                        <Grid ColumnDefinitions="*,80" ColumnSpacing="12">
+                            <Slider Grid.Column="0"
+                                    Minimum="10"
+                                    Maximum="500"
+                                    Value="{Binding ServingSize}"
+                                    MinimumTrackColor="{StaticResource Primary}"
+                                    MaximumTrackColor="{StaticResource Gray300}"
+                                    ThumbColor="{StaticResource Primary}" />
+                            <Entry Grid.Column="1"
+                                   Text="{Binding ServingSizeText}"
+                                   Keyboard="Numeric"
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="16"
+                                   FontAttributes="Bold" />
+                        </Grid>
+
+                        <!-- Meal Type Picker -->
+                        <Label Text="Meal Type"
+                               FontSize="14"
+                               TextColor="{StaticResource Gray500}" />
+                        <Picker ItemsSource="{Binding MealTypes}"
+                                SelectedItem="{Binding SelectedMealType}"
+                                Title="Select meal type" />
+
+                        <!-- Nutrition Estimates -->
+                        <Label Text="Estimated Nutrition" Style="{StaticResource SectionHeader}" />
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                                <Label Text="{Binding EstimatedCalories}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Calories"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                <Label Text="{Binding EstimatedProtein}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#2196F3" />
+                                <Label Text="Protein"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                                <Label Text="{Binding EstimatedCarbs}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#FF9800" />
+                                <Label Text="Carbs"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
+                                <Label Text="{Binding EstimatedFat}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#F44336" />
+                                <Label Text="Fat"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Log Button -->
+        <Button Text="Log Food"
+                Grid.Row="1"
+                Command="{Binding LogFoodCommand}"
+                IsVisible="{Binding IsFoodSelected}"
+                Style="{StaticResource PrimaryButton}"
+                Margin="20,8,20,20" />
+    </Grid>
+</ContentPage>

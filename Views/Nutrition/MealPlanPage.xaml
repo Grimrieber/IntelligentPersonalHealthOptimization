@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.MealPlanPage"
+             x:DataType="vm:MealPlanViewModel"
+             Title="Meal Plan">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <!-- Plan Header -->
+                <Label Text="Meal Plan"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <!-- No Plan State -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding HasMealPlan, Converter={StaticResource InverseBool}}">
+                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center" Padding="0,20">
+                        <Label Text="No Meal Plan"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Label Text="Generate a meal plan from your nutrition profile to get personalized daily meals."
+                               FontSize="14"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalTextAlignment="Center"
+                               Margin="20,0" />
+                        <Button Text="Generate Meal Plan"
+                                Command="{Binding GeneratePlanCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="20,8" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Plan Info -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding HasMealPlan}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding PlanName}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Label Text="{Binding PlanTargetCalories}"
+                               FontSize="14"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="{Binding PlanTargetMacros}"
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Day Selector -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding HasMealPlan}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Text="&lt;"
+                                Command="{Binding PreviousDayCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                WidthRequest="50" />
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="{Binding SelectedDayName}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding DayTotalCalories}"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{StaticResource Primary}" />
+                            <Label Text="{Binding DayMacroSummary}"
+                                   FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2"
+                                Text="&gt;"
+                                Command="{Binding NextDayCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                WidthRequest="50" />
+                    </Grid>
+                </Frame>
+
+                <!-- Day Picker for quick access -->
+                <Picker ItemsSource="{Binding DayNames}"
+                        SelectedIndex="{Binding SelectedDayIndex}"
+                        Title="Jump to day"
+                        IsVisible="{Binding HasMealPlan}" />
+
+                <!-- Meal Groups for Selected Day -->
+                <VerticalStackLayout Spacing="8"
+                                     IsVisible="{Binding HasMealPlan}"
+                                     BindableLayout.ItemsSource="{Binding MealPlanMealGroups}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MealPlanMealGroup">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlanViewModel}}, Path=ViewMealDetailCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout Spacing="2">
+                                    <!-- Row 1: Recipe name + calories -->
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Label Text="{Binding MealName}"
+                                               FontSize="16" FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                               IsVisible="{Binding HasMealName}" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding TotalCalories}"
+                                               FontSize="14" FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Row 2: Meal type + swap -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding MealTypeName}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray500}" />
+                                        <Button Grid.Column="1"
+                                                Text="Swap"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlanViewModel}}, Path=SwapMealCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource Primary}"
+                                                FontSize="12" Padding="0"
+                                                IsVisible="{Binding IsSwappable}" />
+                                    </Grid>
+
+                                    <!-- Row 3: Servings + macros -->
+                                    <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                        <Label Text="{Binding ServingsNote}"
+                                               FontSize="12" FontAttributes="Italic"
+                                               TextColor="{StaticResource Primary}"
+                                               IsVisible="{Binding HasServingsNote}" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding MacroSummary}"
+                                               FontSize="11"
+                                               TextColor="{StaticResource Gray400}" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- No Meals for Day -->
+                <Label Text="No meals planned for this day"
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding HasMealsForDay, Converter={StaticResource InverseBool}}" />
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Regenerate Button -->
+        <Button Text="Regenerate Plan"
+                Grid.Row="1"
+                Command="{Binding RegeneratePlanCommand}"
+                IsVisible="{Binding HasMealPlan}"
+                Style="{StaticResource SecondaryButton}"
+                Margin="20,8,20,20" />
+    </Grid>
+</ContentPage>

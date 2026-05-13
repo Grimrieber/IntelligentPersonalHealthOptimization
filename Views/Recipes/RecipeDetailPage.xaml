@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             xmlns:recipe="clr-namespace:IntelligentPersonalHealthOptimization.Models.Recipe"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Recipes.RecipeDetailPage"
+             x:DataType="vm:RecipeDetailViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Recipe Header -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding RecipeName}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                <Label Text="{Binding CategoryName}"
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+            </VerticalStackLayout>
+
+            <!-- Time / Servings Cards -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="0" Padding="10,8" IsVisible="{Binding HasPrepTime}">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Prep Time" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding PrepTime}" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="1" Padding="10,8" IsVisible="{Binding HasCookTime}">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Cook Time" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding CookTime}" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="2" Padding="10,8" IsVisible="{Binding HasRestTime}">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Rest Time" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding RestTime}" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Servings -->
+            <Frame Style="{StaticResource CardFrame}" Padding="12,8">
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="Servings:" FontSize="14" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                    <Label Text="{Binding Servings}" FontSize="14" FontAttributes="Bold" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Save / Unsave Button -->
+            <Button Text="{Binding SaveButtonText}"
+                    Command="{Binding ToggleSaveCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="8"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    HeightRequest="48" />
+
+            <!-- ===== INGREDIENTS ===== -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Ingredients"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+
+                <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
+
+                <!-- Using BindableLayout instead of nested CollectionView to avoid MAUI crash -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding IngredientGroups}" Spacing="4">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="recipe:IngredientGrouping">
+                            <VerticalStackLayout Spacing="4" Padding="0,4">
+                                <Label Text="{Binding GroupName}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       IsVisible="{Binding GroupName, Converter={StaticResource IsNotEmptyConverter}}"
+                                       TextColor="{StaticResource Gray600}"
+                                       Margin="0,8,0,2" />
+
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}" Spacing="2">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="recipe:RecipeIngredient">
+                                            <HorizontalStackLayout Spacing="8" Padding="8,4">
+                                                <Label Text="&#x2022;" FontSize="14" TextColor="{StaticResource Primary}" VerticalOptions="Start" />
+                                                <Label Text="{Binding Description}" FontSize="14" VerticalOptions="Start" />
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- ===== DIRECTIONS ===== -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Directions"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+
+                <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding DirectionGroups}" Spacing="4">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="recipe:DirectionGrouping">
+                            <VerticalStackLayout Spacing="4" Padding="0,4">
+                                <Label Text="{Binding GroupName}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       IsVisible="{Binding GroupName, Converter={StaticResource IsNotEmptyConverter}}"
+                                       TextColor="{StaticResource Gray600}"
+                                       Margin="0,8,0,2" />
+
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Steps}" Spacing="2">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="recipe:RecipeDirection">
+                                            <Grid ColumnDefinitions="36,*" Padding="4,6" ColumnSpacing="8">
+                                                <Frame BackgroundColor="{StaticResource Primary}"
+                                                       CornerRadius="14"
+                                                       WidthRequest="28"
+                                                       HeightRequest="28"
+                                                       Padding="0"
+                                                       HasShadow="False"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Start">
+                                                    <Label Text="{Binding StepNumber}"
+                                                           TextColor="White"
+                                                           FontSize="13"
+                                                           FontAttributes="Bold"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center" />
+                                                </Frame>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Instruction}"
+                                                       FontSize="14"
+                                                       LineBreakMode="WordWrap"
+                                                       VerticalOptions="Start" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- ===== NOTES ===== -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding HasNotes}">
+                <Label Text="Notes"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
+                <Frame Style="{StaticResource CardFrame}" Padding="14">
+                    <Label Text="{Binding Notes}" FontSize="14" LineBreakMode="WordWrap" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <!-- ===== NUTRITION FACTS ===== -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding HasNutrition}">
+                <Label Text="Nutrition Facts - Per Serving"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
+
+                <Frame Style="{StaticResource CardFrame}" Padding="16">
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="16">
+                        <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2" HorizontalOptions="Center">
+                            <Label Text="Calories" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Calories}" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                        </VerticalStackLayout>
+
+                        <BoxView Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" Color="{StaticResource Gray200}" />
+
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="Protein" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Protein}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="Carbs" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Carbs}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="3" Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="Fat" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Fat}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="3" Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="Fiber" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Fiber}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="4" Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="Sugar" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Sugar}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="4" Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="Sodium" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Sodium}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+
+            <BoxView HeightRequest="20" Color="Transparent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

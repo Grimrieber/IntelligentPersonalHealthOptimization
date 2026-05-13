@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Assessment.OverheadSquatPage"
+             x:DataType="vm:AssessmentViewModel"
+             Title="Overhead Squat">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label Text="Overhead Squat Assessment"
+                   FontSize="24"
+                   FontAttributes="Bold" />
+
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Instructions" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="1. Stand with feet shoulder-width apart, toes forward" FontSize="13" />
+                    <Label Text="2. Raise both arms overhead, fully extended" FontSize="13" />
+                    <Label Text="3. Squat down as far as comfortable (5 reps)" FontSize="13" />
+                    <Label Text="4. Observe from front, side, and rear if possible" FontSize="13" />
+                    <Label Text="5. Check all compensations you observe below" FontSize="13" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="Select all compensations observed:"
+                   FontSize="16" FontAttributes="Bold"
+                   Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding OverheadSquatCompensations}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CompensationItem">
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="4,8" ColumnSpacing="12">
+                            <CheckBox IsChecked="{Binding IsSelected}"
+                                      Color="{StaticResource Primary}"
+                                      Grid.Column="0"
+                                      VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding DisplayName}" FontSize="14" />
+                                <Label Text="{Binding BodyRegion}" FontSize="11"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Next: Single-Leg Balance"
+                    Command="{Binding SaveOverheadSquatAndContinueCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,8,0,24" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             xmlns:recipe="clr-namespace:IntelligentPersonalHealthOptimization.Models.Recipe"
+             xmlns:models="clr-namespace:IntelligentPersonalHealthOptimization.Models"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Recipes.RecipeBrowsePage"
+             x:DataType="vm:RecipeBrowseViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Top Bar: Search + Saved Toggle -->
+        <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="8">
+
+            <!-- Search + Saved toggle row -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <SearchBar Placeholder="Search recipes or ingredients..."
+                           Text="{Binding SearchText}"
+                           SearchCommand="{Binding SearchCommand}"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+                <Button Grid.Column="1"
+                        Text="Search"
+                        Command="{Binding SearchCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        HeightRequest="44"
+                        CornerRadius="8"
+                        FontSize="14" />
+                <Button Grid.Column="2"
+                        Text="{Binding SavedToggleText}"
+                        Command="{Binding ToggleSavedViewCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                        HeightRequest="44"
+                        CornerRadius="8"
+                        FontSize="14" />
+            </Grid>
+
+            <!-- Back to Categories (visible when browsing recipes or saved) -->
+            <Button Text="&lt; All Categories"
+                    Command="{Binding BackToCategoriesCommand}"
+                    IsVisible="{Binding IsShowingCategories, Converter={StaticResource InverseBool}}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    FontSize="14"
+                    HorizontalOptions="Start"
+                    Padding="0" />
+
+            <!-- Connection warning -->
+            <Label Text="{Binding ConnectionStatus}"
+                   IsVisible="{Binding IsConnected, Converter={StaticResource InverseBool}}"
+                   TextColor="Red"
+                   FontSize="13"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Categories Grid -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Categories}"
+                        IsVisible="{Binding IsShowingCategories}"
+                        SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.Header>
+                <BoxView HeightRequest="4" Color="Transparent" />
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="recipe:RecipeCategory">
+                    <Frame Style="{StaticResource CardFrame}"
+                           Margin="8,0"
+                           Padding="16"
+                           HeightRequest="100">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=SelectCategoryCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="{Binding CategoryName}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Recipe List (browse mode) -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Recipes}"
+                        IsVisible="{Binding IsShowingRecipeList}"
+                        SelectionMode="None">
+            <CollectionView.Header>
+                <BoxView HeightRequest="4" Color="Transparent" />
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="recipe:RecipeItem">
+                    <Frame Style="{StaticResource CardFrame}" Margin="16,4" Padding="14">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ViewRecipeCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0" Grid.ColumnSpan="2"
+                                   Text="{Binding RecipeName}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                            <HorizontalStackLayout Grid.Row="1" Spacing="12">
+                                <HorizontalStackLayout Spacing="4" IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}">
+                                    <Label Text="Prep:" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding PrepTime}" FontSize="12" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="4" IsVisible="{Binding CookTime, Converter={StaticResource IsNotEmptyConverter}}">
+                                    <Label Text="Cook:" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding CookTime}" FontSize="12" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                                <Label Text="{Binding Servings, StringFormat='Serving Size: {0}'}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding IngredientCount, StringFormat='{0} ingredients'}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                                   Text=">"
+                                   FontSize="20"
+                                   TextColor="{StaticResource Gray400}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
+                    <Label Text="No recipes found" FontSize="16" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- Saved Recipes List -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding SavedRecipes}"
+                        IsVisible="{Binding IsShowingSaved}"
+                        SelectionMode="None">
+            <CollectionView.Header>
+                <BoxView HeightRequest="4" Color="Transparent" />
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:SavedRecipe">
+                    <Frame Style="{StaticResource CardFrame}" Margin="16,4" Padding="14">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ViewSavedRecipeCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0" Grid.ColumnSpan="2"
+                                   Text="{Binding RecipeName}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                            <HorizontalStackLayout Grid.Row="1" Spacing="12">
+                                <HorizontalStackLayout Spacing="4" IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}">
+                                    <Label Text="Prep:" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding PrepTime}" FontSize="12" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="4" IsVisible="{Binding CookTime, Converter={StaticResource IsNotEmptyConverter}}">
+                                    <Label Text="Cook:" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding CookTime}" FontSize="12" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                                <Label Text="{Binding CategoryName}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding Servings, StringFormat='Serving Size: {0}'}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding CaloriesPerServing, StringFormat='{0} cal'}"
+                                       FontSize="12" TextColor="{StaticResource Gray500}"
+                                       IsVisible="{Binding CaloriesPerServing, Converter={StaticResource IsNotEmptyConverter}}" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                                   Text=">"
+                                   FontSize="20"
+                                   TextColor="{StaticResource Gray400}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40" Spacing="8">
+                    <Label Text="No saved recipes yet" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                    <Label Text="Browse recipes and tap 'Save Recipe' to add them here" FontSize="14" TextColor="{StaticResource Gray400}" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}" />
+    </Grid>
+</ContentPage>

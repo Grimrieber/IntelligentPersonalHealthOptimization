@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Onboarding"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Onboarding.WelcomePage"
+             x:DataType="vm:WelcomeViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <!-- App Icon / Title Area -->
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="Health Optimizer"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    <Label Text="Intelligent Personal Health Optimization"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+
+                <!-- Description -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <Label Text="{Binding AppDescription}"
+                           FontSize="15"
+                           LineHeight="1.4" />
+                </Frame>
+
+                <!-- Steps Overview -->
+                <Label Text="What We'll Cover"
+                       Style="{StaticResource SectionHeader}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8"
+                                         BindableLayout.ItemsSource="{Binding WizardSteps}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Label Text="{Binding .}"
+                                       FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation - only Get Started button, no Back -->
+        <Button Grid.Row="2"
+                Text="Get Started"
+                Command="{Binding GetStartedCommand}"
+                Style="{StaticResource PrimaryButton}"
+                Margin="0,16,0,0"
+                HorizontalOptions="Fill" />
+
+    </Grid>
+</ContentPage>

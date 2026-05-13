@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Assessment.SingleLegBalancePage"
+             x:DataType="vm:AssessmentViewModel"
+             Title="Single-Leg Balance">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label Text="Single-Leg Balance Test"
+                   FontSize="24"
+                   FontAttributes="Bold" />
+
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Instructions" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="1. Stand on one leg with hands on hips" FontSize="13" />
+                    <Label Text="2. Lift the other foot off the ground" FontSize="13" />
+                    <Label Text="3. Hold for 20 seconds, observe compensations" FontSize="13" />
+                    <Label Text="4. Repeat on the other side" FontSize="13" />
+                    <Label Text="5. Check all compensations for each side below" FontSize="13" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Left Side -->
+            <Label Text="Left Leg (standing on left):"
+                   FontSize="18" FontAttributes="Bold"
+                   Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding SingleLegLeftCompensations}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CompensationItem">
+                        <Grid ColumnDefinitions="Auto,*" Padding="4,8" ColumnSpacing="12">
+                            <CheckBox IsChecked="{Binding IsSelected}"
+                                      Color="{StaticResource Primary}"
+                                      Grid.Column="0"
+                                      VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding DisplayName}" FontSize="14" />
+                                <Label Text="{Binding BodyRegion}" FontSize="11"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Right Side -->
+            <Label Text="Right Leg (standing on right):"
+                   FontSize="18" FontAttributes="Bold"
+                   Margin="0,16,0,0" />
+
+            <CollectionView ItemsSource="{Binding SingleLegRightCompensations}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CompensationItem">
+                        <Grid ColumnDefinitions="Auto,*" Padding="4,8" ColumnSpacing="12">
+                            <CheckBox IsChecked="{Binding IsSelected}"
+                                      Color="{StaticResource Primary}"
+                                      Grid.Column="0"
+                                      VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding DisplayName}" FontSize="14" />
+                                <Label Text="{Binding BodyRegion}" FontSize="11"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Complete Assessment"
+                    Command="{Binding CompleteAssessmentCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,8,0,24" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

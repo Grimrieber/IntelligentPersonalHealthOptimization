@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.CesAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.CesAssessment.CesPushPullPage"
+             x:DataType="vm:CesPushPullViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Push &amp; Pull Assessment">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Progress -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,16,24,8" Spacing="4">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,8" Spacing="16">
+
+                <Label Text="Push &amp; Pull Assessment"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <!-- PUSH SECTION -->
+                <Frame Style="{StaticResource CardFrame}" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Push Assessment — How to perform:" FontSize="14" FontAttributes="Bold" />
+                        <Label FontSize="13" LineHeight="1.4" TextColor="{StaticResource Gray600}">
+                            <Label.Text>1. Face a wall and place your hands on it at shoulder height, shoulder-width apart. Step back about 2 feet.
+
+2. Bend your elbows and lower your chest toward the wall (wall push-up). Push back out. Repeat 5 times.
+
+3. If you're comfortable, you can do floor push-ups instead.
+
+4. Have someone watch your upper back and shoulders during the push-ups.</Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="2">
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Scapular winging" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PushScapularWinging}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Shoulder hiking" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PushShoulderHiking}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Forward head poke" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PushForwardHeadPoke}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Low back sag" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PushLowBackSag}" VerticalOptions="Center" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- PULL SECTION -->
+                <Frame Style="{StaticResource CardFrame}" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Pull Assessment — How to perform:" FontSize="14" FontAttributes="Bold" />
+                        <Label FontSize="13" LineHeight="1.4" TextColor="{StaticResource Gray600}">
+                            <Label.Text>1. If you have a resistance band, attach it to a door handle or sturdy post at chest height.
+
+2. Stand facing the band, grab it with both hands, and pull it toward your chest like a rowing motion. Repeat 5 times.
+
+3. No band? Mimic the motion — stand with arms extended forward, then pull your elbows back squeezing your shoulder blades together.
+
+4. Watch for shoulders shrugging up, head poking forward, or low back arching.</Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="2">
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Shoulder hiking" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PullShoulderHiking}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Head protrusion" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PullHeadProtrusion}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Low back extension" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding PullLowBackExtension}" VerticalOptions="Center" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- PAIN SECTION -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Pain Report" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource Gray900}" />
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox IsChecked="{Binding PainDuringAssessment}"
+                                      Color="{StaticResource Primary}"
+                                      VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="Did you experience pain during any part of this assessment?"
+                                   FontSize="14"
+                                   LineHeight="1.3"
+                                   VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,160" Padding="0,4"
+                              IsVisible="{Binding PainDuringAssessment}">
+                            <Label Text="Pain location" FontSize="14" VerticalOptions="Center" />
+                            <Picker Grid.Column="1"
+                                    ItemsSource="{Binding PainLocationOptions}"
+                                    SelectedIndex="{Binding PainLocationIndex}"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Next"
+                    Command="{Binding GoNextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

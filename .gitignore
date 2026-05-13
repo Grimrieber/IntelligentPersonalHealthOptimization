@@ -1,0 +1,136 @@
+# =====================
+# .NET / Visual Studio
+# =====================
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ll]ogs/
+[Bb]uild[Ll]og.*
+
+# VS / Rider / VS Code / Claude Code
+.vs/
+.vscode/
+.idea/
+.claude/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.swp
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# MSBuild
+*.binlog
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Code coverage
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# JetBrains
+*.DotSettings.user
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# =====================
+# MAUI / Mobile build artifacts
+# =====================
+Resources/raw/Default.aab
+*.apk
+*.aab
+*.ipa
+*.app
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.mobileprovision
+
+# Android
+local.properties
+*.iml
+.gradle/
+captures/
+
+# =====================
+# OS junk
+# =====================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# =====================
+# Python (for Tools/)
+# =====================
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+*.log
+
+# =====================
+# Secrets / local config
+# =====================
+*.env
+.env
+.env.*
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+secrets.local.*
+*.secret
+*.key
+*.pem
+
+# =====================
+# Local databases / runtime artifacts
+# =====================
+*.db
+*.db3
+*.sqlite
+*.sqlite3
+
+# =====================
+# Excluded content (per project decision)
+# =====================
+NutritionDocs/
+NutritionCoachFiles/
+CES/
+
+# Spoonacular import log (contains leaked API keys from past runs)
+Tools/spoonacular_import.log
+Tools/*.log

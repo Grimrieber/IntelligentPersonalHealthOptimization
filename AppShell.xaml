@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="IntelligentPersonalHealthOptimization.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:IntelligentPersonalHealthOptimization.Views"
+    xmlns:assessViews="clr-namespace:IntelligentPersonalHealthOptimization.Views.Assessment"
+    xmlns:workoutViews="clr-namespace:IntelligentPersonalHealthOptimization.Views.Workout"
+    xmlns:nutritionViews="clr-namespace:IntelligentPersonalHealthOptimization.Views.Nutrition"
+    xmlns:progressViews="clr-namespace:IntelligentPersonalHealthOptimization.Views.Progress"
+    xmlns:recipeViews="clr-namespace:IntelligentPersonalHealthOptimization.Views.Recipes"
+    xmlns:settingsViews="clr-namespace:IntelligentPersonalHealthOptimization.Views.Settings"
+    Title="Health Optimizer"
+    FlyoutBehavior="Disabled">
+
+    <!-- Login (no tabs) -->
+    <ShellContent Title="Login"
+                  Route="login"
+                  ContentTemplate="{DataTemplate views:LoginPage}"
+                  Shell.TabBarIsVisible="False"
+                  Shell.NavBarIsVisible="False" />
+
+    <!-- Main Tabbed Interface (5 tabs) -->
+    <TabBar Route="main">
+        <ShellContent Title="Dashboard"
+                      Route="Dashboard"
+                      Icon="home.png"
+                      ContentTemplate="{DataTemplate views:DashboardPage}" />
+
+        <ShellContent Title="Workout"
+                      Route="Workout"
+                      Icon="dumbbell.png"
+                      ContentTemplate="{DataTemplate workoutViews:WorkoutProgramPage}" />
+
+        <ShellContent Title="N. Coach"
+                      Route="Nutrition"
+                      Icon="apple.png"
+                      ContentTemplate="{DataTemplate nutritionViews:NutritionDashboardPage}" />
+
+        <ShellContent Title="Recipes"
+                      Route="Recipes"
+                      Icon="recipe.png"
+                      ContentTemplate="{DataTemplate recipeViews:RecipeBrowsePage}" />
+
+        <ShellContent Title="Settings"
+                      Route="Settings"
+                      Icon="settings.png"
+                      ContentTemplate="{DataTemplate settingsViews:SettingsPage}" />
+    </TabBar>
+</Shell>

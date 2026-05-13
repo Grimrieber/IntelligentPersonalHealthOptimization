@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Schedule.CalendarPage"
+             x:DataType="vm:CalendarViewModel"
+             Title="Calendar">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Page Header -->
+            <Label Text="Workout Calendar"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+            <!-- Stats Summary -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="0">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="{Binding StreakText}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="Streak"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="1">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="{Binding CompletedCount}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="#4CAF50" />
+                        <Label Text="Completed"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Style="{StaticResource CardFrame}" Grid.Column="2">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="{Binding MissedCount}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="#F44336" />
+                        <Label Text="Missed"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Calendar Card -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+
+                    <!-- Month Navigation -->
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                        <Button Grid.Column="0"
+                                Text="&lt;"
+                                Command="{Binding PreviousMonthCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="22"
+                                FontAttributes="Bold"
+                                WidthRequest="44" />
+                        <Label Grid.Column="1"
+                               Text="{Binding MonthYearLabel}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Button Grid.Column="2"
+                                Text="&gt;"
+                                Command="{Binding NextMonthCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="22"
+                                FontAttributes="Bold"
+                                WidthRequest="44" />
+                        <Button Grid.Column="3"
+                                Text="Today"
+                                Command="{Binding GoToTodayCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="13"
+                                Padding="8,0" />
+                    </Grid>
+
+                    <!-- Day of Week Headers -->
+                    <Grid ColumnDefinitions="*,*,*,*,*,*,*" ColumnSpacing="2">
+                        <Label Grid.Column="0" Text="Sun" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                        <Label Grid.Column="1" Text="Mon" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                        <Label Grid.Column="2" Text="Tue" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                        <Label Grid.Column="3" Text="Wed" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                        <Label Grid.Column="4" Text="Thu" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                        <Label Grid.Column="5" Text="Fri" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                        <Label Grid.Column="6" Text="Sat" FontSize="12" FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" TextColor="{StaticResource Gray500}" />
+                    </Grid>
+
+                    <!-- Calendar Grid (6 rows x 7 cols) -->
+                    <CollectionView ItemsSource="{Binding CalendarDays}"
+                                    ItemsLayout="VerticalGrid, 7"
+                                    SelectionMode="None"
+                                    HeightRequest="300">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CalendarDayItem">
+                                <Grid HeightRequest="46"
+                                      WidthRequest="46"
+                                      Margin="1">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CalendarViewModel}}, Path=SelectDayCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+
+                                    <!-- Today Border -->
+                                    <Border StrokeThickness="{Binding IsToday, Converter={StaticResource BoolToColorConverter}}"
+                                            Stroke="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 8"
+                                            IsVisible="{Binding IsToday}"
+                                            Margin="2" />
+
+                                    <!-- Day Content -->
+                                    <VerticalStackLayout VerticalOptions="Center"
+                                                         HorizontalOptions="Center"
+                                                         Spacing="2"
+                                                         IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}">
+                                        <Label Text="{Binding DayNumber}"
+                                               FontSize="14"
+                                               HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                        <!-- Status Dot -->
+                                        <BoxView WidthRequest="8"
+                                                 HeightRequest="8"
+                                                 CornerRadius="4"
+                                                 Color="{Binding StatusColor}"
+                                                 HorizontalOptions="Center"
+                                                 IsVisible="{Binding HasWorkout}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Legend -->
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="16">
+                        <HorizontalStackLayout Spacing="4">
+                            <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5"
+                                     Color="#4CAF50" VerticalOptions="Center" />
+                            <Label Text="Done" FontSize="11" TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="4">
+                            <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5"
+                                     Color="#2196F3" VerticalOptions="Center" />
+                            <Label Text="Scheduled" FontSize="11" TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="4">
+                            <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5"
+                                     Color="#F44336" VerticalOptions="Center" />
+                            <Label Text="Missed" FontSize="11" TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="4">
+                            <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5"
+                                     Color="#E0E0E0" VerticalOptions="Center" />
+                            <Label Text="Rest" FontSize="11" TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Selected Day Detail Card -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasSelectedDay}"
+                   BorderColor="{StaticResource Primary}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="{Binding SelectedDayTitle}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Frame Grid.Column="1"
+                               BackgroundColor="{Binding SelectedDayStatusColor}"
+                               Padding="10,4"
+                               CornerRadius="12"
+                               HasShadow="False">
+                            <Label Text="{Binding SelectedDayStatus}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource White}" />
+                        </Frame>
+                    </Grid>
+
+                    <Label Text="{Binding SelectedDayFocus}"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}"
+                           IsVisible="{Binding SelectedDayFocus, Converter={StaticResource IsNotEmptyConverter}}" />
+
+                    <Label Text="{Binding SelectedDayExerciseCount}"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}"
+                           IsVisible="{Binding SelectedDayExerciseCount, Converter={StaticResource IsNotEmptyConverter}}" />
+
+                    <Button Text="Start Workout"
+                            Command="{Binding StartWorkoutCommand}"
+                            IsVisible="{Binding CanStartWorkout}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,4,0,0" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

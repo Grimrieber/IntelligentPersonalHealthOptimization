@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.WellnessCheckIn"
+             x:Class="IntelligentPersonalHealthOptimization.Views.WellnessCheckIn.WellnessBehavioralPage"
+             x:DataType="vm:WellnessBehavioralViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16" Padding="0,8">
+
+                <Label Text="Your Patterns and Habits"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <Label Text="Check any that apply to you. It's okay if none apply — that's a great sign."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}"
+                       LineHeight="1.3" />
+
+                <!-- Eating Behaviors -->
+                <Label Text="Eating Behaviors" FontSize="17" FontAttributes="Bold" Margin="0,8,0,0"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <Frame Style="{StaticResource CardFrame}" Padding="12">
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding BingeEating}" />
+                            <Label Text="I sometimes eat large amounts of food and feel out of control" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding RestrictToControl}" />
+                            <Label Text="I restrict food intake to control my weight" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding GuiltAfterEating}" />
+                            <Label Text="I feel guilty or ashamed after eating" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding EarnFoodExercise}" />
+                            <Label Text="I 'earn' food through exercise" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding SkipMeals}" />
+                            <Label Text="I skip meals intentionally (not because I'm busy)" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding EatInSecret}" />
+                            <Label Text="I eat in secret or hide what I eat from others" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding RigidFoodRules}" />
+                            <Label Text="I have rigid, stressful rules about eating" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding UseLaxativesDietPills}" />
+                            <Label Text="I use laxatives, diet pills, or supplements to control weight" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Mindset & Body Image -->
+                <Label Text="Mindset and Body Image" FontSize="17" FontAttributes="Bold" Margin="0,8,0,0"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <Frame Style="{StaticResource CardFrame}" Padding="12">
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding LabelFoodsGoodBad}" />
+                            <Label Text="I label foods as 'good' or 'bad'" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding MoodAffectedByFood}" />
+                            <Label Text="My mood is strongly affected by what I eat or weigh" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding PreoccupiedWithFood}" />
+                            <Label Text="I frequently think about food or my body (multiple times per hour)" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding CompareBody}" />
+                            <Label Text="I compare my body to others regularly" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding AvoidSocialFood}" />
+                            <Label Text="I avoid social situations involving food" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding AnxiousWithoutTracking}" />
+                            <Label Text="I feel anxious if I can't track what I'm eating" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding WorthTiedToWeight}" />
+                            <Label Text="My self-worth is connected to my weight or appearance" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Physical Indicators -->
+                <Label Text="Physical Indicators" FontSize="17" FontAttributes="Bold" Margin="0,8,0,0"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <Frame Style="{StaticResource CardFrame}" Padding="12">
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding FrequentFatigue}" />
+                            <Label Text="Frequent fatigue, dizziness, or lightheadedness" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding RapidWeightChange}" />
+                            <Label Text="Rapid weight loss or gain (10+ lbs in a month)" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding HormonalIssues}" />
+                            <Label Text="Hormonal issues (missed periods, low energy, etc.)" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding DentalThroatIssues}" />
+                            <Label Text="Dental problems, frequent sore throats, or swollen glands" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding CompulsiveExercise}" />
+                            <Label Text="I exercise even when sick or injured because I feel I 'have to'" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding ColdOrHairLoss}" />
+                            <Label Text="I feel cold all the time or have noticed hair thinning" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding Fainting}" />
+                            <Label Text="I have fainted or nearly fainted" FontSize="14" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Diet Count -->
+                <Frame Style="{StaticResource CardFrame}" Padding="16">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="How many diets have you been on in the last 2 years?" FontSize="14" />
+                        <Picker ItemsSource="{Binding DietCountOptions}"
+                                SelectedIndex="{Binding DietCountIndex}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,12,0,0">
+            <Button Grid.Column="0" Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1" Text="See Results"
+                    Command="{Binding GoNextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

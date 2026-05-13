@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Onboarding"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Onboarding.GoalsPage"
+             x:DataType="vm:GoalsViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <Label Text="Your Goals"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                <Label Text="Define your fitness goals so we can create a program that helps you achieve them."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+
+                <!-- Primary Fitness Goal -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Primary Fitness Goal" FontSize="16" FontAttributes="Bold" />
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                Padding="12,4">
+                            <Picker Title="Select Goal"
+                                    ItemsSource="{Binding FitnessGoalOptions}"
+                                    SelectedItem="{Binding SelectedPrimaryGoal}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Activity Level -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Current Activity Level" FontSize="16" FontAttributes="Bold" />
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                Padding="12,4">
+                            <Picker Title="Select Activity Level"
+                                    ItemsSource="{Binding ActivityLevelOptions}"
+                                    SelectedItem="{Binding SelectedActivityLevel}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Suggested Goal Templates -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding HasTemplateSuggestions}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Suggested Goals"
+                               FontSize="16"
+                               FontAttributes="Bold" />
+                        <Label Text="Tap to add a suggested goal based on your fitness goal. You can edit it after adding."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+
+                        <FlexLayout Wrap="Wrap"
+                                    Direction="Row"
+                                    JustifyContent="Start"
+                                    AlignItems="Center"
+                                    BindableLayout.ItemsSource="{Binding SuggestedTemplates}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:GoalTemplateSuggestion">
+                                    <Border StrokeShape="RoundRectangle 16"
+                                            Stroke="{StaticResource Primary}"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                            Padding="12,8"
+                                            Margin="4">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=ApplyTemplateCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="+"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                            <Label Text="{Binding DisplayText}"
+                                                   FontSize="13"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Specific Goals -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Specific Goals"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   Grid.Column="0" />
+                            <Label Text="(max 3)"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center"
+                                   Grid.Column="1" />
+                        </Grid>
+
+                        <Label Text="Add specific, measurable goals to track your progress."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+
+                        <!-- Goals Collection -->
+                        <VerticalStackLayout Spacing="12"
+                                             BindableLayout.ItemsSource="{Binding Goals}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:GoalEntryItem">
+                                    <Border StrokeShape="RoundRectangle 8"
+                                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                            Padding="12"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+                                        <VerticalStackLayout Spacing="8">
+
+                                            <!-- Remove button -->
+                                            <Label Text="Remove"
+                                                   FontSize="12"
+                                                   TextColor="Red"
+                                                   HorizontalOptions="End">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=RemoveGoalCommand}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
+
+                                            <!-- Category -->
+                                            <Picker Title="Category"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=GoalCategoryOptions}"
+                                                    SelectedItem="{Binding SelectedCategory}" />
+
+                                            <!-- Title -->
+                                            <Entry Text="{Binding Title}"
+                                                   Placeholder="Goal title (e.g., Lose 5kg)"
+                                                   ReturnType="Next" />
+
+                                            <!-- Target Value + Unit -->
+                                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                                <Entry Text="{Binding TargetValueText}"
+                                                       Placeholder="Target value"
+                                                       Keyboard="Numeric"
+                                                       Grid.Column="0" />
+                                                <Entry Text="{Binding TargetUnit}"
+                                                       Placeholder="Unit (kg, min, etc.)"
+                                                       Grid.Column="1" />
+                                            </Grid>
+
+                                            <!-- Timeframe -->
+                                            <Picker Title="Timeframe"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=GoalTimeframeOptions}"
+                                                    SelectedItem="{Binding SelectedTimeframe}" />
+
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <Button Text="+ Add Goal"
+                                Command="{Binding AddGoalCommand}"
+                                IsVisible="{Binding CanAddGoal}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="14"
+                                HeightRequest="40" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
+            <Button Text="Back"
+                    Command="{Binding PreviousCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Grid.Column="0" />
+            <Button Text="Next"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

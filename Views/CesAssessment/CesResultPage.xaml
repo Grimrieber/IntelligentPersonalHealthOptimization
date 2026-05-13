@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.CesAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.CesAssessment.CesResultPage"
+             x:DataType="vm:CesResultViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Your Results">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Progress -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,16,24,8" Spacing="4">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,8" Spacing="16">
+
+                <Label Text="Your Results"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <!-- Score Banner -->
+                <Frame Style="{StaticResource CardFrame}"
+                       BackgroundColor="{StaticResource Primary}"
+                       Padding="24">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Movement Quality Score"
+                               FontSize="14"
+                               TextColor="{StaticResource White}"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding MovementScore}"
+                               FontSize="48"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource White}"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding ScoreDescription}"
+                               FontSize="15"
+                               TextColor="{StaticResource White}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               LineHeight="1.3" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Risk Level -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Risk Level:"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource Gray900}" />
+                        <Label Text="{Binding RiskLevelText}"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               TextColor="{Binding RiskColor}" />
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <!-- Syndromes -->
+                <Label Text="Identified Patterns"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <CollectionView ItemsSource="{Binding Syndromes}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SyndromeDisplayItem">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,0,0,8">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray900}" />
+
+                                    <Label Text="{Binding Description}"
+                                           FontSize="14"
+                                           LineHeight="1.3"
+                                           TextColor="{StaticResource Gray600}" />
+
+                                    <Label Text="{Binding DailyImpact}"
+                                           FontSize="13"
+                                           LineHeight="1.3"
+                                           TextColor="{StaticResource Gray500}"
+                                           IsVisible="{Binding HasDailyImpact}" />
+
+                                    <VerticalStackLayout Spacing="4" IsVisible="{Binding HasMuscleInfo}">
+                                        <Label FontSize="13" TextColor="#F44336">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Overactive: " FontAttributes="Bold" />
+                                                    <Span Text="{Binding OveractiveMuscles}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label FontSize="13" TextColor="#4CAF50">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Underactive: " FontAttributes="Bold" />
+                                                    <Span Text="{Binding UnderactiveMuscles}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Referral Card -->
+                <Frame Style="{StaticResource CardFrame}"
+                       BorderColor="#F44336"
+                       IsVisible="{Binding ShowReferral}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Professional Evaluation Recommended"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#D32F2F" />
+                        <Label Text="Based on your assessment results, we recommend consulting a physical therapist or qualified movement specialist before beginning a corrective exercise program. They can perform a hands-on evaluation and rule out any underlying conditions."
+                               FontSize="14"
+                               LineHeight="1.3"
+                               TextColor="{StaticResource Gray600}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Save &amp; Generate Program"
+                    Command="{Binding CompleteCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

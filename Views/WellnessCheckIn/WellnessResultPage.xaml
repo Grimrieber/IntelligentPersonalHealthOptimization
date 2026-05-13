@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.WellnessCheckIn"
+             x:Class="IntelligentPersonalHealthOptimization.Views.WellnessCheckIn.WellnessResultPage"
+             x:DataType="vm:WellnessResultViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16" Padding="0,8">
+
+                <!-- Result Heading -->
+                <Frame Padding="20" CornerRadius="12" HasShadow="False"
+                       BackgroundColor="{StaticResource Primary}">
+                    <Label Text="{Binding ResultHeading}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center" />
+                </Frame>
+
+                <!-- Result Message -->
+                <Frame Style="{StaticResource CardFrame}" Padding="16">
+                    <Label Text="{Binding ResultMessage}"
+                           FontSize="15"
+                           LineHeight="1.5"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                </Frame>
+
+                <!-- Modified Note -->
+                <Frame Style="{StaticResource CardFrame}" Padding="16"
+                       IsVisible="{Binding ShowModifiedNote}"
+                       BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#E65100}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="What this means for your experience" FontSize="15" FontAttributes="Bold" />
+                        <Label Text="{Binding FeaturesNote}" FontSize="14" LineHeight="1.4"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Referral Resources -->
+                <VerticalStackLayout Spacing="12" IsVisible="{Binding ShowReferralResources}">
+                    <Label Text="Support Resources" FontSize="18" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                    <Frame Style="{StaticResource CardFrame}" Padding="16">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="We recommend connecting with:" FontSize="14" FontAttributes="Bold" />
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="A registered dietitian (RD) specializing in eating behaviors" FontSize="14" />
+                                <Label Text="Your primary care physician" FontSize="14" />
+                                <Label Text="A therapist or counselor specializing in body image" FontSize="14" />
+                            </VerticalStackLayout>
+
+                            <BoxView HeightRequest="1" Color="{StaticResource Gray200}" />
+
+                            <Button Text="Find a Specialist"
+                                    Command="{Binding FindTherapistCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="14" />
+
+                            <Button Text="NEDA - National Eating Disorders Association"
+                                    Command="{Binding OpenNedaCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="14" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <!-- Crisis Resources -->
+                <VerticalStackLayout Spacing="12" IsVisible="{Binding ShowCrisisResources}">
+                    <Frame Padding="16" CornerRadius="12" HasShadow="False"
+                           BackgroundColor="{AppThemeBinding Light=#FFEBEE, Dark=#B71C1C}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="If you need immediate support" FontSize="16" FontAttributes="Bold" />
+
+                            <Button Text="Call NEDA Helpline: 1-800-931-2237"
+                                    Command="{Binding CallNedaCommand}"
+                                    BackgroundColor="#D32F2F"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    CornerRadius="8" />
+
+                            <Label Text="Text 'NEDA' to 741741 for Crisis Text Line" FontSize="14" />
+
+                            <Button Text="Call 988 Suicide &amp; Crisis Lifeline"
+                                    Command="{Binding CallCrisisLineCommand}"
+                                    BackgroundColor="#D32F2F"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    CornerRadius="8" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,12,0,0">
+            <Button Grid.Column="0" Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1" Text="Complete"
+                    Command="{Binding CompleteCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

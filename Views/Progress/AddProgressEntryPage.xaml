@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Progress.AddProgressEntryPage"
+             x:DataType="vm:AddProgressEntryViewModel"
+             Title="Log Progress">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label Text="Log Progress" FontSize="28" FontAttributes="Bold" />
+
+            <!-- Weight -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Body Weight" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Enter in kg or lb — both fields stay in sync."
+                           FontSize="12" TextColor="{StaticResource Gray500}" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4" Grid.Column="0">
+                            <Label Text="kg" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="0.0"
+                                   Text="{Binding WeightKg}"
+                                   Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="4" Grid.Column="1">
+                            <Label Text="lb" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <Entry Placeholder="0.0"
+                                   Text="{Binding WeightLb}"
+                                   Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Label Text="This will update your profile weight and recalculate nutrition targets."
+                           FontSize="11" TextColor="{StaticResource Gray400}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Body Measurements -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Body Measurements (cm)" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Optional - enter any measurements you want to track"
+                           FontSize="12" TextColor="{StaticResource Gray500}" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowSpacing="8"
+                          RowDefinitions="Auto,Auto,Auto,Auto">
+                        <Entry Placeholder="Chest" Text="{Binding ChestCm}" Keyboard="Numeric"
+                               Grid.Row="0" Grid.Column="0" />
+                        <Entry Placeholder="Waist" Text="{Binding WaistCm}" Keyboard="Numeric"
+                               Grid.Row="0" Grid.Column="1" />
+                        <Entry Placeholder="Hips" Text="{Binding HipsCm}" Keyboard="Numeric"
+                               Grid.Row="1" Grid.Column="0" />
+                        <Entry Placeholder="Left Arm" Text="{Binding LeftArmCm}" Keyboard="Numeric"
+                               Grid.Row="1" Grid.Column="1" />
+                        <Entry Placeholder="Right Arm" Text="{Binding RightArmCm}" Keyboard="Numeric"
+                               Grid.Row="2" Grid.Column="0" />
+                        <Entry Placeholder="Left Thigh" Text="{Binding LeftThighCm}" Keyboard="Numeric"
+                               Grid.Row="2" Grid.Column="1" />
+                        <Entry Placeholder="Right Thigh" Text="{Binding RightThighCm}" Keyboard="Numeric"
+                               Grid.Row="3" Grid.Column="0" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" FontSize="14"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotEmptyConverter}}" />
+
+            <Button Text="Save Progress"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,8,0,24" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.FoodLogPage"
+             x:DataType="vm:FoodLogViewModel"
+             Title="Food Log">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Date Navigation -->
+            <Frame Style="{StaticResource CardFrame}">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Button Grid.Column="0"
+                            Text="&lt;"
+                            Command="{Binding PreviousDayCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Primary}"
+                            FontSize="24"
+                            FontAttributes="Bold"
+                            WidthRequest="50" />
+                    <Label Grid.Column="1"
+                           Text="{Binding DateDisplayText}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Button Grid.Column="2"
+                            Text="&gt;"
+                            Command="{Binding NextDayCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Primary}"
+                            FontSize="24"
+                            FontAttributes="Bold"
+                            WidthRequest="50" />
+                </Grid>
+            </Frame>
+
+            <!-- Nutrition Progress -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasNutritionTargets}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nutrition Progress"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                    <!-- Calorie Row -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <HorizontalStackLayout Spacing="4">
+                            <Label Text="{Binding ConsumedCaloriesText}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Label Text="/"
+                                   FontSize="16"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,3"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding TargetCaloriesText}"
+                                   FontSize="16"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,3"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="kcal"
+                                   FontSize="14"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,3"
+                                   TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                        <!-- Remaining: green when under target -->
+                        <Label Grid.Column="1"
+                               Text="{Binding RemainingCaloriesText}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               TextColor="#4CAF50"
+                               IsVisible="{Binding IsCaloriesOver, Converter={StaticResource InverseBool}}" />
+                        <!-- Remaining: red when over target -->
+                        <Label Grid.Column="1"
+                               Text="{Binding RemainingCaloriesText}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               TextColor="#F44336"
+                               IsVisible="{Binding IsCaloriesOver}" />
+                    </Grid>
+
+                    <!-- Separator -->
+                    <BoxView HeightRequest="1"
+                             Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}" />
+
+                    <!-- Macro Row -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <!-- Protein -->
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="{Binding ProteinProgress}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="#2196F3" />
+                            <Label Text="Protein"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <!-- Carbs -->
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="{Binding CarbsProgress}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="#FF9800" />
+                            <Label Text="Carbs"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <!-- Fat -->
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                            <Label Text="{Binding FatProgress}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="#F44336" />
+                            <Label Text="Fat"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- No Meals State -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasEntries, Converter={StaticResource InverseBool}}">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center" Padding="0,12">
+                    <Label Text="No meals for today"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Label Text="Add a meal or log your planned meals to track your nutrition."
+                           FontSize="13"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalTextAlignment="Center"
+                           Margin="20,0" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Meal Groups (only active meal types) -->
+            <VerticalStackLayout Spacing="8"
+                                 BindableLayout.ItemsSource="{Binding MealGroups}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FoodLogMealGroup">
+                        <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                            <VerticalStackLayout Spacing="8">
+
+                                <!-- Meal Type Header -->
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <Label Text="{Binding MealTypeName}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding TotalCalories}"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Primary}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding HasItems}" />
+                                </Grid>
+
+                                <!-- Planned Meal Section (visible when plan exists and nothing logged yet) -->
+                                <VerticalStackLayout IsVisible="{Binding ShowPlannedMeal}" Spacing="6">
+                                    <BoxView HeightRequest="1"
+                                             Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}" />
+
+                                    <!-- Planned meal header -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding PlannedMealName, StringFormat='Planned: {0}'}"
+                                               FontSize="13"
+                                               FontAttributes="Italic"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding PlannedCalories}"
+                                               FontSize="13"
+                                               TextColor="{StaticResource Gray500}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Planned ingredients list -->
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding PlannedItems}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:FoodLogPlannedItem">
+                                                <Grid Padding="8,2,0,2" ColumnDefinitions="*,Auto,Auto">
+                                                    <Label Text="{Binding FoodName}"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource Gray500}"
+                                                           LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding ServingSize}"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource Gray300}"
+                                                           Margin="8,0" />
+                                                    <Label Grid.Column="2"
+                                                           Text="{Binding Calories}"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource Gray500}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+
+                                    <!-- Log This Meal button -->
+                                    <Button Text="Log This Meal"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FoodLogViewModel}}, Path=LogPlannedMealCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Style="{StaticResource SecondaryButton}"
+                                            FontSize="13"
+                                            HeightRequest="38"
+                                            Margin="0,4,0,0" />
+                                </VerticalStackLayout>
+
+                                <!-- Logged Food Entries -->
+                                <VerticalStackLayout IsVisible="{Binding HasItems}"
+                                                     BindableLayout.ItemsSource="{Binding Items}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:FoodLogEntryDisplayItem">
+                                            <SwipeView>
+                                                <SwipeView.RightItems>
+                                                    <SwipeItems>
+                                                        <SwipeItem Text="Delete"
+                                                                   BackgroundColor="#F44336"
+                                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FoodLogViewModel}}, Path=DeleteEntryCommand}"
+                                                                   CommandParameter="{Binding .}" />
+                                                    </SwipeItems>
+                                                </SwipeView.RightItems>
+                                                <Grid Padding="0,6" ColumnDefinitions="*,Auto">
+                                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                                        <Label Text="{Binding FoodName}"
+                                                               FontSize="14"
+                                                               FontAttributes="Bold"
+                                                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                                        <HorizontalStackLayout Spacing="8">
+                                                            <Label Text="{Binding ServingSize}"
+                                                                   FontSize="12"
+                                                                   TextColor="{StaticResource Gray500}" />
+                                                            <Label Text="|"
+                                                                   FontSize="12"
+                                                                   TextColor="{StaticResource Gray300}" />
+                                                            <Label Text="{Binding ProteinG, StringFormat='P: {0}'}"
+                                                                   FontSize="12"
+                                                                   TextColor="#2196F3" />
+                                                            <Label Text="{Binding CarbsG, StringFormat='C: {0}'}"
+                                                                   FontSize="12"
+                                                                   TextColor="#FF9800" />
+                                                            <Label Text="{Binding FatG, StringFormat='F: {0}'}"
+                                                                   FontSize="12"
+                                                                   TextColor="#F44336" />
+                                                        </HorizontalStackLayout>
+                                                    </VerticalStackLayout>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Calories}"
+                                                           FontSize="14"
+                                                           FontAttributes="Bold"
+                                                           VerticalOptions="Center"
+                                                           TextColor="{StaticResource Primary}" />
+                                                </Grid>
+                                            </SwipeView>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- Add Meal Button -->
+            <Button Text="+ Add Meal"
+                    Command="{Binding AddMealTypeCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"
+                    Margin="0,4" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

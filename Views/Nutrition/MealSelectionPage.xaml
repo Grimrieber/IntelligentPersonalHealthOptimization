@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.MealSelectionPage"
+             x:DataType="vm:MealSelectionViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Padding="16">
+
+        <!-- Header -->
+        <Label Grid.Row="0"
+               Text="{Binding MealTypeLabel, StringFormat='Choose {0}'}"
+               FontSize="22"
+               FontAttributes="Bold"
+               Margin="4,0,0,4"
+               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+        <Label Grid.Row="1"
+               Text="{Binding TargetCaloriesLabel}"
+               FontSize="13"
+               TextColor="{StaticResource Gray500}"
+               Margin="4,0,0,8" />
+
+        <!-- Search Bar -->
+        <SearchBar Grid.Row="2"
+                   Placeholder="Search recipes..."
+                   Text="{Binding SearchText}"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                   PlaceholderColor="{StaticResource Gray500}"
+                   Margin="0,0,0,8" />
+
+        <!-- Recipe List -->
+        <CollectionView Grid.Row="3"
+                        ItemsSource="{Binding FilteredMeals}"
+                        SelectionMode="None">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="20">
+                    <Label Text="No recipes found"
+                           FontSize="16"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Text="Generate a meal plan first to build your recipe library"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray300}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:MealOptionItem">
+                    <Frame Style="{StaticResource CardFrame}" Margin="0,4" Padding="12">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealSelectionViewModel}}, Path=SelectMealCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                        <VerticalStackLayout Spacing="2">
+                            <!-- Recipe name + total calories -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Label Text="{Binding Name}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                <Label Grid.Column="1"
+                                       Text="{Binding EstimatedCalories}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <!-- Category -->
+                            <Label Text="{Binding Category}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}" />
+                            <!-- Servings note -->
+                            <Label Text="{Binding ServingsNote}"
+                                   FontSize="12"
+                                   FontAttributes="Italic"
+                                   TextColor="{StaticResource Primary}" />
+                            <!-- Macros -->
+                            <Label Text="{Binding MacroSummary}"
+                                   FontSize="11"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="3"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+</ContentPage>

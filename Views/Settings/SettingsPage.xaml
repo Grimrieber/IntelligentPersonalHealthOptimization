@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Settings.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Settings" FontSize="28" FontAttributes="Bold" />
+
+            <!-- Profile -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Profile" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding UserName}" FontSize="16" />
+                    <Label Text="{Binding UserDetails}" FontSize="13" TextColor="{StaticResource Gray500}" />
+
+                    <Button Text="Edit Profile"
+                            Command="{Binding ToggleEditProfileCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="14" HeightRequest="40"
+                            IsVisible="{Binding IsEditingProfile, Converter={StaticResource InverseBool}}" />
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding IsEditingProfile}">
+                        <!-- Weight -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Weight" FontSize="14" FontAttributes="Bold" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
+                                <Label Text="{Binding EditWeightKg, StringFormat='{0:F1} kg'}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Grid.Column="0"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="{Binding EditWeightLbDisplay}"
+                                       FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Grid.Column="1"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                            </Grid>
+                            <Slider Minimum="30" Maximum="200"
+                                    Value="{Binding EditWeightKg}"
+                                    ThumbColor="{StaticResource Primary}"
+                                    MinimumTrackColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Text="30 kg / 66 lb" FontSize="10" TextColor="{StaticResource Gray400}" />
+                                <Label Text="200 kg / 440 lb" FontSize="10" TextColor="{StaticResource Gray400}" HorizontalOptions="End" Grid.Column="1" />
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <!-- Height -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Height" FontSize="14" FontAttributes="Bold" />
+                            <Label Text="{Binding EditHeightDisplay}"
+                                   FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                            <Slider Minimum="100" Maximum="220"
+                                    Value="{Binding EditHeightCm}"
+                                    ThumbColor="{StaticResource Primary}"
+                                    MinimumTrackColor="{StaticResource Primary}" />
+                        </VerticalStackLayout>
+
+                        <!-- Activity Level -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Activity Level" FontSize="14" FontAttributes="Bold" />
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                    Padding="12,4">
+                                <Picker Title="Select Activity Level"
+                                        ItemsSource="{Binding ActivityLevelOptions}"
+                                        SelectedItem="{Binding EditActivityLevel}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <Label Text="{Binding ProfileMessage}" FontSize="13"
+                               TextColor="{StaticResource Primary}"
+                               IsVisible="{Binding ProfileMessage, Converter={StaticResource IsNotEmptyConverter}}" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Text="Save" Command="{Binding SaveProfileCommand}"
+                                    Style="{StaticResource PrimaryButton}" Grid.Column="0" />
+                            <Button Text="Cancel" Command="{Binding ToggleEditProfileCommand}"
+                                    Style="{StaticResource SecondaryButton}" Grid.Column="1" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Notifications -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Notifications" FontSize="18" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Workout Reminders" FontSize="14" VerticalOptions="Center" />
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding NotificationsEnabled}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+                    <Label Text="Get reminded before scheduled workouts"
+                           FontSize="12"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Nutrition -->
+            <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasNutritionProfile}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nutrition" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding NutritionSummary}" FontSize="13" TextColor="{StaticResource Gray500}" />
+                    <Button Text="Regenerate Meal Plan"
+                            Command="{Binding RegenerateMealPlanCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="14"
+                            HeightRequest="40" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Training -->
+            <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasTrainingProfile}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Training" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding TrainingSummary}" FontSize="13" TextColor="{StaticResource Gray500}" />
+                    <Button Text="View Calendar"
+                            Command="{Binding ViewCalendarCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="14"
+                            HeightRequest="40" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Goals -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Goals" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="View and manage your fitness goals"
+                           FontSize="13" TextColor="{StaticResource Gray500}" />
+                    <Button Text="Manage Goals"
+                            Command="{Binding ViewGoalsCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="14"
+                            HeightRequest="40" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Security -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Security" FontSize="18" FontAttributes="Bold" />
+
+                    <Button Text="Change PIN"
+                            Command="{Binding ToggleChangePinCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            IsVisible="{Binding IsChangingPin, Converter={StaticResource InverseBool}}" />
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsChangingPin}">
+                        <Entry Placeholder="Current PIN" Text="{Binding CurrentPin}"
+                               IsPassword="True" Keyboard="Numeric" MaxLength="6" />
+                        <Entry Placeholder="New PIN" Text="{Binding NewPin}"
+                               IsPassword="True" Keyboard="Numeric" MaxLength="6" />
+                        <Entry Placeholder="Confirm New PIN" Text="{Binding ConfirmNewPin}"
+                               IsPassword="True" Keyboard="Numeric" MaxLength="6" />
+                        <Label Text="{Binding PinMessage}" FontSize="13"
+                               IsVisible="{Binding PinMessage, Converter={StaticResource IsNotEmptyConverter}}" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Text="Save" Command="{Binding ChangePinCommand}"
+                                    Style="{StaticResource PrimaryButton}" Grid.Column="0" />
+                            <Button Text="Cancel" Command="{Binding ToggleChangePinCommand}"
+                                    Style="{StaticResource SecondaryButton}" Grid.Column="1" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- About -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="About" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Health Optimizer v2.0" FontSize="14" TextColor="{StaticResource Gray500}" />
+                    <Label Text="Your comprehensive personal health optimization app."
+                           FontSize="12" TextColor="{StaticResource Gray400}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Error Log -->
+            <Frame Style="{StaticResource CardFrame}" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Error Log" FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Label Text="View, share, or clear the app error log for troubleshooting."
+                           FontSize="13" TextColor="{StaticResource Gray500}" />
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Text="View Log"
+                                Command="{Binding ViewCrashLogCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="13" HeightRequest="36" />
+                        <Button Text="Share"
+                                Command="{Binding ShareCrashLogCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="13" HeightRequest="36" />
+                        <Button Text="Clear"
+                                Command="{Binding ClearCrashLogCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="13" HeightRequest="36" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Actions -->
+            <Button Text="Log Out"
+                    Command="{Binding LogoutCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+
+            <Button Text="Clear All Data"
+                    Command="{Binding ClearAllDataCommand}"
+                    BackgroundColor="#DC3545"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    FontSize="16"
+                    Margin="0,16,0,24" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,8 @@
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.Views")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.Views.Assessment")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.Views.Workout")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.Views.Progress")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.Views.Settings")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.ViewModels")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "IntelligentPersonalHealthOptimization.Converters")]

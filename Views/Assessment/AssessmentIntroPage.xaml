@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Assessment.AssessmentIntroPage"
+             x:DataType="vm:AssessmentViewModel"
+             Title="Movement Assessment">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+
+            <Label Text="Movement Assessment"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="What to Expect" FontSize="20" FontAttributes="Bold" />
+                    <Label Text="This assessment evaluates your movement quality to create a personalized exercise program. You'll perform two tests:"
+                           FontSize="14" />
+
+                    <Label Text="1. Overhead Squat Assessment" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="Identifies movement compensations in your squat pattern, revealing tight or weak muscle groups."
+                           FontSize="14" TextColor="{StaticResource Gray500}" />
+
+                    <Label Text="2. Single-Leg Balance Test" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="Evaluates hip stability and balance on each leg, detecting asymmetries and weaknesses."
+                           FontSize="14" TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="How to Prepare" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="&#8226; Wear comfortable, form-fitting clothing" FontSize="14" />
+                    <Label Text="&#8226; Remove shoes for better foot observation" FontSize="14" />
+                    <Label Text="&#8226; Have a mirror or camera to observe yourself" FontSize="14" />
+                    <Label Text="&#8226; Clear a space of about 6 feet around you" FontSize="14" />
+                    <Label Text="&#8226; Perform a brief 2-3 minute warmup walk" FontSize="14" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardFrame}" BackgroundColor="{AppThemeBinding Light=#FFF3CD, Dark=#332B00}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Important" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="Stop immediately if you experience sharp pain. Mark 'Pain During Movement' for any test that causes discomfort. This is not a physical test of endurance - perform each movement at a comfortable pace."
+                           FontSize="13" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Begin Assessment"
+                    Command="{Binding StartSessionCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,8,0,24" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

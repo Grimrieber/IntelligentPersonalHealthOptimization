@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.NutritionAssessment"
+             xmlns:models="clr-namespace:IntelligentPersonalHealthOptimization.Models"
+             x:Class="IntelligentPersonalHealthOptimization.Views.NutritionAssessment.NutriGoalsPage"
+             x:DataType="vm:NutriGoalsViewModel"
+             Title="{Binding StepTitle}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
+
+        <!-- Progress bar -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="0,8">
+
+                <Label Text="Nutrition Goals"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                <Label Text="Define your primary nutrition goal, focus areas, and timeline. This shapes your personalized plan."
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}" />
+
+                <!-- Primary Goal -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Primary Goal" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="What is the main outcome you want from improving your nutrition?"
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                Padding="12,4">
+                            <Picker Title="Select your primary goal"
+                                    ItemsSource="{Binding PrimaryGoalOptions}"
+                                    SelectedItem="{Binding SelectedPrimaryGoal}"
+                                    ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Target Weight -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Target Weight" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Slide to set your target weight."
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
+                            <VerticalStackLayout Spacing="2" Grid.Column="0" HorizontalOptions="Center">
+                                <Label Text="{Binding TargetWeightKgDisplay}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="kg" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Spacing="2" Grid.Column="1" HorizontalOptions="Center">
+                                <Label Text="{Binding TargetWeightLbDisplay}"
+                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Label Text="lb" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Slider x:Name="WeightSlider"
+                                Minimum="30"
+                                Maximum="200"
+                                ValueChanged="OnWeightSliderValueChanged"
+                                ThumbColor="{StaticResource Primary}"
+                                MinimumTrackColor="{StaticResource Primary}"
+                                MaximumTrackColor="{StaticResource Gray300}" />
+                        <Grid ColumnDefinitions="*,*">
+                            <Label Text="30 kg / 66 lb"
+                                   FontSize="11" TextColor="{StaticResource Gray500}" Grid.Column="0" />
+                            <Label Text="200 kg / 440 lb"
+                                   FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="End" Grid.Column="1" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Safety Warning -->
+                <Frame Style="{StaticResource CardFrame}"
+                       BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3E2723}"
+                       BorderColor="#FF9800"
+                       IsVisible="{Binding ShowSafetyWarning}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="&#x26A0; Unsafe Rate of Change"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}" />
+                        <Label Text="{Binding SafetyWarningText}"
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light=#BF360C, Dark=#FFCC80}"
+                               LineBreakMode="WordWrap" />
+                        <Label Text="{Binding SuggestedTimelineText}"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Planned Exercise -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Planned Exercise" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="How often and how long do you plan to work out? This affects your calorie needs."
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+
+                        <!-- Workouts per week -->
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                            <Label Text="Workouts per week" FontSize="14" VerticalOptions="Center" Grid.Column="0" />
+                            <HorizontalStackLayout Spacing="8" Grid.Column="1">
+                                <Button Text="−" Command="{Binding DecrementWorkoutsCommand}"
+                                        WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                                        FontSize="18" Padding="0"
+                                        Style="{StaticResource SecondaryButton}" />
+                                <Label Text="{Binding WorkoutsPerWeek}" FontSize="18" FontAttributes="Bold"
+                                       WidthRequest="40" HorizontalTextAlignment="Center" VerticalOptions="Center" />
+                                <Button Text="+" Command="{Binding IncrementWorkoutsCommand}"
+                                        WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                                        FontSize="18" Padding="0"
+                                        Style="{StaticResource SecondaryButton}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+
+                        <!-- Average duration -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Avg. duration (minutes)" FontSize="14" VerticalOptions="Center" Grid.Column="0" />
+                            <HorizontalStackLayout Spacing="8" Grid.Column="1">
+                                <Button Text="−" Command="{Binding DecrementDurationCommand}"
+                                        WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                                        FontSize="18" Padding="0"
+                                        Style="{StaticResource SecondaryButton}" />
+                                <Label Text="{Binding AvgWorkoutMinutes}" FontSize="18" FontAttributes="Bold"
+                                       WidthRequest="40" HorizontalTextAlignment="Center" VerticalOptions="Center" />
+                                <Button Text="+" Command="{Binding IncrementDurationCommand}"
+                                        WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                                        FontSize="18" Padding="0"
+                                        Style="{StaticResource SecondaryButton}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+
+                        <Label Text="{Binding WorkoutSummary}" FontSize="13"
+                               TextColor="{StaticResource Gray500}" HorizontalOptions="Center" Margin="0,4,0,0" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Focus Areas -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Focus Areas" FontSize="16" FontAttributes="Bold" Grid.Column="0" />
+                            <Label Text="{Binding FocusAreaCountDisplay}" FontSize="13"
+                                   TextColor="{StaticResource Gray500}" VerticalOptions="Center" Grid.Column="1" />
+                        </Grid>
+                        <Label Text="Select up to 5 areas you want to focus on."
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+
+                        <VerticalStackLayout Spacing="4"
+                                             BindableLayout.ItemsSource="{Binding FocusAreaItems}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:CheckableItemBase">
+                                    <Border StrokeShape="RoundRectangle 8"
+                                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                            Padding="12,8" Margin="0,2">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                            <CheckBox IsChecked="{Binding IsChecked}" VerticalOptions="Start" Grid.Column="0" />
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                                <Label Text="{Binding DisplayName}" FontSize="14" FontAttributes="Bold" />
+                                                <Label Text="{Binding Description}" FontSize="12" TextColor="{StaticResource Gray500}" LineBreakMode="WordWrap" />
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Timeline -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Goal Timeline" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="How long do you want to commit to this nutrition plan?"
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                Padding="12,4">
+                            <Picker Title="Select timeline"
+                                    ItemsSource="{Binding TimelineOptions}"
+                                    SelectedItem="{Binding SelectedTimeline}"
+                                    ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
+            <Button Text="Back"
+                    Command="{Binding PreviousCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Grid.Column="0" />
+            <Button Text="Next"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

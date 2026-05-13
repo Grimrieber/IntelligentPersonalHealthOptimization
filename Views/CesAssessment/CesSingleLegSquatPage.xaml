@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.CesAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.CesAssessment.CesSingleLegSquatPage"
+             x:DataType="vm:CesSingleLegSquatViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Single-Leg Squat">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Progress -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,16,24,8" Spacing="4">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,8" Spacing="16">
+
+                <Label Text="Single-Leg Squat Assessment"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <Frame Style="{StaticResource CardFrame}" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="How to perform:" FontSize="14" FontAttributes="Bold" />
+                        <Label FontSize="13" LineHeight="1.4" TextColor="{StaticResource Gray600}">
+                            <Label.Text>1. Stand on your LEFT leg. Lift your right foot slightly off the ground behind you.
+
+2. Slowly bend your left knee and squat down as far as comfortable — like a mini squat on one leg. You can hold your arms out for balance.
+
+3. Stand back up. Repeat 5 times on the LEFT leg.
+
+4. Have someone watch from the FRONT. Does your knee cave inward? Does your opposite hip drop? Do you lean to one side?
+
+5. Switch to the RIGHT leg and repeat 5 times. Rate each side below.</Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- LEFT SIDE -->
+                <Label Text="LEFT SIDE" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="2">
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Knee valgus" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding LeftKneeValgus}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Hip drop" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding LeftHipDrop}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Trunk lean" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding LeftTrunkLean}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Foot pronation" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding LeftFootPronation}" VerticalOptions="Center" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- RIGHT SIDE -->
+                <Label Text="RIGHT SIDE" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="2">
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Knee valgus" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding RightKneeValgus}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Hip drop" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding RightHipDrop}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Trunk lean" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding RightTrunkLean}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Foot pronation" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding MovementSeverityOptions}" SelectedIndex="{Binding RightFootPronation}" VerticalOptions="Center" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Next"
+                    Command="{Binding GoNextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

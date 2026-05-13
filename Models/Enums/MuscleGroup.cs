@@ -1,0 +1,45 @@
+namespace IntelligentPersonalHealthOptimization.Models.Enums;
+
+public enum MuscleGroup
+{
+    Quadriceps,
+    Hamstrings,
+    Glutes,
+    Calves,
+    HipFlexors,
+    Chest,
+    UpperBack,
+    Lats,
+    Shoulders,
+    Biceps,
+    Triceps,
+    Core,
+    Obliques,
+    LowerBack,
+    Adductors,
+    Abductors,
+    RotatorCuff,
+    Forearms,
+    TibialisAnterior,
+    Peroneals,
+
+    // CES additions
+    TibialPosterior,
+    DeepCervicalFlexors,
+    SerratusAnterior,
+    Rhomboids,
+    LowerTrapezius,
+    MiddleTrapezius,
+    UpperTrapezius,
+    LevatorScapulae,
+    Suboccipitals,
+    SCM,
+    PectoralisMinor,
+    Piriformis,
+    TFL,
+    ITBand,
+    Multifidus,
+    TransverseAbdominis,
+    IntrinsicFoot,
+    ErectorSpinae
+}

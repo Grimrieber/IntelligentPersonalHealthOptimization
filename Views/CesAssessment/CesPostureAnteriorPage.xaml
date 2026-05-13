@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.CesAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.CesAssessment.CesPostureAnteriorPage"
+             x:DataType="vm:CesPostureAnteriorViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Posture — Front View">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Progress -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,16,24,8" Spacing="4">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,8" Spacing="16">
+
+                <Label Text="Stand Naturally — Front View"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <Frame Style="{StaticResource CardFrame}" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="How to perform:" FontSize="14" FontAttributes="Bold" />
+                        <Label FontSize="13" LineHeight="1.4" TextColor="{StaticResource Gray600}">
+                            <Label.Text>1. Stand naturally in front of a full-length mirror or have someone observe you from the front.
+
+2. Feet should be hip-width apart, arms relaxed at your sides.
+
+3. Stand the way you normally would waiting in a grocery line — do NOT try to "stand up straight."
+
+4. Look at your feet, knees, hips, shoulders, and head. Rate each area below.</Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Label Text="Rate what you observe:" FontSize="15" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="2">
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Feet turned out" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding FeetTurnedOut}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Feet pronated (flat arch)" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding FeetPronated}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Feet supinated (high arch)" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding FeetSupinated}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Knees valgus (cave inward)" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding KneesValgus}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Knees varus (bow outward)" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding KneesVarus}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Uneven hips" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding UnevenHips}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Uneven shoulders" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding UnevenShoulders}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Head tilt" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding HeadTilt}" VerticalOptions="Center" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Next"
+                    Command="{Binding GoNextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

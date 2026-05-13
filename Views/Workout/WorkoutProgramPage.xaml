@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Workout.WorkoutProgramPage"
+             x:DataType="vm:WorkoutProgramViewModel"
+             Title="Workout">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Corrective Exercise"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+            <!-- ===== No Assessment State ===== -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasAssessment, Converter={StaticResource InverseBool}}">
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Label Text="Body Posture Assessment"
+                           FontSize="18" FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Label Text="Take a quick body posture and movement assessment to identify areas that may need corrective exercise. We'll check your posture, squat form, and movement patterns."
+                           FontSize="14" TextColor="{StaticResource Gray500}"
+                           HorizontalTextAlignment="Center" />
+                    <Button Text="Start Assessment"
+                            Command="{Binding StartAssessmentCommand}"
+                            Style="{StaticResource PrimaryButton}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ===== Assessment Complete Card ===== -->
+            <Frame Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasAssessment}"
+                   BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Body Posture Assessment"
+                                   FontSize="16" FontAttributes="Bold" />
+                            <Label Text="{Binding LastAssessmentDate, StringFormat='Last assessed: {0}'}"
+                                   FontSize="13" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1" Text="Re-assess"
+                                Command="{Binding StartAssessmentCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="13" HeightRequest="36"
+                                VerticalOptions="Center" />
+                    </Grid>
+
+                    <!-- Score -->
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Margin="0,8,0,0">
+                        <Frame BackgroundColor="{StaticResource Primary}" CornerRadius="25"
+                               WidthRequest="50" HeightRequest="50" Padding="0" HasShadow="False">
+                            <Label Text="{Binding MovementScore}"
+                                   FontSize="20" FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Frame>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                            <Label Text="Movement Quality Score" FontSize="13" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding ScoreDescription}" FontSize="13" FontAttributes="Italic"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Syndromes -->
+                    <VerticalStackLayout Spacing="4" IsVisible="{Binding HasSyndromes}" Margin="0,4,0,0">
+                        <Label Text="Areas to Address:" FontSize="13" FontAttributes="Bold" TextColor="{StaticResource Gray600}" />
+                        <CollectionView ItemsSource="{Binding IdentifiedSyndromes}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Label Text="{Binding ., StringFormat='  {0}'}" FontSize="13"
+                                           TextColor="{StaticResource Gray600}" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- Generate button if no program yet -->
+                    <Button Text="Generate Corrective Program"
+                            Command="{Binding GenerateProgramCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            IsVisible="{Binding HasProgram, Converter={StaticResource InverseBool}}"
+                            Margin="0,8,0,0" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ===== Corrective Program ===== -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding HasProgram}">
+                <Label Text="{Binding ProgramName}"
+                       FontSize="20" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                <Label Text="{Binding ProgramDetails}"
+                       FontSize="14" TextColor="{StaticResource Gray500}" />
+
+                <CollectionView ItemsSource="{Binding WorkoutDays}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:WorkoutDayItem">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:WorkoutProgramViewModel}}, Path=OpenDayCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                    <Label Text="{Binding DayName}"
+                                           FontSize="18" FontAttributes="Bold"
+                                           Grid.Row="0" Grid.Column="0" />
+                                    <Label Text="{Binding Focus}"
+                                           FontSize="14" TextColor="{StaticResource Gray500}"
+                                           Grid.Row="1" Grid.Column="0" />
+                                    <Label Text="{Binding ExerciseCountDisplay}"
+                                           FontSize="12" TextColor="{StaticResource Gray400}"
+                                           Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.CesAssessment"
+             x:Class="IntelligentPersonalHealthOptimization.Views.CesAssessment.CesPostureLateralPage"
+             x:DataType="vm:CesPostureLateralViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Posture — Side View">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Progress -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,16,24,8" Spacing="4">
+            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding StepIndicator}" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,8" Spacing="16">
+
+                <Label Text="Stand Naturally — Side View"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <Frame Style="{StaticResource CardFrame}" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="How to perform:" FontSize="14" FontAttributes="Bold" />
+                        <Label FontSize="13" LineHeight="1.4" TextColor="{StaticResource Gray600}">
+                            <Label.Text>1. Turn sideways to the mirror, or have someone observe you from the side.
+
+2. Same natural stance — don't try to correct your posture.
+
+3. Look for: Is your ear directly over your shoulder? Are your shoulders forward? Does your low back have an exaggerated curve? Does your belly push forward?
+
+4. Check both left and right sides if possible.</Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Label Text="Rate each observation:" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource Gray900}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="2">
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Forward head posture" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding ForwardHead}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Rounded shoulders" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding RoundedShoulders}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Thoracic kyphosis (rounded upper back)" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding ThoracicKyphosis}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Lumbar lordosis (excessive low back arch)" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding LumbarLordosis}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Flat back" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding FlatBack}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Anterior pelvic tilt" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding AnteriorPelvicTilt}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Posterior pelvic tilt" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding PosteriorPelvicTilt}" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,140" Padding="0,4">
+                            <Label Text="Knee hyperextension" FontSize="14" VerticalOptions="Center" LineHeight="1.3" />
+                            <Picker Grid.Column="1" ItemsSource="{Binding PostureSeverityOptions}" SelectedIndex="{Binding KneeHyperextension}" VerticalOptions="Center" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Navigation -->
+        <Grid Grid.Row="2" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Text="Back"
+                    Command="{Binding GoPreviousCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1"
+                    Text="Next"
+                    Command="{Binding GoNextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>
