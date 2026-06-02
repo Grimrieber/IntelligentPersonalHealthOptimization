@@ -374,7 +374,7 @@ public class MainProgramRules : IRuleSet
         _ => 0, // Novice, Intermediate
     };
 
-    private static bool HasAvailableEquipment(Exercise exercise, List<string> availableEquipment)
+    internal static bool HasAvailableEquipment(Exercise exercise, List<string> availableEquipment)
     {
         if (availableEquipment.Count == 0) return true;
         if (string.IsNullOrEmpty(exercise.Equipment)) return true;

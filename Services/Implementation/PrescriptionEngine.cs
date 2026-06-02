@@ -189,6 +189,9 @@ public class PrescriptionEngine : IPrescriptionEngine
         // Build workout days based on available days
         var daySplits = GetDaySplits(ruleResult.DaysPerWeek);
 
+        // Track main exercises used across the program so injury back-fills prefer variety.
+        var usedMainAcrossProgram = new HashSet<int>();
+
         for (int d = 0; d < ruleResult.DaysPerWeek; d++)
         {
             var day = new WorkoutDay
@@ -238,25 +241,35 @@ public class PrescriptionEngine : IPrescriptionEngine
             // Day-specific main exercises
             var dayMainExercises = ruleResult.MainExercises
                 .Where(me => me.DayIndex == d)
-                .OrderBy(me => me.OrderIndex);
+                .OrderBy(me => me.OrderIndex)
+                .ToList();
+
+            var usedMainToday = new HashSet<int>();
+            var droppedSlots = new List<ExercisePrescription>();
 
             foreach (var me in dayMainExercises)
             {
                 // Look up the exercise name so we can compute a recommended weight
                 var exDef = exercises.FirstOrDefault(e => e.Id == me.ExerciseId);
+
+                // Injury-aware adjustment. If "avoid" is on and this exercise directly loads a
+                // flagged area, drop it (we back-fill the slot with a joint-safe lift below).
+                if (avoidInjured && exDef != null && injuredAreas.Count > 0
+                    && DirectlyLoadsInjuredArea(exDef, injuredAreas))
+                {
+                    droppedSlots.Add(me);
+                    continue;
+                }
+
                 decimal? recommended = exDef != null
                     ? await _workingWeights.RecommendWeightKgAsync(userId, exDef.Name, me.RepsMin, me.RepsMax)
                     : null;
 
-                // Injury-aware adjustment. If "avoid" is on and this exercise directly loads a
-                // flagged area, drop it entirely. Otherwise, if it broadly loads a flagged area,
-                // lighten the recommended load and add a caution note the user will see.
+                // Otherwise, if it broadly loads a flagged area, lighten the recommended load
+                // and add a caution note the user will see.
                 var injuryNote = string.Empty;
                 if (exDef != null && injuredAreas.Count > 0)
                 {
-                    if (avoidInjured && DirectlyLoadsInjuredArea(exDef, injuredAreas))
-                        continue; // user opted to skip exercises that directly load the injury
-
                     var flagged = AffectedInjuryAreas(exDef, injuredAreas);
                     if (flagged.Count > 0)
                     {
@@ -267,6 +280,8 @@ public class PrescriptionEngine : IPrescriptionEngine
                     }
                 }
 
+                usedMainToday.Add(me.ExerciseId);
+                usedMainAcrossProgram.Add(me.ExerciseId);
                 await db.InsertAsync(new WorkoutExercise
                 {
                     WorkoutDayId = day.Id,
@@ -281,6 +296,59 @@ public class PrescriptionEngine : IPrescriptionEngine
                     RecommendedWeightKg = recommended,
                     Notes = injuryNote
                 });
+            }
+
+            // Back-fill each dropped slot with a joint-safe main exercise targeting one of the
+            // day's OTHER muscles, so avoiding (say) knee work doesn't leave an empty day.
+            if (droppedSlots.Count > 0)
+            {
+                var avoidMuscles = injuredAreas
+                    .SelectMany(a => InjuryDirectLoadMap.TryGetValue(a, out var m) ? m : Array.Empty<MuscleGroup>())
+                    .ToHashSet();
+                var safeMuscles = daySplits[d].muscles.Where(m => !avoidMuscles.Contains(m)).ToHashSet();
+
+                foreach (var slot in droppedSlots)
+                {
+                    var sub = exercises
+                        .Where(e => e.Category == ExerciseCategory.Main && e.IsActive
+                            && safeMuscles.Contains(e.PrimaryMuscle)
+                            && !DirectlyLoadsInjuredArea(e, injuredAreas)
+                            && !usedMainToday.Contains(e.Id)
+                            && MainProgramRules.HasAvailableEquipment(e, availableEquipment))
+                        .OrderBy(e => usedMainAcrossProgram.Contains(e.Id) ? 1 : 0)
+                        .ThenByDescending(e => e.DifficultyLevel)
+                        .FirstOrDefault();
+                    if (sub == null) break; // no joint-safe alternative available
+
+                    usedMainToday.Add(sub.Id);
+                    usedMainAcrossProgram.Add(sub.Id);
+
+                    decimal? recommended = await _workingWeights.RecommendWeightKgAsync(userId, sub.Name, slot.RepsMin, slot.RepsMax);
+                    var injuryNote = string.Empty;
+                    var flagged = AffectedInjuryAreas(sub, injuredAreas);
+                    if (flagged.Count > 0)
+                    {
+                        var loadReduced = recommended.HasValue;
+                        if (loadReduced)
+                            recommended = Math.Round(recommended!.Value * InjuryLoadFactor, 1);
+                        injuryNote = BuildInjuryCaution(flagged, loadReduced);
+                    }
+
+                    await db.InsertAsync(new WorkoutExercise
+                    {
+                        WorkoutDayId = day.Id,
+                        ExerciseId = sub.Id,
+                        OrderIndex = order++,
+                        Category = ExerciseCategory.Main,
+                        Sets = slot.Sets,
+                        RepsMin = slot.RepsMin,
+                        RepsMax = slot.RepsMax,
+                        Tempo = slot.Tempo,
+                        RestSeconds = slot.RestSeconds,
+                        RecommendedWeightKg = recommended,
+                        Notes = injuryNote
+                    });
+                }
             }
 
             // Cooldown exercises (same for all days)
