@@ -120,6 +120,9 @@ public class DatabaseService : IDatabaseService
         await _connection.CreateTableAsync<WorkingWeight>();
         await _connection.CreateTableAsync<ExercisePerformanceEntry>();
 
+        // Local notification preferences
+        await _connection.CreateTableAsync<NotificationSettings>();
+
         // Seed data
         await SeedData.SeedExercisesAsync(_connection);
         await SeedData.SeedCesExercisesAsync(_connection);

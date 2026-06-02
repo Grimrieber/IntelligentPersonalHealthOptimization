@@ -18,7 +18,6 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
 
         _selectedTrainingLocation = TrainingLocationOptions.FirstOrDefault(o => o.Value == _coordinator.Data.TrainingLocation) ?? TrainingLocationOptions[0];
         _selectedExperienceLevel = ExperienceLevels.FirstOrDefault(o => o.Value == _coordinator.Data.ExperienceLevel) ?? ExperienceLevels[0];
-        _trainingMonths = _coordinator.Data.TrainingMonths;
         _currentFrequency = _coordinator.Data.CurrentFrequency;
         _sessionDurationMinutes = _coordinator.Data.SessionDurationMinutes;
         _selectedTimeOfDay = _coordinator.Data.PreferredTimeOfDay;
@@ -54,10 +53,6 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
     private PickerItem<ExperienceLevel> _selectedExperienceLevel;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(TrainingMonthsDisplay))]
-    private int _trainingMonths;
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FrequencyDisplay))]
     private int _currentFrequency;
 
@@ -72,7 +67,6 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
     [ObservableProperty]
     private string _availableDaysCsv = string.Empty;
 
-    public string TrainingMonthsDisplay => $"{TrainingMonths} months";
     public string FrequencyDisplay => $"{CurrentFrequency} days/week";
     public string DurationDisplay => $"{SessionDurationMinutes} minutes";
 
@@ -86,7 +80,6 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
 
     partial void OnSelectedExperienceLevelChanged(PickerItem<ExperienceLevel> value) =>
         _coordinator.Data.ExperienceLevel = value.Value;
-    partial void OnTrainingMonthsChanged(int value) => _coordinator.Data.TrainingMonths = value;
     partial void OnCurrentFrequencyChanged(int value) => _coordinator.Data.CurrentFrequency = value;
     partial void OnSessionDurationMinutesChanged(int value) => _coordinator.Data.SessionDurationMinutes = value;
     partial void OnSelectedTimeOfDayChanged(string value) => _coordinator.Data.PreferredTimeOfDay = value;
@@ -177,20 +170,6 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
     {
         if (SessionDurationMinutes > 15)
             SessionDurationMinutes -= 15;
-    }
-
-    [RelayCommand]
-    private void IncrementMonths()
-    {
-        if (TrainingMonths < 360)
-            TrainingMonths++;
-    }
-
-    [RelayCommand]
-    private void DecrementMonths()
-    {
-        if (TrainingMonths > 0)
-            TrainingMonths--;
     }
 
     [RelayCommand]

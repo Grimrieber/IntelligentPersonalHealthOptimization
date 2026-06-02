@@ -18,6 +18,7 @@ public partial class DashboardViewModel : BaseViewModel
     private readonly IFoodService _foodService;
     private readonly IGoalService _goalService;
     private readonly INutritionService _nutritionService;
+    private readonly INotificationService _notificationService;
 
     public DashboardViewModel(
         IUserService userService,
@@ -27,7 +28,8 @@ public partial class DashboardViewModel : BaseViewModel
         IScheduleService scheduleService,
         IFoodService foodService,
         IGoalService goalService,
-        INutritionService nutritionService)
+        INutritionService nutritionService,
+        INotificationService notificationService)
     {
         _userService = userService;
         _assessmentService = assessmentService;
@@ -37,6 +39,7 @@ public partial class DashboardViewModel : BaseViewModel
         _foodService = foodService;
         _goalService = goalService;
         _nutritionService = nutritionService;
+        _notificationService = notificationService;
         Title = "Dashboard";
     }
 
@@ -152,6 +155,9 @@ public partial class DashboardViewModel : BaseViewModel
             // One-shot (self-gated): reconcile any drifted saved nutrition targets through
             // the shared entry point so the dashboard reads consistent numbers. Runs once.
             await _nutritionService.ReconcileSavedTargetsAsync(user);
+
+            // Re-apply local notification schedule so reminders survive reboots/app updates.
+            await _notificationService.RescheduleForUserAsync(user.Id);
 
             // Greeting
             var hour = DateTime.Now.Hour;

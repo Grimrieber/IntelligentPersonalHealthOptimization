@@ -61,33 +61,6 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Training Months -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Months of Training Experience" FontSize="16" FontAttributes="Bold" />
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Button Text="-"
-                                    Command="{Binding DecrementMonthsCommand}"
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    CornerRadius="22"
-                                    Grid.Column="0" />
-                            <Label Text="{Binding TrainingMonthsDisplay}"
-                                   FontSize="20"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   Grid.Column="1" />
-                            <Button Text="+"
-                                    Command="{Binding IncrementMonthsCommand}"
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    CornerRadius="22"
-                                    Grid.Column="2" />
-                        </Grid>
-                    </VerticalStackLayout>
-                </Frame>
-
                 <!-- Frequency -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="8">

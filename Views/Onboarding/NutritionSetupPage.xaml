@@ -116,38 +116,6 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Food Preferences -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Food Preferences" FontSize="16" FontAttributes="Bold" />
-                        <Label Text="Foods you enjoy and want included in your plan."
-                               FontSize="13"
-                               TextColor="{StaticResource Gray500}" />
-                        <Border StrokeShape="RoundRectangle 8"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                                Padding="12,4">
-                            <Entry Text="{Binding FoodPreferences}"
-                                   Placeholder="e.g., chicken, rice, broccoli" />
-                        </Border>
-                    </VerticalStackLayout>
-                </Frame>
-
-                <!-- Food Dislikes -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Food Dislikes" FontSize="16" FontAttributes="Bold" />
-                        <Label Text="Foods you want to avoid."
-                               FontSize="13"
-                               TextColor="{StaticResource Gray500}" />
-                        <Border StrokeShape="RoundRectangle 8"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                                Padding="12,4">
-                            <Entry Text="{Binding FoodDislikes}"
-                                   Placeholder="e.g., liver, mushrooms" />
-                        </Border>
-                    </VerticalStackLayout>
-                </Frame>
-
                 <!-- Daily Water -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="8">
@@ -167,66 +135,6 @@
                                    Grid.Column="1" />
                             <Button Text="+"
                                     Command="{Binding IncrementWaterCommand}"
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    CornerRadius="22"
-                                    Grid.Column="2" />
-                        </Grid>
-                    </VerticalStackLayout>
-                </Frame>
-
-                <!-- Supplements -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Supplement Use" FontSize="16" FontAttributes="Bold" />
-                        <Label Text="List any supplements you currently take."
-                               FontSize="13"
-                               TextColor="{StaticResource Gray500}" />
-                        <Border StrokeShape="RoundRectangle 8"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                                Padding="12,4">
-                            <Entry Text="{Binding SupplementUse}"
-                                   Placeholder="e.g., protein, creatine, vitamin D" />
-                        </Border>
-                    </VerticalStackLayout>
-                </Frame>
-
-                <!-- Alcohol -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Alcohol Frequency" FontSize="16" FontAttributes="Bold" />
-                        <Border StrokeShape="RoundRectangle 8"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                                Padding="12,4">
-                            <Picker Title="Select Frequency"
-                                    ItemsSource="{Binding AlcoholFrequencyOptions}"
-                                    SelectedItem="{Binding SelectedAlcoholFrequency}" />
-                        </Border>
-                    </VerticalStackLayout>
-                </Frame>
-
-                <!-- Caffeine -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Caffeine Intake" FontSize="16" FontAttributes="Bold" />
-                        <Label Text="Cups of coffee, tea, or energy drinks per day."
-                               FontSize="13"
-                               TextColor="{StaticResource Gray500}" />
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Button Text="-"
-                                    Command="{Binding DecrementCaffeineCommand}"
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    CornerRadius="22"
-                                    Grid.Column="0" />
-                            <Label Text="{Binding CaffeineDisplay}"
-                                   FontSize="20"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   Grid.Column="1" />
-                            <Button Text="+"
-                                    Command="{Binding IncrementCaffeineCommand}"
                                     WidthRequest="44"
                                     HeightRequest="44"
                                     CornerRadius="22"

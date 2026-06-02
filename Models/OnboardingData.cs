@@ -21,13 +21,11 @@ public class OnboardingData
     // Step 5: Training Background
     public TrainingLocation TrainingLocation { get; set; } = TrainingLocation.Gym;
     public ExperienceLevel ExperienceLevel { get; set; } = ExperienceLevel.Beginner;
-    public int TrainingMonths { get; set; }
     public int CurrentFrequency { get; set; } = 3;
     public int SessionDurationMinutes { get; set; } = 60;
     public List<EquipmentType> AvailableEquipment { get; set; } = [EquipmentType.Bodyweight];
     public List<string> AvailableDays { get; set; } = ["Monday", "Wednesday", "Friday"];
     public string PreferredTimeOfDay { get; set; } = "Morning";
-    public string SportOrActivity { get; set; } = string.Empty;
 
     // Step 6: Movement Assessment
     public List<MovementCompensation> OverheadSquatCompensations { get; set; } = [];
@@ -54,12 +52,7 @@ public class OnboardingData
     public DietType DietType { get; set; } = DietType.Standard;
     public int MealsPerDay { get; set; } = 3;
     public List<FoodAllergy> Allergies { get; set; } = [];
-    public string FoodPreferences { get; set; } = string.Empty;
-    public string FoodDislikes { get; set; } = string.Empty;
     public int DailyWaterGlasses { get; set; } = 8;
-    public string SupplementUse { get; set; } = string.Empty;
-    public string AlcoholFrequency { get; set; } = "None";
-    public int CaffeinePerDay { get; set; }
 
     // Step 10: Security
     public string Pin { get; set; } = string.Empty;

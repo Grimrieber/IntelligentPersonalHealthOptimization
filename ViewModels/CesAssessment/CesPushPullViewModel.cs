@@ -23,15 +23,6 @@ public partial class CesPushPullViewModel : CesStepViewModelBase
 
     // Pain reporting
     [ObservableProperty] private bool _painDuringAssessment;
-    [ObservableProperty] private string _painLocation = string.Empty;
-
-    public string[] PainLocationOptions { get; } =
-    [
-        "None", "Neck", "Shoulder", "Upper Back", "Low Back",
-        "Hip", "Knee", "Ankle/Foot", "Multiple Areas"
-    ];
-
-    [ObservableProperty] private int _painLocationIndex;
 
     public override Task LoadAsync()
     {
@@ -56,6 +47,5 @@ public partial class CesPushPullViewModel : CesStepViewModelBase
         Data.PullHeadProtrusion = PullHeadProtrusion;
         Data.PullLowBackExtension = PullLowBackExtension;
         Data.PainDuringAssessment = PainDuringAssessment;
-        Data.PainLocation = PainLocationIndex > 0 ? PainLocationOptions[PainLocationIndex] : string.Empty;
     }
 }

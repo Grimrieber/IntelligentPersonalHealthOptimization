@@ -118,15 +118,6 @@
                                    LineHeight="1.3"
                                    VerticalOptions="Center" />
                         </Grid>
-
-                        <Grid ColumnDefinitions="*,160" Padding="0,4"
-                              IsVisible="{Binding PainDuringAssessment}">
-                            <Label Text="Pain location" FontSize="14" VerticalOptions="Center" />
-                            <Picker Grid.Column="1"
-                                    ItemsSource="{Binding PainLocationOptions}"
-                                    SelectedIndex="{Binding PainLocationIndex}"
-                                    VerticalOptions="Center" />
-                        </Grid>
                     </VerticalStackLayout>
                 </Frame>
 

@@ -78,7 +78,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("nutriassessintro", typeof(NutriAssessIntroPage));
         Routing.RegisterRoute("nutriassessbodycomp", typeof(BodyCompositionPage));
         Routing.RegisterRoute("nutriassessdietplan", typeof(DietPlanPage));
-        Routing.RegisterRoute("nutriassessfoodfreq", typeof(FoodFrequencyPage));
         Routing.RegisterRoute("nutriassessdietaryhabits", typeof(DietaryHabitsPage));
         Routing.RegisterRoute("nutriassessbehavior", typeof(BehavioralReadinessPage));
         Routing.RegisterRoute("nutriassessgoals", typeof(NutriGoalsPage));

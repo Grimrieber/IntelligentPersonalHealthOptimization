@@ -1,27 +1,5 @@
 namespace IntelligentPersonalHealthOptimization.Models.Enums;
 
-public enum FoodFrequency
-{
-    Never,
-    Rarely,
-    Sometimes,
-    Often,
-    Daily
-}
-
-public enum FFQCategory
-{
-    Beverages,
-    Fruits,
-    Vegetables,
-    Grains,
-    Protein,
-    Dairy,
-    FatsAndOils,
-    Processed,
-    Sweets
-}
-
 public enum EatingPattern
 {
     EatBreakfastRegularly,
@@ -32,24 +10,6 @@ public enum EatingPattern
     EatLateAtNight,
     EatAtConsistentTimes,
     GrazeAllDay
-}
-
-public enum EatingBehavior
-{
-    StressEmotionalEating,
-    EatOutFrequently,
-    CookAtHome,
-    EatOnTheGo,
-    TendToOvereat,
-    SnackFrequently,
-    DrinkSugaryBeverages,
-    DrinkCaffeineDaily,
-    DrinkAlcoholRegularly,
-    MealPrep,
-    ReadNutritionLabels,
-    RelyOnConvenienceFoods,
-    EatWhileDistracted,
-    FollowRecipes
 }
 
 public enum NutritionMotivation

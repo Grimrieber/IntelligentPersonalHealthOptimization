@@ -21,7 +21,6 @@ public class NutritionAssessment
     public double ThighCm { get; set; }
     public double CalfCm { get; set; }
     public double BicepCm { get; set; }
-    public double CalculatedBodyFatPercent { get; set; }
 
     // Diet Plan & Preferences
     public DietType SelectedDietType { get; set; } = DietType.Standard;
@@ -39,16 +38,9 @@ public class NutritionAssessment
     public bool MealPrepMode { get; set; }
     public int MealPrepDays { get; set; } = 3;
 
-    // Food Frequency (JSON)
-    [MaxLength(5000)]
-    public string FoodFrequencyJson { get; set; } = string.Empty;
-
     // Eating Patterns (JSON)
     [MaxLength(1000)]
     public string EatingPatternsJson { get; set; } = string.Empty;
-
-    [MaxLength(2000)]
-    public string EatingBehaviorsJson { get; set; } = string.Empty;
 
     // Motivation & Barriers
     public int ConfidenceLevel { get; set; }

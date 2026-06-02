@@ -87,17 +87,74 @@
 
             <!-- Notifications -->
             <Frame Style="{StaticResource CardFrame}">
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Spacing="14">
                     <Label Text="Notifications" FontSize="18" FontAttributes="Bold" />
+
+                    <!-- Workout reminders -->
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Workout Reminders" FontSize="14" VerticalOptions="Center" />
-                        <Switch Grid.Column="1"
-                                IsToggled="{Binding NotificationsEnabled}"
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Workout reminders" FontSize="14" />
+                            <Label Text="On your training days" FontSize="11" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" VerticalOptions="Center"
+                                IsToggled="{Binding WorkoutRemindersOn}"
                                 OnColor="{StaticResource Primary}" />
                     </Grid>
-                    <Label Text="Get reminded before scheduled workouts"
+                    <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding WorkoutRemindersOn}" Margin="0,-4,0,0">
+                        <Label Text="Remind me at" FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                        <TimePicker Grid.Column="1" Time="{Binding WorkoutTime}" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray200}" />
+
+                    <!-- Meal log reminder -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Meal log reminder" FontSize="14" />
+                            <Label Text="A daily nudge to log your meals" FontSize="11" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" VerticalOptions="Center"
+                                IsToggled="{Binding MealReminderOn}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding MealReminderOn}" Margin="0,-4,0,0">
+                        <Label Text="Remind me at" FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                        <TimePicker Grid.Column="1" Time="{Binding MealTime}" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray200}" />
+
+                    <!-- Water reminder -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Water reminder" FontSize="14" />
+                            <Label Text="Recurring hydration reminders" FontSize="11" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" VerticalOptions="Center"
+                                IsToggled="{Binding WaterReminderOn}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+                    <VerticalStackLayout Spacing="6" IsVisible="{Binding WaterReminderOn}" Margin="0,-4,0,0">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="From" FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                            <TimePicker Grid.Column="1" Time="{Binding WaterStartTime}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Until" FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                            <TimePicker Grid.Column="1" Time="{Binding WaterEndTime}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Every (hours)" FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                            <Picker Grid.Column="1" WidthRequest="80"
+                                    ItemsSource="{Binding WaterIntervalOptions}"
+                                    SelectedItem="{Binding WaterIntervalHours}" />
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <Label Text="{Binding NotificationStatus}"
                            FontSize="12"
-                           TextColor="{StaticResource Gray500}" />
+                           TextColor="{StaticResource Primary}"
+                           IsVisible="{Binding NotificationStatus, Converter={StaticResource IsNotEmptyConverter}}" />
                 </VerticalStackLayout>
             </Frame>
 

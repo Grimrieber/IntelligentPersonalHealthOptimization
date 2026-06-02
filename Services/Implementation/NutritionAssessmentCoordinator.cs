@@ -110,12 +110,8 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
             ShakesPerDay = previous.ShakesPerDay > 0 ? previous.ShakesPerDay : 1,
             ProteinPerShakeG = previous.ProteinPerShakeG > 0 ? previous.ProteinPerShakeG : 30,
 
-            // Food Frequency
-            FoodFrequencyResponses = DeserializeJson<List<FoodFrequencyResponse>>(previous.FoodFrequencyJson) ?? [],
-
             // Eating Patterns
             SelectedEatingPatterns = DeserializeJson<List<EatingPattern>>(previous.EatingPatternsJson) ?? [],
-            SelectedEatingBehaviors = DeserializeJson<List<EatingBehavior>>(previous.EatingBehaviorsJson) ?? [],
 
             // Motivation & Barriers
             ConfidenceLevel = previous.ConfidenceLevel > 0 ? previous.ConfidenceLevel : 5,
@@ -151,15 +147,6 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
         var user = await _userService.GetCurrentUserAsync();
         if (user == null) return;
 
-        // Calculate body fat % using US Navy formula
-        double bodyFatPercent = 0;
-        if (Data.WaistCm > 0 && Data.NeckCm > 0)
-        {
-            bodyFatPercent = CalculateBodyFatNavy(
-                Data.WaistCm, Data.HipsCm, Data.NeckCm,
-                user.HeightCm, user.Gender);
-        }
-
         // Calculate readiness score from confidence + motivation vs challenges
         var readinessScore = CalculateReadinessScore();
 
@@ -186,7 +173,6 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
             ThighCm = Data.ThighCm,
             CalfCm = Data.CalfCm,
             BicepCm = Data.BicepCm,
-            CalculatedBodyFatPercent = bodyFatPercent,
 
             // Diet Plan
             SelectedDietType = Data.SelectedDietType,
@@ -199,12 +185,8 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
             MealPrepMode = Data.MealPrepMode,
             MealPrepDays = Data.MealPrepDays,
 
-            // Food Frequency
-            FoodFrequencyJson = JsonSerializer.Serialize(Data.FoodFrequencyResponses),
-
             // Eating Patterns
             EatingPatternsJson = JsonSerializer.Serialize(Data.SelectedEatingPatterns),
-            EatingBehaviorsJson = JsonSerializer.Serialize(Data.SelectedEatingBehaviors),
 
             // Motivation & Barriers
             ConfidenceLevel = Data.ConfidenceLevel,
@@ -330,32 +312,5 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
         }
 
         return Math.Round(confidenceComponent + balanceComponent, 1);
-    }
-
-    /// <summary>
-    /// US Navy body fat estimation formula.
-    /// Male:   BF% = 86.010 × log10(waist - neck) - 70.041 × log10(height) + 36.76
-    /// Female: BF% = 163.205 × log10(waist + hip - neck) - 97.684 × log10(height) - 78.387
-    /// </summary>
-    private static double CalculateBodyFatNavy(
-        double waistCm, double hipsCm, double neckCm, double heightCm, Gender gender)
-    {
-        if (waistCm <= neckCm || heightCm <= 0) return 0;
-
-        double bodyFat;
-        if (gender == Gender.Male)
-        {
-            var diff = waistCm - neckCm;
-            if (diff <= 0) return 0;
-            bodyFat = 86.010 * Math.Log10(diff) - 70.041 * Math.Log10(heightCm) + 36.76;
-        }
-        else
-        {
-            var sum = waistCm + hipsCm - neckCm;
-            if (sum <= 0) return 0;
-            bodyFat = 163.205 * Math.Log10(sum) - 97.684 * Math.Log10(heightCm) - 78.387;
-        }
-
-        return Math.Round(Math.Max(0, Math.Min(bodyFat, 60)), 1);
     }
 }

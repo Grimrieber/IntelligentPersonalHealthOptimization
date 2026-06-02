@@ -91,16 +91,6 @@ public class CesAssessment
     // ===== Pain Reported =====
     public bool PainDuringAssessment { get; set; }
 
-    [MaxLength(500)]
-    public string PainLocation { get; set; } = string.Empty;
-
-    // ===== Objective Measurements =====
-    public double AnkleDorsiflexionLeftInches { get; set; }
-    public double AnkleDorsiflexionRightInches { get; set; }
-    public int SingleLegBalanceLeftSeconds { get; set; }
-    public int SingleLegBalanceRightSeconds { get; set; }
-    public bool WallAngelFullContact { get; set; }
-
     // ===== Generated Program Reference =====
     public int GeneratedProgramId { get; set; }
 }

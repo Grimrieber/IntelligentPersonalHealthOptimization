@@ -34,12 +34,8 @@ public class NutritionAssessmentData
     public bool MealPrepMode { get; set; } = true;
     public int MealPrepDays { get; set; } = 3;
 
-    // Food Frequency Questionnaire
-    public List<FoodFrequencyResponse> FoodFrequencyResponses { get; set; } = [];
-
     // Eating Patterns
     public List<EatingPattern> SelectedEatingPatterns { get; set; } = [];
-    public List<EatingBehavior> SelectedEatingBehaviors { get; set; } = [];
 
     // Motivation & Barriers
     public int ConfidenceLevel { get; set; } = 5;
@@ -55,13 +51,6 @@ public class NutritionAssessmentData
     // Planned Exercise
     public int WorkoutsPerWeek { get; set; }
     public int AvgWorkoutMinutes { get; set; } = 45;
-}
-
-public class FoodFrequencyResponse
-{
-    public string FoodName { get; set; } = string.Empty;
-    public FFQCategory Category { get; set; }
-    public FoodFrequency Frequency { get; set; } = FoodFrequency.Never;
 }
 
 /// <summary>

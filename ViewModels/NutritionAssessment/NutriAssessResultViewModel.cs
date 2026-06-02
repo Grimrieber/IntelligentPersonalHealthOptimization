@@ -44,11 +44,6 @@ public partial class NutriAssessResultViewModel : BaseViewModel
     [ObservableProperty] private string _circumferenceSummary = string.Empty;
     [ObservableProperty] private string _bodyFatDisclaimer = string.Empty;
 
-    // Dietary Patterns
-    [ObservableProperty] private string _dietarySummary = string.Empty;
-    [ObservableProperty] private int _frequentFoodCount;
-    [ObservableProperty] private int _processedFoodCount;
-
     // Eating Patterns
     [ObservableProperty] private bool _hasEatingPatterns;
     public ObservableCollection<string> EatingPatternDisplayItems { get; } = [];
@@ -136,27 +131,10 @@ public partial class NutriAssessResultViewModel : BaseViewModel
             if (data.CalfCm > 0) measurements.Add($"Calf: {data.CalfCm:F1} cm");
             CircumferenceSummary = string.Join(" | ", measurements);
 
-            // Food Frequency Summary
-            var frequentFoods = data.FoodFrequencyResponses
-                .Count(f => f.Frequency is FoodFrequency.Often or FoodFrequency.Daily);
-            var processedFoods = data.FoodFrequencyResponses
-                .Count(f => (f.Category is FFQCategory.Processed or FFQCategory.Sweets)
-                    && (f.Frequency is FoodFrequency.Often or FoodFrequency.Daily));
-            FrequentFoodCount = frequentFoods;
-            ProcessedFoodCount = processedFoods;
-
-            DietarySummary = processedFoods > 3
-                ? "Your diet includes a notable amount of processed foods. Consider gradually replacing some with whole food alternatives."
-                : frequentFoods > 15
-                    ? "You have a varied diet with many foods consumed regularly. Great foundation for balanced nutrition!"
-                    : "Your diet could benefit from more variety. Try introducing new whole foods gradually.";
-
             // Eating Patterns
             EatingPatternDisplayItems.Clear();
             foreach (var p in data.SelectedEatingPatterns)
                 EatingPatternDisplayItems.Add(SplitCamelCase(p.ToString()));
-            foreach (var b in data.SelectedEatingBehaviors)
-                EatingPatternDisplayItems.Add(SplitCamelCase(b.ToString()));
             HasEatingPatterns = EatingPatternDisplayItems.Count > 0;
 
             // Readiness

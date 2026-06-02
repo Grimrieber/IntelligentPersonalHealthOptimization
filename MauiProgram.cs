@@ -22,6 +22,7 @@ using IntelligentPersonalHealthOptimization.ViewModels.WellnessCheckIn;
 using IntelligentPersonalHealthOptimization.ViewModels.Workout;
 using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace IntelligentPersonalHealthOptimization;
 
@@ -35,6 +36,7 @@ public static class MauiProgram
             .UseMauiCommunityToolkit()
             .UseMauiCommunityToolkitMediaElement()
             .UseMicrocharts()
+            .UseLocalNotification()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -53,7 +55,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IFoodService, FoodService>();
         builder.Services.AddSingleton<IGoalService, GoalService>();
         builder.Services.AddSingleton<IScheduleService, ScheduleService>();
-        builder.Services.AddSingleton<INotificationService, NotificationService>();
+        builder.Services.AddSingleton<Services.Interfaces.INotificationService, Services.Implementation.NotificationService>();
         builder.Services.AddSingleton<IOnboardingCoordinator, OnboardingCoordinator>();
         builder.Services.AddSingleton<INutritionAssessmentCoordinator, NutritionAssessmentCoordinator>();
         builder.Services.AddSingleton<IWellnessCheckInCoordinator, WellnessCheckInCoordinator>();
@@ -118,7 +120,6 @@ public static class MauiProgram
         builder.Services.AddTransient<NutriAssessIntroViewModel>();
         builder.Services.AddTransient<BodyCompositionViewModel>();
         builder.Services.AddTransient<DietPlanViewModel>();
-        builder.Services.AddTransient<FoodFrequencyViewModel>();
         builder.Services.AddTransient<DietaryHabitsViewModel>();
         builder.Services.AddTransient<BehavioralReadinessViewModel>();
         builder.Services.AddTransient<NutriGoalsViewModel>();
@@ -203,7 +204,6 @@ public static class MauiProgram
         builder.Services.AddTransient<NutriAssessIntroPage>();
         builder.Services.AddTransient<BodyCompositionPage>();
         builder.Services.AddTransient<DietPlanPage>();
-        builder.Services.AddTransient<FoodFrequencyPage>();
         builder.Services.AddTransient<DietaryHabitsPage>();
         builder.Services.AddTransient<BehavioralReadinessPage>();
         builder.Services.AddTransient<NutriGoalsPage>();

@@ -21,12 +21,7 @@ public partial class NutritionSetupViewModel : BaseViewModel
 
         _selectedDietType = DietTypeOptions.FirstOrDefault(o => o.Value == _coordinator.Data.DietType) ?? DietTypeOptions[0];
         _mealsPerDay = _coordinator.Data.MealsPerDay;
-        _foodPreferences = _coordinator.Data.FoodPreferences;
-        _foodDislikes = _coordinator.Data.FoodDislikes;
         _dailyWaterGlasses = _coordinator.Data.DailyWaterGlasses;
-        _supplementUse = _coordinator.Data.SupplementUse;
-        _selectedAlcoholFrequency = _coordinator.Data.AlcoholFrequency;
-        _caffeinePerDay = _coordinator.Data.CaffeinePerDay;
 
         // Load allergy selections
         foreach (var allergy in _coordinator.Data.Allergies)
@@ -42,7 +37,6 @@ public partial class NutritionSetupViewModel : BaseViewModel
 
     public List<PickerItem<DietType>> DietTypeOptions { get; } =
         PickerItem<DietType>.From(Enum.GetValues<DietType>());
-    public List<string> AlcoholFrequencyOptions { get; } = ["None", "Rarely", "Weekly", "Daily"];
     public List<FoodAllergy> AllAllergyOptions { get; } = Enum.GetValues<FoodAllergy>().ToList();
 
     [ObservableProperty]
@@ -53,28 +47,11 @@ public partial class NutritionSetupViewModel : BaseViewModel
     private int _mealsPerDay;
 
     [ObservableProperty]
-    private string _foodPreferences = string.Empty;
-
-    [ObservableProperty]
-    private string _foodDislikes = string.Empty;
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(WaterDisplay))]
     private int _dailyWaterGlasses;
 
-    [ObservableProperty]
-    private string _supplementUse = string.Empty;
-
-    [ObservableProperty]
-    private string _selectedAlcoholFrequency;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CaffeineDisplay))]
-    private int _caffeinePerDay;
-
     public string MealsPerDayDisplay => $"{MealsPerDay} meals/day";
     public string WaterDisplay => $"{DailyWaterGlasses} glasses/day";
-    public string CaffeineDisplay => $"{CaffeinePerDay} servings/day";
 
     public ObservableCollection<FoodAllergy> SelectedAllergies { get; } = [];
 
@@ -109,12 +86,7 @@ public partial class NutritionSetupViewModel : BaseViewModel
 
     partial void OnSelectedDietTypeChanged(PickerItem<DietType> value) => _coordinator.Data.DietType = value.Value;
     partial void OnMealsPerDayChanged(int value) => _coordinator.Data.MealsPerDay = value;
-    partial void OnFoodPreferencesChanged(string value) => _coordinator.Data.FoodPreferences = value ?? string.Empty;
-    partial void OnFoodDislikesChanged(string value) => _coordinator.Data.FoodDislikes = value ?? string.Empty;
     partial void OnDailyWaterGlassesChanged(int value) => _coordinator.Data.DailyWaterGlasses = value;
-    partial void OnSupplementUseChanged(string value) => _coordinator.Data.SupplementUse = value ?? string.Empty;
-    partial void OnSelectedAlcoholFrequencyChanged(string value) => _coordinator.Data.AlcoholFrequency = value ?? "None";
-    partial void OnCaffeinePerDayChanged(int value) => _coordinator.Data.CaffeinePerDay = value;
 
     private void CalculateNutritionSummary()
     {
@@ -213,18 +185,6 @@ public partial class NutritionSetupViewModel : BaseViewModel
     private void DecrementWater()
     {
         if (DailyWaterGlasses > 1) DailyWaterGlasses--;
-    }
-
-    [RelayCommand]
-    private void IncrementCaffeine()
-    {
-        if (CaffeinePerDay < 10) CaffeinePerDay++;
-    }
-
-    [RelayCommand]
-    private void DecrementCaffeine()
-    {
-        if (CaffeinePerDay > 0) CaffeinePerDay--;
     }
 
     [RelayCommand]

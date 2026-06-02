@@ -116,30 +116,6 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Dietary Patterns Card -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Dietary Patterns" FontSize="18" FontAttributes="Bold" />
-
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="0">
-                                <Label Text="{Binding FrequentFoodCount}"
-                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                <Label Text="Regular Foods" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout HorizontalOptions="Center" Grid.Column="1">
-                                <Label Text="{Binding ProcessedFoodCount}"
-                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
-                                       TextColor="OrangeRed" />
-                                <Label Text="Processed (often/daily)" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
-                            </VerticalStackLayout>
-                        </Grid>
-
-                        <Label Text="{Binding DietarySummary}" FontSize="13" TextColor="{StaticResource Gray500}" />
-                    </VerticalStackLayout>
-                </Frame>
-
                 <!-- Eating Patterns Card -->
                 <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasEatingPatterns}">
                     <VerticalStackLayout Spacing="8">

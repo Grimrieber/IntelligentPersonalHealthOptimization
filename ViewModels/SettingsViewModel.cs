@@ -38,9 +38,18 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty] private string _pinMessage = string.Empty;
     [ObservableProperty] private bool _isChangingPin;
 
-    // Notifications
-    [ObservableProperty] private bool _notificationsEnabled;
-    [ObservableProperty] private int _reminderMinutesBefore = 30;
+    // Notifications (local scheduled reminders)
+    [ObservableProperty] private bool _workoutRemindersOn;
+    [ObservableProperty] private TimeSpan _workoutTime = TimeSpan.FromHours(18);
+    [ObservableProperty] private bool _mealReminderOn;
+    [ObservableProperty] private TimeSpan _mealTime = TimeSpan.FromHours(12);
+    [ObservableProperty] private bool _waterReminderOn;
+    [ObservableProperty] private TimeSpan _waterStartTime = TimeSpan.FromHours(8);
+    [ObservableProperty] private TimeSpan _waterEndTime = TimeSpan.FromHours(20);
+    [ObservableProperty] private int _waterIntervalHours = 2;
+    [ObservableProperty] private string _notificationStatus = string.Empty;
+
+    public List<int> WaterIntervalOptions { get; } = [1, 2, 3, 4];
 
     // Nutrition
     [ObservableProperty] private string _nutritionSummary = string.Empty;
@@ -93,6 +102,8 @@ public partial class SettingsViewModel : BaseViewModel
 
     private User? _currentUser;
     private bool _loadingSettings;
+    private NotificationSettings? _notifSettings;
+    private bool _loadingNotif;
 
     [RelayCommand]
     private async Task LoadSettingsAsync()
@@ -117,11 +128,28 @@ public partial class SettingsViewModel : BaseViewModel
         EditActivityLevel = user.ActivityLevel;
         SelectedActivityLevelOption = activityOption;
 
-        // Load notification settings
-        NotificationsEnabled = await _notificationService.AreNotificationsEnabledAsync();
-
         // Load nutrition profile summary
         var db = await _databaseService.GetConnectionAsync();
+
+        // Load notification settings (create a default row on first run).
+        _loadingNotif = true;
+        var ns = await db.Table<NotificationSettings>().FirstOrDefaultAsync(n => n.UserId == user.Id);
+        if (ns == null)
+        {
+            ns = new NotificationSettings { UserId = user.Id };
+            await db.InsertAsync(ns);
+        }
+        _notifSettings = ns;
+        WorkoutRemindersOn = ns.WorkoutEnabled;
+        WorkoutTime = TimeSpan.FromMinutes(ns.WorkoutTimeMinutes);
+        MealReminderOn = ns.MealEnabled;
+        MealTime = TimeSpan.FromMinutes(ns.MealTimeMinutes);
+        WaterReminderOn = ns.WaterEnabled;
+        WaterStartTime = TimeSpan.FromMinutes(ns.WaterStartMinutes);
+        WaterEndTime = TimeSpan.FromMinutes(ns.WaterEndMinutes);
+        WaterIntervalHours = ns.WaterIntervalHours;
+        _loadingNotif = false;
+
         var nutritionProfile = await db.Table<NutritionProfile>().FirstOrDefaultAsync(p => p.UserId == user.Id);
         HasNutritionProfile = nutritionProfile != null;
         if (nutritionProfile != null)
@@ -266,17 +294,56 @@ public partial class SettingsViewModel : BaseViewModel
         IsChangingPin = false;
     }
 
-    [RelayCommand]
-    private async Task ToggleNotificationsAsync()
+    // Any notification setting change persists + reschedules everything.
+    partial void OnWorkoutRemindersOnChanged(bool value) => SaveAndReschedule();
+    partial void OnWorkoutTimeChanged(TimeSpan value) => SaveAndReschedule();
+    partial void OnMealReminderOnChanged(bool value) => SaveAndReschedule();
+    partial void OnMealTimeChanged(TimeSpan value) => SaveAndReschedule();
+    partial void OnWaterReminderOnChanged(bool value) => SaveAndReschedule();
+    partial void OnWaterStartTimeChanged(TimeSpan value) => SaveAndReschedule();
+    partial void OnWaterEndTimeChanged(TimeSpan value) => SaveAndReschedule();
+    partial void OnWaterIntervalHoursChanged(int value) => SaveAndReschedule();
+
+    private void SaveAndReschedule()
     {
-        if (NotificationsEnabled)
+        if (_loadingNotif) return;
+        _ = SaveAndRescheduleAsync();
+    }
+
+    private async Task SaveAndRescheduleAsync()
+    {
+        if (_currentUser == null || _notifSettings == null) return;
+        try
         {
-            await _notificationService.CancelAllRemindersAsync();
-            NotificationsEnabled = false;
+            var anyOn = WorkoutRemindersOn || MealReminderOn || WaterReminderOn;
+
+            // Ask for OS permission the first time the user enables anything.
+            if (anyOn && !await _notificationService.AreNotificationsEnabledAsync())
+            {
+                var granted = await _notificationService.RequestPermissionAsync();
+                if (!granted)
+                    NotificationStatus = "Allow notifications in system settings to receive reminders.";
+            }
+
+            _notifSettings.WorkoutEnabled = WorkoutRemindersOn;
+            _notifSettings.WorkoutTimeMinutes = (int)WorkoutTime.TotalMinutes;
+            _notifSettings.MealEnabled = MealReminderOn;
+            _notifSettings.MealTimeMinutes = (int)MealTime.TotalMinutes;
+            _notifSettings.WaterEnabled = WaterReminderOn;
+            _notifSettings.WaterStartMinutes = (int)WaterStartTime.TotalMinutes;
+            _notifSettings.WaterEndMinutes = (int)WaterEndTime.TotalMinutes;
+            _notifSettings.WaterIntervalHours = WaterIntervalHours;
+            _notifSettings.UpdatedAt = DateTime.UtcNow;
+            await _databaseService.UpdateAsync(_notifSettings);
+
+            await _notificationService.RescheduleForUserAsync(_currentUser.Id);
+
+            if (string.IsNullOrEmpty(NotificationStatus) || NotificationStatus.StartsWith("Reminders"))
+                NotificationStatus = anyOn ? "Reminders updated." : "Reminders off.";
         }
-        else
+        catch (Exception ex)
         {
-            NotificationsEnabled = true;
+            Services.CrashLogger.Log("Settings.SaveReschedule", ex);
         }
     }
 
