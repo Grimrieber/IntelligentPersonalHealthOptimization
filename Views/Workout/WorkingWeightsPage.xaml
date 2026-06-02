@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Workout"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Workout.WorkingWeightsPage"
+             x:DataType="vm:WorkingWeightsViewModel"
+             Title="Strength Baselines">
+
+    <Grid RowDefinitions="*,Auto" Padding="0">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="24,16" Spacing="16">
+
+                <Label Text="Strength Baselines"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                <Label Text="Set your current working max (top heavy single you can hit with good form) for each lift — drag the slider or tap − / + to fine-tune. We'll use these to recommend weights for prescribed exercises. Estimates are fine — toggle 'Estimated' if you're guessing."
+                       FontSize="13"
+                       LineHeight="1.4"
+                       TextColor="{StaticResource Gray500}" />
+
+                <CollectionView ItemsSource="{Binding Lifts}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:LiftEntry">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="{Binding DisplayName}"
+                                           FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding Description}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource Gray500}" />
+
+                                    <!-- Current value + fine-adjust buttons -->
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,4,0,0">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                                            <Label Text="{Binding WeightKgDisplay}"
+                                                   FontSize="22" FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding WeightLbDisplay}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource Gray500}" />
+                                        </VerticalStackLayout>
+                                        <Button Grid.Column="1" Text="−"
+                                                Command="{Binding DecreaseCommand}"
+                                                BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                                                BorderColor="{StaticResource Primary}" BorderWidth="1" CornerRadius="20"
+                                                FontSize="20" WidthRequest="40" HeightRequest="40" Padding="0"
+                                                VerticalOptions="Center" />
+                                        <Button Grid.Column="2" Text="+"
+                                                Command="{Binding IncreaseCommand}"
+                                                BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                                                BorderColor="{StaticResource Primary}" BorderWidth="1" CornerRadius="20"
+                                                FontSize="20" WidthRequest="40" HeightRequest="40" Padding="0"
+                                                VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <Slider Minimum="0" Maximum="250"
+                                            Value="{Binding WeightKg}"
+                                            MinimumTrackColor="{StaticResource Primary}"
+                                            ThumbColor="{StaticResource Primary}" />
+
+                                    <HorizontalStackLayout Spacing="8">
+                                        <CheckBox IsChecked="{Binding IsEstimated}" />
+                                        <Label Text="Estimated (I'm guessing)" VerticalOptions="Center" FontSize="12" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="{Binding SaveStatus}"
+                       FontSize="12"
+                       TextColor="{StaticResource Primary}"
+                       IsVisible="{Binding SaveStatus, Converter={StaticResource IsNotEmptyConverter}}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="1"
+                Text="Done"
+                Command="{Binding DoneCommand}"
+                Style="{StaticResource PrimaryButton}"
+                Margin="24,12" />
+
+    </Grid>
+</ContentPage>

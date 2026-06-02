@@ -88,6 +88,68 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <!-- ===== Workout program controls (equipment-aware build, baselines, equipment, calendar) ===== -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Build Your Workout Program"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Label Text="Generates a multi-day strength/hypertrophy program tailored to your equipment, environment, and goals. Independent from the corrective program above."
+                           FontSize="13" TextColor="{StaticResource Gray500}" />
+
+                    <!-- Primary action -->
+                    <Button Text="Build / update workout program"
+                            Command="{Binding BuildWorkoutProgramCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            FontSize="14"
+                            HeightRequest="44" />
+
+                    <!-- Training level: settings-style row (current value + tap to change) -->
+                    <Border Stroke="{StaticResource Primary}" StrokeThickness="1"
+                            StrokeShape="RoundRectangle 12" BackgroundColor="Transparent"
+                            Padding="14,11" Margin="0,2,0,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeTrainingLevelCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="6">
+                            <Label Text="Training level" FontSize="13"
+                                   TextColor="{StaticResource Gray500}" VerticalTextAlignment="Center" />
+                            <Label Grid.Column="1" Text="{Binding TrainingLevelText}" FontSize="13"
+                                   FontAttributes="Bold" TextColor="{StaticResource Primary}"
+                                   VerticalTextAlignment="Center" />
+                            <Label Grid.Column="2" Text="›" FontSize="16"
+                                   TextColor="{StaticResource Primary}" VerticalTextAlignment="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Baselines + Equipment: two equal-width action chips on one row -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Border Grid.Column="0" Stroke="{StaticResource Primary}" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12" BackgroundColor="Transparent" Padding="0,10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EditWorkingWeightsCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Baselines" FontSize="13" TextColor="{StaticResource Primary}"
+                                   HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                        </Border>
+                        <Border Grid.Column="1" Stroke="{StaticResource Primary}" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12" BackgroundColor="Transparent" Padding="0,10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding UpdateEquipmentCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Equipment" FontSize="13" TextColor="{StaticResource Primary}"
+                                   HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                        </Border>
+                    </Grid>
+
+                    <!-- Calendar -->
+                    <Button Text="View Calendar"
+                            Command="{Binding ViewCalendarCommand}"
+                            BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                            FontSize="13" HeightRequest="32" HorizontalOptions="Center" Padding="0" />
+                </VerticalStackLayout>
+            </Frame>
+
             <!-- ===== Corrective Program ===== -->
             <VerticalStackLayout Spacing="12" IsVisible="{Binding HasProgram}">
                 <Label Text="{Binding ProgramName}"

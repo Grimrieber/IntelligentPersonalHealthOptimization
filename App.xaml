@@ -15,6 +15,7 @@
             <converters:EnumToStringConverter x:Key="EnumToString" />
             <converters:BoolToColorConverter x:Key="BoolToColor" />
             <converters:IsNotEmptyConverter x:Key="IsNotEmptyConverter" />
+            <converters:BoolToOpacityConverter x:Key="BoolToOpacity" />
 
             <!-- Global Styles -->
             <Style x:Key="PrimaryButton" TargetType="Button">

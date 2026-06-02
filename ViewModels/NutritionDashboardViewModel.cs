@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IntelligentPersonalHealthOptimization.Constants;
@@ -123,6 +124,13 @@ public partial class NutritionDashboardViewModel : BaseViewModel
     [ObservableProperty] private bool _hasWeightChange;
     [ObservableProperty] private string _assessmentDateRange = string.Empty;
 
+    private static List<NutritionFocusArea> DeserializeFocusAreas(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return new List<NutritionFocusArea>();
+        try { return JsonSerializer.Deserialize<List<NutritionFocusArea>>(json) ?? new(); }
+        catch { return new List<NutritionFocusArea>(); }
+    }
+
     [RelayCommand]
     private async Task LoadDataAsync()
     {
@@ -135,12 +143,101 @@ public partial class NutritionDashboardViewModel : BaseViewModel
             var profile = await _nutritionService.GetNutritionProfileAsync(user.Id);
             HasNutritionProfile = profile != null;
 
+            // Load latest assessment first so we can recompute calorie targets live
+            // (instead of using the stale snapshot stored on profile.TargetCalories
+            // at the time of the last assessment completion).
+            var latestAssess = await _nutritionService.GetLatestAssessmentAsync(user.Id);
+
             if (profile != null)
             {
-                CaloriesTarget = profile.TargetCalories;
-                ProteinTarget = profile.TargetProteinG;
-                CarbsTarget = profile.TargetCarbsG;
-                FatTarget = profile.TargetFatG;
+                // Recompute targets fresh from CURRENT User.WeightKg + ActivityLevel
+                // and the latest assessment inputs. If the user updates their weight
+                // on the Goals page, the dashboard reflects it on next load.
+                if (latestAssess != null && user.WeightKg > 0)
+                {
+                    var bmrLive = _nutritionService.CalculateBMR(user);
+                    var tdeeLive = _nutritionService.CalculateTDEE(bmrLive, user.ActivityLevel);
+                    var focusAreas = DeserializeFocusAreas(latestAssess.FocusAreasJson);
+                    var (cal, p, c, f) = _nutritionService.CalculateAssessmentTargets(
+                        tdeeLive,
+                        latestAssess.PrimaryGoal,
+                        profile.DietType,
+                        user.Gender,
+                        user.WeightKg,
+                        latestAssess.TargetWeightKg,
+                        latestAssess.SelectedTimeline,
+                        latestAssess.WorkoutsPerWeek,
+                        latestAssess.AvgWorkoutMinutes,
+                        focusAreas,
+                        latestAssess.ConfidenceLevel,
+                        latestAssess.ReadinessScore);
+
+                    // === DIAGNOSTIC DUMP ===
+                    // Write inputs + intermediates to a file in the app's private
+                    // files directory. Readable via: adb shell run-as <pkg> cat files/calorie_diag.txt
+                    try
+                    {
+                        var ageNow = DateTime.Today.Year - user.DateOfBirth.Year;
+                        if (user.DateOfBirth.Date > DateTime.Today.AddYears(-ageNow)) ageNow--;
+                        var dumpPath = Path.Combine(FileSystem.AppDataDirectory, "calorie_diag.txt");
+                        var dump =
+                            $"===== profile dump @ {DateTime.Now:yyyy-MM-dd HH:mm:ss} =====\n" +
+                            $"user.WeightKg = {user.WeightKg}\n" +
+                            $"user.HeightCm = {user.HeightCm}\n" +
+                            $"user.DateOfBirth = {user.DateOfBirth:yyyy-MM-dd} (age {ageNow})\n" +
+                            $"user.Gender = {user.Gender}\n" +
+                            $"user.ActivityLevel = {user.ActivityLevel}\n" +
+                            $"assess.PrimaryGoal = {latestAssess.PrimaryGoal}\n" +
+                            $"assess.TargetWeightKg = {latestAssess.TargetWeightKg}\n" +
+                            $"assess.SelectedTimeline = {latestAssess.SelectedTimeline}\n" +
+                            $"assess.WorkoutsPerWeek = {latestAssess.WorkoutsPerWeek}\n" +
+                            $"assess.AvgWorkoutMinutes = {latestAssess.AvgWorkoutMinutes}\n" +
+                            $"assess.ConfidenceLevel = {latestAssess.ConfidenceLevel}\n" +
+                            $"assess.ReadinessScore = {latestAssess.ReadinessScore}\n" +
+                            $"assess.AssessmentDate = {latestAssess.AssessmentDate:yyyy-MM-dd HH:mm:ss}\n" +
+                            $"profile.DietType = {profile.DietType}\n" +
+                            $"BMR(live) = {bmrLive:F1}\n" +
+                            $"TDEE(live) = {tdeeLive:F1}\n" +
+                            $"TARGET CALORIES = {cal}\n" +
+                            $"protein/carbs/fat = {p}/{c}/{f}\n" +
+                            $"profile.TargetCalories(stored, pre-update) = {profile.TargetCalories}\n" +
+                            $"=====================\n";
+                        File.WriteAllText(dumpPath, dump);
+                    }
+                    catch { /* best-effort diagnostic */ }
+
+                    CaloriesTarget = cal;
+                    ProteinTarget = p;
+                    CarbsTarget = c;
+                    FatTarget = f;
+
+                    // Persist the recomputed values so other consumers
+                    // (e.g. meal planning) see the same numbers.
+                    if (profile.TargetCalories != cal
+                        || profile.TargetProteinG != p
+                        || profile.TargetCarbsG != c
+                        || profile.TargetFatG != f
+                        || Math.Abs(profile.BMR - bmrLive) > 0.5
+                        || Math.Abs(profile.TDEE - tdeeLive) > 0.5)
+                    {
+                        profile.BMR = bmrLive;
+                        profile.TDEE = tdeeLive;
+                        profile.TargetCalories = cal;
+                        profile.TargetProteinG = p;
+                        profile.TargetCarbsG = c;
+                        profile.TargetFatG = f;
+                        profile.UpdatedAt = DateTime.UtcNow;
+                        await _databaseService.UpdateAsync(profile);
+                    }
+                }
+                else
+                {
+                    // No assessment yet — fall back to the stored values
+                    CaloriesTarget = profile.TargetCalories;
+                    ProteinTarget = profile.TargetProteinG;
+                    CarbsTarget = profile.TargetCarbsG;
+                    FatTarget = profile.TargetFatG;
+                }
                 WaterTarget = profile.DailyWaterGlasses;
             }
 
@@ -148,7 +245,6 @@ public partial class NutritionDashboardViewModel : BaseViewModel
             var db = await _databaseService.GetConnectionAsync();
 
             // Weight & progress display
-            var latestAssess = await _nutritionService.GetLatestAssessmentAsync(user.Id);
             HasWeightGoal = latestAssess != null && latestAssess.TargetWeightKg > 0;
 
             if (HasWeightGoal)
@@ -276,6 +372,24 @@ public partial class NutritionDashboardViewModel : BaseViewModel
             var foodItems = plannedItems.Where(i => i.MealName != "Protein Shake").ToList();
             var shakeItems = plannedItems.Where(i => i.MealName == "Protein Shake").ToList();
 
+            // Meal-prep label for today's meals (same meals repeat across the block).
+            var prepActive = (latestAssessment?.MealPrepMode ?? false) && (latestAssessment?.MealPrepDays ?? 1) > 1;
+            var prepDays = Math.Max(1, latestAssessment?.MealPrepDays ?? 1);
+            var isCookDay = true;
+            var mealPrepNote = string.Empty;
+            if (prepActive)
+            {
+                var activePlan = await _nutritionService.GetActiveMealPlanAsync(user.Id);
+                var daysSinceStart = activePlan != null
+                    ? Math.Max(0, (DateTime.UtcNow.Date - activePlan.CreatedAt.Date).Days)
+                    : 0;
+                var dayInBlock = daysSinceStart % prepDays;
+                isCookDay = dayInBlock == 0;
+                mealPrepNote = isCookDay
+                    ? $"Meal prep · cook today, covers {prepDays} days"
+                    : $"Meal prep · day {dayInBlock + 1} of {prepDays} (leftovers)";
+            }
+
             // Group food items by meal type
             foreach (var group in foodItems.GroupBy(i => i.MealType))
             {
@@ -288,12 +402,22 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 var savedRecipeId = items.FirstOrDefault(i => i.SavedRecipeId > 0)?.SavedRecipeId ?? 0;
                 var servings = items.FirstOrDefault()?.Servings ?? 1;
 
+                // Servings note. Meal prep → batch on the cook day / reheat amount on
+                // leftover days. Otherwise the per-day multiplier, only when it scales
+                // (a plain "1 serving" needs no note).
                 var servingsNote = string.Empty;
-                if (servings > 1.01)
+                if (savedRecipeId > 0)
                 {
-                    var rounded = Math.Round(servings * 2) / 2.0;
-                    var servingText = rounded % 1 == 0 ? $"{rounded:F0}" : $"{rounded:F1}";
-                    servingsNote = $"Make {servingText}x this recipe";
+                    if (prepActive)
+                    {
+                        servingsNote = isCookDay
+                            ? $"Cook {Math.Round(servings * prepDays, 1):0.#}x the recipe (~{servings:0.#}/day)"
+                            : $"Reheat ~{servings:0.#} serving{(servings > 1.04 ? "s" : "")}";
+                    }
+                    else if (servings < 0.95 || servings > 1.05)
+                    {
+                        servingsNote = $"Make {servings:0.#}x this recipe";
+                    }
                 }
 
                 // Check if this meal is already logged today
@@ -308,10 +432,12 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                     SavedRecipeId = savedRecipeId,
                     MealTypeName = FormatMealType(group.Key),
                     RecipeName = mealName,
-                    Calories = $"{totalCal:F0} kcal",
+                    Calories = prepActive ? $"{totalCal:F0} kcal/day" : $"{totalCal:F0} kcal",
                     MacroSummary = $"P: {totalP:F0}g  C: {totalC:F0}g  F: {totalF:F0}g",
                     ServingsNote = servingsNote,
                     HasServingsNote = !string.IsNullOrEmpty(servingsNote),
+                    MealPrepNote = mealPrepNote,
+                    HasMealPrepNote = !string.IsNullOrEmpty(mealPrepNote),
                     CaloriesValue = totalCal,
                     ProteinValue = totalP,
                     CarbsValue = totalC,
@@ -684,6 +810,8 @@ public partial class PlannedMealItem : ObservableObject
     public string MacroSummary { get; set; } = string.Empty;
     public string ServingsNote { get; set; } = string.Empty;
     public bool HasServingsNote { get; set; }
+    public string MealPrepNote { get; set; } = string.Empty;
+    public bool HasMealPrepNote { get; set; }
     public double CaloriesValue { get; set; }
     public double ProteinValue { get; set; }
     public double CarbsValue { get; set; }

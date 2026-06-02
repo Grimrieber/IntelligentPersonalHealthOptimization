@@ -13,13 +13,15 @@
         <!-- Top Bar: Search + Saved Toggle -->
         <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="8">
 
-            <!-- Search + Saved toggle row -->
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                <SearchBar Placeholder="Search recipes or ingredients..."
-                           Text="{Binding SearchText}"
-                           SearchCommand="{Binding SearchCommand}"
-                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
-                <Button Grid.Column="1"
+            <!-- Search bar: full-width on its own row -->
+            <SearchBar Placeholder="Search recipes or ingredients..."
+                       Text="{Binding SearchText}"
+                       SearchCommand="{Binding SearchCommand}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+
+            <!-- Search + Saved toggle on a second row -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Grid.Column="0"
                         Text="Search"
                         Command="{Binding SearchCommand}"
                         BackgroundColor="{StaticResource Primary}"
@@ -27,7 +29,7 @@
                         HeightRequest="44"
                         CornerRadius="8"
                         FontSize="14" />
-                <Button Grid.Column="2"
+                <Button Grid.Column="1"
                         Text="{Binding SavedToggleText}"
                         Command="{Binding ToggleSavedViewCommand}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
@@ -37,10 +39,10 @@
                         FontSize="14" />
             </Grid>
 
-            <!-- Back to Categories (visible when browsing recipes or saved) -->
-            <Button Text="&lt; All Categories"
+            <!-- Up one level: recipe list -> group's categories -> all groups -->
+            <Button Text="{Binding BackLabel}"
                     Command="{Binding BackToCategoriesCommand}"
-                    IsVisible="{Binding IsShowingCategories, Converter={StaticResource InverseBool}}"
+                    IsVisible="{Binding CanGoBack}"
                     BackgroundColor="Transparent"
                     TextColor="{StaticResource Primary}"
                     FontSize="14"
@@ -55,7 +57,48 @@
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
 
-        <!-- Categories Grid -->
+        <!-- Top-level Groups Grid -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Groups}"
+                        IsVisible="{Binding IsShowingGroups}"
+                        SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.Header>
+                <BoxView HeightRequest="4" Color="Transparent" />
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="recipe:RecipeCategory">
+                    <Frame Style="{StaticResource CardFrame}"
+                           Margin="8,0"
+                           Padding="14,16"
+                           MinimumHeightRequest="110">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=SelectGroupCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Label Text="{Binding CategoryName}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="WordWrap"
+                                   MaxLines="3"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding RecipeCount, StringFormat='{0} recipes'}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Categories Grid (within a selected group) -->
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Categories}"
                         IsVisible="{Binding IsShowingCategories}"
@@ -70,20 +113,27 @@
                 <DataTemplate x:DataType="recipe:RecipeCategory">
                     <Frame Style="{StaticResource CardFrame}"
                            Margin="8,0"
-                           Padding="16"
-                           HeightRequest="100">
+                           Padding="14,16"
+                           MinimumHeightRequest="110">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=SelectCategoryCommand}"
                                 CommandParameter="{Binding .}" />
                         </Frame.GestureRecognizers>
-                        <Label Text="{Binding CategoryName}"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               HorizontalOptions="Center"
-                               HorizontalTextAlignment="Center"
-                               VerticalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Label Text="{Binding CategoryName}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="WordWrap"
+                                   MaxLines="3"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding RecipeCount, StringFormat='{0} recipes'}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
@@ -105,13 +155,14 @@
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ViewRecipeCommand}"
                                 CommandParameter="{Binding .}" />
                         </Frame.GestureRecognizers>
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
-                            <Label Grid.Row="0" Grid.ColumnSpan="2"
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="6">
+                            <Label Grid.Row="0" Grid.Column="0"
                                    Text="{Binding RecipeName}"
                                    FontSize="16"
                                    FontAttributes="Bold"
+                                   LineBreakMode="TailTruncation"
                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-                            <HorizontalStackLayout Grid.Row="1" Spacing="12">
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="12">
                                 <HorizontalStackLayout Spacing="4" IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}">
                                     <Label Text="Prep:" FontSize="12" TextColor="{StaticResource Gray500}" />
                                     <Label Text="{Binding PrepTime}" FontSize="12" FontAttributes="Bold" />
@@ -121,15 +172,26 @@
                                     <Label Text="{Binding CookTime}" FontSize="12" FontAttributes="Bold" />
                                 </HorizontalStackLayout>
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12">
                                 <Label Text="{Binding Servings, StringFormat='Serving Size: {0}'}" FontSize="12" TextColor="{StaticResource Gray500}" />
                                 <Label Text="{Binding IngredientCount, StringFormat='{0} ingredients'}" FontSize="12" TextColor="{StaticResource Gray500}" />
                             </HorizontalStackLayout>
+
+                            <!-- Star: save / unsave this recipe to "My Saved".
+                                 Emoji ⭐ renders via the system color font (OpenSans
+                                 lacks ☆/★); dim = not saved, bright = saved. -->
                             <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
-                                   Text=">"
-                                   FontSize="20"
-                                   TextColor="{StaticResource Gray400}"
-                                   VerticalOptions="Center" />
+                                   Text="&#x2B50;"
+                                   FontSize="22"
+                                   Opacity="{Binding IsSaved, Converter={StaticResource BoolToOpacity}}"
+                                   VerticalOptions="Center"
+                                   Padding="8,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ToggleSaveRecipeCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
                         </Grid>
                     </Frame>
                 </DataTemplate>
@@ -157,13 +219,14 @@
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ViewSavedRecipeCommand}"
                                 CommandParameter="{Binding .}" />
                         </Frame.GestureRecognizers>
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
-                            <Label Grid.Row="0" Grid.ColumnSpan="2"
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="6">
+                            <Label Grid.Row="0" Grid.Column="0"
                                    Text="{Binding RecipeName}"
                                    FontSize="16"
                                    FontAttributes="Bold"
+                                   LineBreakMode="TailTruncation"
                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-                            <HorizontalStackLayout Grid.Row="1" Spacing="12">
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="12">
                                 <HorizontalStackLayout Spacing="4" IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}">
                                     <Label Text="Prep:" FontSize="12" TextColor="{StaticResource Gray500}" />
                                     <Label Text="{Binding PrepTime}" FontSize="12" FontAttributes="Bold" />
@@ -173,26 +236,34 @@
                                     <Label Text="{Binding CookTime}" FontSize="12" FontAttributes="Bold" />
                                 </HorizontalStackLayout>
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12">
                                 <Label Text="{Binding CategoryName}" FontSize="12" TextColor="{StaticResource Gray500}" />
                                 <Label Text="{Binding Servings, StringFormat='Serving Size: {0}'}" FontSize="12" TextColor="{StaticResource Gray500}" />
                                 <Label Text="{Binding CaloriesPerServing, StringFormat='{0} cal'}"
                                        FontSize="12" TextColor="{StaticResource Gray500}"
                                        IsVisible="{Binding CaloriesPerServing, Converter={StaticResource IsNotEmptyConverter}}" />
                             </HorizontalStackLayout>
+
+                            <!-- Star: always filled here (these are saved); tap to remove. -->
                             <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
-                                   Text=">"
-                                   FontSize="20"
-                                   TextColor="{StaticResource Gray400}"
-                                   VerticalOptions="Center" />
+                                   Text="&#x2B50;"
+                                   FontSize="22"
+                                   VerticalOptions="Center"
+                                   Padding="8,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ToggleSavedRecipeStarCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
                         </Grid>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
             <CollectionView.EmptyView>
                 <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40" Spacing="8">
-                    <Label Text="No saved recipes yet" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-                    <Label Text="Browse recipes and tap 'Save Recipe' to add them here" FontSize="14" TextColor="{StaticResource Gray400}" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    <Label Text="No favorites yet" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                    <Label Text="Browse recipes and tap the &#x2B50; to add them here" FontSize="14" TextColor="{StaticResource Gray400}" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
         </CollectionView>

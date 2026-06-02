@@ -49,6 +49,8 @@ public partial class SettingsViewModel : BaseViewModel
     // Training
     [ObservableProperty] private string _trainingSummary = string.Empty;
     [ObservableProperty] private bool _hasTrainingProfile;
+    // CSV of training days, bound to the shared TrainingDaySelector control.
+    [ObservableProperty] private string _trainingDaysCsv = string.Empty;
 
     // Edit Profile
     [ObservableProperty] private bool _isEditingProfile;
@@ -62,6 +64,15 @@ public partial class SettingsViewModel : BaseViewModel
     private double _editHeightCm;
 
     [ObservableProperty] private ActivityLevel _editActivityLevel;
+
+    // Humanized wrapper so the Picker shows "Moderately Active" rather than the raw
+    // concatenated enum name. EditActivityLevel stays the source of truth for Save.
+    [ObservableProperty] private PickerItem<ActivityLevel>? _selectedActivityLevelOption;
+    partial void OnSelectedActivityLevelOptionChanged(PickerItem<ActivityLevel>? value)
+    {
+        if (value != null) EditActivityLevel = value.Value;
+    }
+
     [ObservableProperty] private string _profileMessage = string.Empty;
 
     public string EditWeightLbDisplay => $"{EditWeightKg * 2.20462:F0} lb";
@@ -77,9 +88,11 @@ public partial class SettingsViewModel : BaseViewModel
         }
     }
 
-    public List<ActivityLevel> ActivityLevelOptions { get; } = Enum.GetValues<ActivityLevel>().ToList();
+    public List<PickerItem<ActivityLevel>> ActivityLevelOptions { get; } =
+        PickerItem<ActivityLevel>.From(Enum.GetValues<ActivityLevel>());
 
     private User? _currentUser;
+    private bool _loadingSettings;
 
     [RelayCommand]
     private async Task LoadSettingsAsync()
@@ -92,12 +105,17 @@ public partial class SettingsViewModel : BaseViewModel
         var age = DateTime.Today.Year - user.DateOfBirth.Year;
         if (user.DateOfBirth > DateTime.Today.AddYears(-age)) age--;
         var lbs = user.WeightKg * 2.20462;
-        UserDetails = $"Age {age} | {user.HeightCm:F0} cm | {user.WeightKg:F1} kg ({lbs:F0} lb) | {user.ActivityLevel}";
+        var totalInches = user.HeightCm / 2.54;
+        var feet = (int)(totalInches / 12);
+        var inches = (int)(totalInches % 12);
+        var activityOption = ActivityLevelOptions.First(o => o.Value == user.ActivityLevel);
+        UserDetails = $"Age {age} | {user.HeightCm:F0} cm / {feet}'{inches}\" | {user.WeightKg:F1} kg ({lbs:F0} lb) | {activityOption.Display}";
 
         // Pre-populate edit fields
         EditWeightKg = user.WeightKg;
         EditHeightCm = user.HeightCm;
         EditActivityLevel = user.ActivityLevel;
+        SelectedActivityLevelOption = activityOption;
 
         // Load notification settings
         NotificationsEnabled = await _notificationService.AreNotificationsEnabledAsync();
@@ -117,6 +135,42 @@ public partial class SettingsViewModel : BaseViewModel
         if (trainingProfile != null)
         {
             TrainingSummary = $"{trainingProfile.ExperienceLevel} | {trainingProfile.CurrentFrequency}x/week | {trainingProfile.SessionDurationMinutes} min";
+
+            // Seed the day selector without triggering a save (guarded).
+            _loadingSettings = true;
+            var days = (trainingProfile.AvailableDays ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            TrainingDaysCsv = days.Length == 0 ? "Monday,Wednesday,Friday" : string.Join(",", days);
+            _loadingSettings = false;
+        }
+    }
+
+    partial void OnTrainingDaysCsvChanged(string value)
+    {
+        if (_loadingSettings) return;
+        _ = SaveTrainingDaysAsync(value);
+    }
+
+    private async Task SaveTrainingDaysAsync(string daysCsv)
+    {
+        if (_currentUser == null) return;
+        try
+        {
+            var count = daysCsv.Split(',', StringSplitOptions.RemoveEmptyEntries).Length;
+            var db = await _databaseService.GetConnectionAsync();
+            var profile = await db.Table<TrainingProfile>().FirstOrDefaultAsync(t => t.UserId == _currentUser.Id);
+            if (profile == null) return;
+
+            profile.AvailableDays = daysCsv;
+            profile.CurrentFrequency = count;
+            profile.UpdatedAt = DateTime.UtcNow;
+            await _databaseService.UpdateAsync(profile);
+
+            TrainingSummary = $"{profile.ExperienceLevel} | {profile.CurrentFrequency}x/week | {profile.SessionDurationMinutes} min";
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("Settings.SaveTrainingDays", ex);
         }
     }
 
@@ -130,6 +184,7 @@ public partial class SettingsViewModel : BaseViewModel
             EditWeightKg = _currentUser.WeightKg;
             EditHeightCm = _currentUser.HeightCm;
             EditActivityLevel = _currentUser.ActivityLevel;
+            SelectedActivityLevelOption = ActivityLevelOptions.First(o => o.Value == _currentUser.ActivityLevel);
         }
     }
 
@@ -149,40 +204,19 @@ public partial class SettingsViewModel : BaseViewModel
         var profile = await db.Table<NutritionProfile>().FirstOrDefaultAsync(p => p.UserId == _currentUser.Id);
         if (profile != null)
         {
-            var bmr = _nutritionService.CalculateBMR(_currentUser);
-            var tdee = _nutritionService.CalculateTDEE(bmr, _currentUser.ActivityLevel);
-
-            // Check if there's a recent assessment with goal/target data
+            // Recompute through the single shared entry point. It pulls ALL goal inputs
+            // (incl. focus areas / confidence / readiness) off the latest assessment, so a
+            // weight edit here produces exactly the macros the assessment did. When there's
+            // no assessment it falls back to the FitnessGoal-based path.
             var assessment = await _nutritionService.GetLatestAssessmentAsync(_currentUser.Id);
-            if (assessment != null)
-            {
-                var (calories, proteinG, carbsG, fatG) = _nutritionService.CalculateAssessmentTargets(
-                    tdee, assessment.PrimaryGoal, assessment.SelectedDietType, _currentUser.Gender,
-                    _currentUser.WeightKg, assessment.TargetWeightKg, assessment.SelectedTimeline,
-                    assessment.WorkoutsPerWeek, assessment.AvgWorkoutMinutes);
+            var t = _nutritionService.ComputeTargetsForUser(_currentUser, assessment);
 
-                profile.TargetCalories = calories;
-                profile.TargetProteinG = proteinG;
-                profile.TargetCarbsG = carbsG;
-                profile.TargetFatG = fatG;
-            }
-            else
-            {
-                // No assessment — use simple goal-based calculation
-                var (proteinG, carbsG, fatG) = _nutritionService.CalculateMacroTargets(tdee, _currentUser.FitnessGoal);
-                profile.TargetCalories = _currentUser.FitnessGoal switch
-                {
-                    FitnessGoal.WeightLoss => (int)(tdee - 500),
-                    FitnessGoal.MuscleBuilding => (int)(tdee + 300),
-                    _ => (int)tdee
-                };
-                profile.TargetProteinG = proteinG;
-                profile.TargetCarbsG = carbsG;
-                profile.TargetFatG = fatG;
-            }
-
-            profile.BMR = bmr;
-            profile.TDEE = tdee;
+            profile.TargetCalories = t.Calories;
+            profile.TargetProteinG = t.ProteinG;
+            profile.TargetCarbsG = t.CarbsG;
+            profile.TargetFatG = t.FatG;
+            profile.BMR = t.Bmr;
+            profile.TDEE = t.Tdee;
             profile.UpdatedAt = DateTime.UtcNow;
             await _databaseService.UpdateAsync(profile);
         }
@@ -305,6 +339,18 @@ public partial class SettingsViewModel : BaseViewModel
     private async Task ViewCalendarAsync()
     {
         await Shell.Current.GoToAsync(RouteConstants.Calendar);
+    }
+
+    [RelayCommand]
+    private async Task UpdateEquipmentAsync()
+    {
+        await Shell.Current.GoToAsync($"{RouteConstants.EquipmentIntro}?reentry=true");
+    }
+
+    [RelayCommand]
+    private async Task EditWorkingWeightsAsync()
+    {
+        await Shell.Current.GoToAsync(RouteConstants.WorkingWeights);
     }
 
     [RelayCommand]

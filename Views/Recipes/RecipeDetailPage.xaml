@@ -11,15 +11,29 @@
         <VerticalStackLayout Padding="20" Spacing="16">
 
             <!-- Recipe Header -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="{Binding RecipeName}"
-                       FontSize="26"
-                       FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-                <Label Text="{Binding CategoryName}"
-                       FontSize="14"
-                       TextColor="{StaticResource Gray500}" />
-            </VerticalStackLayout>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="{Binding RecipeName}"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                    <Label Text="{Binding CategoryName}"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+
+                <!-- Star: save / unsave. Dim = not saved, bright = saved. -->
+                <Label Grid.Column="1"
+                       Text="&#x2B50;"
+                       FontSize="32"
+                       Opacity="{Binding IsSaved, Converter={StaticResource BoolToOpacity}}"
+                       VerticalOptions="Center"
+                       Padding="6,0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleSaveCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
 
             <!-- Time / Servings Cards -->
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
@@ -51,16 +65,6 @@
                 </HorizontalStackLayout>
             </Frame>
 
-            <!-- Save / Unsave Button -->
-            <Button Text="{Binding SaveButtonText}"
-                    Command="{Binding ToggleSaveCommand}"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="White"
-                    CornerRadius="8"
-                    FontSize="15"
-                    FontAttributes="Bold"
-                    HeightRequest="48" />
-
             <!-- ===== INGREDIENTS ===== -->
             <VerticalStackLayout Spacing="8">
                 <Label Text="Ingredients"
@@ -85,10 +89,10 @@
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}" Spacing="2">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate x:DataType="recipe:RecipeIngredient">
-                                            <HorizontalStackLayout Spacing="8" Padding="8,4">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Padding="8,4">
                                                 <Label Text="&#x2022;" FontSize="14" TextColor="{StaticResource Primary}" VerticalOptions="Start" />
-                                                <Label Text="{Binding Description}" FontSize="14" VerticalOptions="Start" />
-                                            </HorizontalStackLayout>
+                                                <Label Grid.Column="1" Text="{Binding Description}" FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Start" />
+                                            </Grid>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>

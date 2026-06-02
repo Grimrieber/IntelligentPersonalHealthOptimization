@@ -54,12 +54,24 @@ public class SavedRecipe
     public double? FatGrams { get; set; }
     public double? FiberGrams { get; set; }
     public double? SugarGrams { get; set; }
+    public double? SodiumMg { get; set; }
+    public double? CholesterolMg { get; set; }
+    public double? SatFatGrams { get; set; }
+
+    /// <summary>0-100. How much of the recipe's ingredient list mapped to a
+    /// known food during nutrition computation; lower = nutrition less reliable.</summary>
+    public double? IngredientMatchRate { get; set; }
 
     [MaxLength(200)]
     public string? ServingSizeNote { get; set; }
 
     [MaxLength(500)]
     public string? TagsJson { get; set; }
+
+    /// <summary>"User" for personally-saved recipes, "Wikibooks" for bundled
+    /// catalog rows, future sources as added.</summary>
+    [Indexed, MaxLength(50)]
+    public string SourceProvider { get; set; } = "User";
 
     public DateTime SavedAt { get; set; } = DateTime.UtcNow;
 }

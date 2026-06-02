@@ -20,7 +20,7 @@ public partial class NutriGoalsPage : ContentPage
         {
             if (BindingContext is NutriGoalsViewModel vm)
             {
-                // Load user's current weight for safety warning calculation
+                // Load user record (used both for initial current weight and to persist edits)
                 await vm.LoadCurrentWeightAsync();
 
                 // Guard prevents slider clamping events from corrupting the VM value
@@ -28,9 +28,10 @@ public partial class NutriGoalsPage : ContentPage
                 _isInitializingSlider = true;
                 vm.InitializeWeight();
 
-                // Defer slider value set to next frame so Min/Max bindings are resolved.
+                // Defer slider value sets to next frame so Min/Max bindings are resolved.
                 Dispatcher.Dispatch(() =>
                 {
+                    CurrentWeightSlider.Value = vm.CurrentWeight;
                     WeightSlider.Value = vm.TargetWeight;
                     _isInitializingSlider = false;
                 });
@@ -55,17 +56,28 @@ public partial class NutriGoalsPage : ContentPage
             vm.TargetWeight = e.NewValue;
     }
 
-    /// <summary>
-    /// Sync Slider position when the VM updates TargetWeight programmatically.
-    /// </summary>
+    private void OnCurrentWeightSliderValueChanged(object? sender, ValueChangedEventArgs e)
+    {
+        if (_isInitializingSlider) return;
+        if (BindingContext is NutriGoalsViewModel vm)
+            vm.CurrentWeight = e.NewValue;
+    }
+
+    /// <summary>Sync Slider positions when the VM updates the values programmatically.</summary>
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (_isInitializingSlider) return;
+        if (sender is not NutriGoalsViewModel vm) return;
+
         if (e.PropertyName == nameof(NutriGoalsViewModel.TargetWeight)
-            && sender is NutriGoalsViewModel vm
             && Math.Abs(WeightSlider.Value - vm.TargetWeight) > 0.01)
         {
             WeightSlider.Value = vm.TargetWeight;
+        }
+        else if (e.PropertyName == nameof(NutriGoalsViewModel.CurrentWeight)
+            && Math.Abs(CurrentWeightSlider.Value - vm.CurrentWeight) > 0.01)
+        {
+            CurrentWeightSlider.Value = vm.CurrentWeight;
         }
     }
 }

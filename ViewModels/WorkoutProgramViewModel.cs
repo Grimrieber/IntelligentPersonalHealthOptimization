@@ -13,11 +13,14 @@ public partial class WorkoutProgramViewModel : BaseViewModel
 {
     private readonly IDatabaseService _databaseService;
     private readonly IUserService _userService;
+    private readonly IPrescriptionEngine _prescriptionEngine;
 
-    public WorkoutProgramViewModel(IDatabaseService databaseService, IUserService userService)
+    public WorkoutProgramViewModel(IDatabaseService databaseService, IUserService userService,
+        IPrescriptionEngine prescriptionEngine)
     {
         _databaseService = databaseService;
         _userService = userService;
+        _prescriptionEngine = prescriptionEngine;
         Title = "Workout";
     }
 
@@ -35,6 +38,14 @@ public partial class WorkoutProgramViewModel : BaseViewModel
     [ObservableProperty] private bool _hasProgram;
     [ObservableProperty] private List<WorkoutDayItem> _workoutDays = new();
 
+    // Training level (drives program volume + difficulty)
+    [ObservableProperty] private string _trainingLevelText = "Not set";
+    private TrainingProfile? _trainingProfile;
+
+    // 4 user-facing levels (the enum also has Novice, kept for legacy profiles).
+    private static readonly ExperienceLevel[] SelectableLevels =
+        { ExperienceLevel.Beginner, ExperienceLevel.Intermediate, ExperienceLevel.Advanced, ExperienceLevel.Elite };
+
     [RelayCommand]
     private async Task LoadProgramAsync()
     {
@@ -45,6 +56,14 @@ public partial class WorkoutProgramViewModel : BaseViewModel
             if (user == null) return;
 
             var db = await _databaseService.GetConnectionAsync();
+
+            // Load training level — latest profile row (by Id) for consistency with
+            // the generator, which reads the same row.
+            _trainingProfile = await db.Table<TrainingProfile>()
+                .Where(t => t.UserId == user.Id)
+                .OrderByDescending(t => t.Id)
+                .FirstOrDefaultAsync();
+            TrainingLevelText = $"{LevelDisplay(_trainingProfile?.ExperienceLevel)}";
 
             // Load latest CES assessment
             var cesAssessment = await db.Table<Models.CesAssessment>()
@@ -97,16 +116,17 @@ public partial class WorkoutProgramViewModel : BaseViewModel
             var dayItems = new List<WorkoutDayItem>();
             foreach (var day in days)
             {
-                var exerciseCount = await db.Table<WorkoutExercise>()
+                var dayExercises = await db.Table<WorkoutExercise>()
                     .Where(e => e.WorkoutDayId == day.Id)
-                    .CountAsync();
+                    .ToListAsync();
 
                 dayItems.Add(new WorkoutDayItem
                 {
                     DayId = day.Id,
                     DayName = day.DayName,
                     Focus = day.Focus,
-                    ExerciseCount = exerciseCount
+                    ExerciseCount = dayExercises.Count,
+                    TotalSets = dayExercises.Sum(e => e.Sets)
                 });
             }
             WorkoutDays = dayItems;
@@ -131,6 +151,141 @@ public partial class WorkoutProgramViewModel : BaseViewModel
     private async Task StartAssessmentAsync()
     {
         await Shell.Current.GoToAsync(RouteConstants.CesIntro);
+    }
+
+    [RelayCommand]
+    private async Task BuildWorkoutProgramAsync()
+    {
+        var user = await _userService.GetCurrentUserAsync();
+        if (user == null) return;
+        var db = await _databaseService.GetConnectionAsync();
+
+        // If we already have a training profile, the generator can rebuild straight
+        // from saved data (level, days, equipment) — no need to re-run the equipment
+        // wizard. First-timers (no profile yet) go through the wizard to collect it.
+        var profile = await db.Table<TrainingProfile>()
+            .Where(t => t.UserId == user.Id)
+            .OrderByDescending(t => t.Id)
+            .FirstOrDefaultAsync();
+        if (profile == null)
+        {
+            await Shell.Current.GoToAsync(RouteConstants.EquipmentIntro);
+            return;
+        }
+
+        if (await RegenerateProgramAsync(user.Id, db))
+            await Shell.Current.DisplayAlert("Program updated",
+                "Rebuilt from your current settings. Tap a day to see it.", "OK");
+    }
+
+    /// <summary>Rebuilds the program in place from the user's saved profile (level,
+    /// days, equipment) + the assessment the current program used, if any. No wizard.</summary>
+    private async Task<bool> RegenerateProgramAsync(int userId, SQLite.SQLiteAsyncConnection db)
+    {
+        IsBusy = true;
+        try
+        {
+            // Reuse the assessment the active program was built from so corrective
+            // tailoring is preserved; 0 = build from goal + level when there's none.
+            var current = await db.Table<WorkoutProgram>()
+                .Where(p => p.UserId == userId && p.IsActive)
+                .FirstOrDefaultAsync();
+            var sessionId = current?.AssessmentSessionId ?? 0;
+
+            await _prescriptionEngine.GenerateProgramAsync(userId, sessionId);
+            await LoadProgramAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("WorkoutProgram.Regenerate", ex);
+            await Shell.Current.DisplayAlert("Error", "Could not rebuild your program. Please try again.", "OK");
+            return false;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task ChangeTrainingLevelAsync()
+    {
+        var current = _trainingProfile?.ExperienceLevel ?? ExperienceLevel.Beginner;
+
+        // Build the picker, marking the current level.
+        var labels = SelectableLevels
+            .Select(l => l == current ? $"{LevelDisplay(l)}  ✓" : LevelDisplay(l))
+            .ToArray();
+
+        var choice = await Shell.Current.DisplayActionSheet(
+            "Training level — controls how many exercises, sets, and how challenging your program is.",
+            "Cancel", null, labels);
+
+        if (string.IsNullOrEmpty(choice) || choice == "Cancel") return;
+
+        var picked = SelectableLevels.FirstOrDefault(l => choice.StartsWith(LevelDisplay(l)));
+        if (picked == current) return;
+
+        var user = await _userService.GetCurrentUserAsync();
+        if (user == null) return;
+        var db = await _databaseService.GetConnectionAsync();
+
+        var steppingUp = picked > current;
+        if (steppingUp)
+        {
+            var ok = await Shell.Current.DisplayAlert("Step up your training?",
+                $"Move from {LevelDisplay(current)} to {LevelDisplay(picked)}? Your next build will add " +
+                "exercises, sets, and tougher variations.", "Yes, level up", "Not yet");
+            if (!ok) return;
+        }
+
+        if (_trainingProfile == null)
+        {
+            _trainingProfile = new TrainingProfile { UserId = user.Id, ExperienceLevel = picked, UpdatedAt = DateTime.UtcNow };
+            await db.InsertAsync(_trainingProfile);
+        }
+        else
+        {
+            _trainingProfile.ExperienceLevel = picked;
+            _trainingProfile.UpdatedAt = DateTime.UtcNow;
+            await db.UpdateAsync(_trainingProfile);
+        }
+
+        TrainingLevelText = $"{LevelDisplay(picked)}";
+
+        // Apply the change immediately: rebuild in place from saved data. No wizard.
+        if (await RegenerateProgramAsync(user.Id, db))
+            await Shell.Current.DisplayAlert("Training level updated",
+                $"Your program was rebuilt for {LevelDisplay(picked)} — more/less volume and difficulty applied.", "OK");
+    }
+
+    private static string LevelDisplay(ExperienceLevel? level) => level switch
+    {
+        ExperienceLevel.Beginner => "Beginner",
+        ExperienceLevel.Novice => "Novice",
+        ExperienceLevel.Intermediate => "Intermediate",
+        ExperienceLevel.Advanced => "Advanced",
+        ExperienceLevel.Elite => "Elite",
+        _ => "not set"
+    };
+
+    [RelayCommand]
+    private async Task EditWorkingWeightsAsync()
+    {
+        await Shell.Current.GoToAsync(RouteConstants.WorkingWeights);
+    }
+
+    [RelayCommand]
+    private async Task UpdateEquipmentAsync()
+    {
+        await Shell.Current.GoToAsync($"{RouteConstants.EquipmentIntro}?reentry=true");
+    }
+
+    [RelayCommand]
+    private async Task ViewCalendarAsync()
+    {
+        await Shell.Current.GoToAsync(RouteConstants.Calendar);
     }
 
     [RelayCommand]
@@ -315,5 +470,6 @@ public class WorkoutDayItem
     public string DayName { get; set; } = string.Empty;
     public string Focus { get; set; } = string.Empty;
     public int ExerciseCount { get; set; }
-    public string ExerciseCountDisplay => $"{ExerciseCount} exercises";
+    public int TotalSets { get; set; }
+    public string ExerciseCountDisplay => $"{ExerciseCount} exercises · {TotalSets} sets";
 }

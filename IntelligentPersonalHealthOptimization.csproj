@@ -69,6 +69,8 @@
 		<PackageReference Include="sqlite-net-sqlcipher" Version="1.9.172" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="5.0.0" />
+		<PackageReference Include="Xamarin.AndroidX.LocalBroadcastManager" Version="1.1.0.20" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" />
 		<PackageReference Include="Microcharts.Maui" Version="1.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.116.1" />
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.4.0" />

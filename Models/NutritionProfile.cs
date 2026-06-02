@@ -30,6 +30,12 @@ public class NutritionProfile
     public int ShakesPerDay { get; set; }
     public int ProteinPerShakeG { get; set; }
 
+    /// <summary>When true, the meal plan repeats each recipe for
+    /// <see cref="MealPrepDays"/> consecutive days (batch cooking) instead of a
+    /// new recipe every meal.</summary>
+    public bool MealPrepMode { get; set; }
+    public int MealPrepDays { get; set; } = 3;
+
 
     [MaxLength(500)]
     public string SupplementUse { get; set; } = string.Empty;
@@ -45,10 +51,18 @@ public class NutritionProfile
     [MaxLength(1000)]
     public string EatingPatternsJson { get; set; } = string.Empty;
 
+    // DEPRECATED (2026-06-01, goals consolidation Step 2): focus areas, confidence,
+    // and readiness are canonically owned by NutritionAssessment. These columns are no
+    // longer written or read — they remain mapped only to avoid a schema change on the
+    // encrypted DB. Read the latest NutritionAssessment instead. See project_goals_consolidation.
     [MaxLength(2000)]
+    [Obsolete("Read NutritionAssessment.FocusAreasJson instead. No longer written.")]
     public string FocusAreasJson { get; set; } = string.Empty;
 
+    [Obsolete("Read NutritionAssessment.ConfidenceLevel instead. No longer written.")]
     public int ConfidenceLevel { get; set; }
+
+    [Obsolete("Read NutritionAssessment.ReadinessScore instead. No longer written.")]
     public double ReadinessScore { get; set; }
 
     public double BMR { get; set; }

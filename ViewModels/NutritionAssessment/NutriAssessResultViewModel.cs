@@ -246,6 +246,37 @@ public partial class NutriAssessResultViewModel : BaseViewModel
                 data.WorkoutsPerWeek, data.AvgWorkoutMinutes,
                 data.SelectedFocusAreas, data.ConfidenceLevel, readinessScore);
 
+            // === DIAGNOSTIC: write to file for adb run-as to read ===
+            try
+            {
+                var ageNow = DateTime.Today.Year - user.DateOfBirth.Year;
+                if (user.DateOfBirth.Date > DateTime.Today.AddYears(-ageNow)) ageNow--;
+                var path = System.IO.Path.Combine(FileSystem.AppDataDirectory, "calorie_diag.txt");
+                var dump =
+                    $"===== ResultPage load @ {DateTime.Now:HH:mm:ss} =====\n" +
+                    $"user.WeightKg = {user.WeightKg}\n" +
+                    $"user.HeightCm = {user.HeightCm}\n" +
+                    $"user.DateOfBirth = {user.DateOfBirth:yyyy-MM-dd} (age {ageNow})\n" +
+                    $"user.Gender = {user.Gender}\n" +
+                    $"user.ActivityLevel = {user.ActivityLevel}\n" +
+                    $"data.PrimaryGoal = {data.PrimaryGoal}\n" +
+                    $"data.TargetWeightKg = {data.TargetWeightKg}\n" +
+                    $"data.SelectedTimeline = {data.SelectedTimeline}\n" +
+                    $"data.SelectedDietType = {data.SelectedDietType}\n" +
+                    $"data.WorkoutsPerWeek = {data.WorkoutsPerWeek}\n" +
+                    $"data.AvgWorkoutMinutes = {data.AvgWorkoutMinutes}\n" +
+                    $"data.ConfidenceLevel = {data.ConfidenceLevel}\n" +
+                    $"readinessScore = {readinessScore}\n" +
+                    $"focusAreas = [{string.Join(",", data.SelectedFocusAreas)}]\n" +
+                    $"BMR = {bmr:F1}\n" +
+                    $"TDEE = {tdee:F1}\n" +
+                    $"TARGET = {targetCalories}\n" +
+                    $"protein/carbs/fat = {proteinG}/{carbsG}/{fatG}\n" +
+                    $"====================\n";
+                System.IO.File.WriteAllText(path, dump);
+            }
+            catch { /* best effort */ }
+
             CaloriesDisplay = $"{targetCalories} kcal/day";
             RecommendedProteinG = proteinG;
             RecommendedCarbsG = carbsG;
@@ -334,6 +365,29 @@ public partial class NutriAssessResultViewModel : BaseViewModel
         try
         {
             await _coordinator.CompleteAssessmentAsync();
+        }
+        catch (Exception ex)
+        {
+            // Stop silent failures — log to file AND surface to user
+            try
+            {
+                var path = System.IO.Path.Combine(FileSystem.AppDataDirectory, "complete_error.txt");
+                System.IO.File.WriteAllText(path,
+                    $"@ {DateTime.Now:yyyy-MM-dd HH:mm:ss}\n" +
+                    $"Type: {ex.GetType().FullName}\n" +
+                    $"Message: {ex.Message}\n\n" +
+                    $"Stack:\n{ex.StackTrace}\n\n" +
+                    (ex.InnerException == null ? "" :
+                        $"Inner: {ex.InnerException.GetType().FullName}: {ex.InnerException.Message}\n" +
+                        $"{ex.InnerException.StackTrace}"));
+            }
+            catch { /* ignore */ }
+
+            await Shell.Current.DisplayAlert(
+                "Couldn't complete assessment",
+                $"{ex.GetType().Name}: {ex.Message}\n\n" +
+                "Tap OK and tell the developer — this dialog replaces a previously-silent failure.",
+                "OK");
         }
         finally
         {

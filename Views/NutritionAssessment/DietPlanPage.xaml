@@ -115,6 +115,41 @@
                     </VerticalStackLayout>
                 </Frame>
 
+                <!-- Meal Prep -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Meal Prep" FontSize="16" FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                            <Switch Grid.Column="1"
+                                    IsToggled="{Binding MealPrepMode}"
+                                    OnColor="{StaticResource Primary}" />
+                        </Grid>
+                        <Label Text="Batch-cook a few recipes and repeat them, instead of a different meal every day."
+                               FontSize="13" TextColor="{StaticResource Gray500}" />
+
+                        <VerticalStackLayout Spacing="12" IsVisible="{Binding MealPrepMode}">
+                            <Label Text="How often you cook" FontSize="14" FontAttributes="Bold" Margin="0,4,0,0" />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Button Text="-"
+                                        Command="{Binding DecrementMealPrepDaysCommand}"
+                                        WidthRequest="44" HeightRequest="44" CornerRadius="22"
+                                        Grid.Column="0" />
+                                <Label Text="{Binding MealPrepDaysDisplay}"
+                                       FontSize="20" FontAttributes="Bold"
+                                       HorizontalOptions="Center" VerticalOptions="Center"
+                                       Grid.Column="1" />
+                                <Button Text="+"
+                                        Command="{Binding IncrementMealPrepDaysCommand}"
+                                        WidthRequest="44" HeightRequest="44" CornerRadius="22"
+                                        Grid.Column="2" />
+                            </Grid>
+                            <Label Text="Each recipe covers this many days before you cook something new."
+                                   FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
                 <!-- Daily Water Goal -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="8">

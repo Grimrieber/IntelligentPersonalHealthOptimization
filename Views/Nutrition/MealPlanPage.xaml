@@ -139,6 +139,19 @@
                                                 IsVisible="{Binding IsSwappable}" />
                                     </Grid>
 
+                                    <!-- Meal-prep badge: this meal repeats across the prep block -->
+                                    <Border IsVisible="{Binding HasMealPrepNote}"
+                                            Stroke="Transparent"
+                                            BackgroundColor="{AppThemeBinding Light=#EDE7F6, Dark=#311B92}"
+                                            StrokeShape="RoundRectangle 6"
+                                            Padding="8,3"
+                                            HorizontalOptions="Start"
+                                            Margin="0,6,0,0">
+                                        <Label Text="{Binding MealPrepNote}"
+                                               FontSize="11" FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                                    </Border>
+
                                     <!-- Row 3: Servings + macros -->
                                     <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
                                         <Label Text="{Binding ServingsNote}"

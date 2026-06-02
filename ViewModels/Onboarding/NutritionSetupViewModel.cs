@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IntelligentPersonalHealthOptimization.Helpers;
 using IntelligentPersonalHealthOptimization.Models;
 using IntelligentPersonalHealthOptimization.Models.Enums;
 using IntelligentPersonalHealthOptimization.Services.Interfaces;
@@ -18,7 +19,7 @@ public partial class NutritionSetupViewModel : BaseViewModel
         _nutritionService = nutritionService;
         Title = _coordinator.StepTitle;
 
-        _selectedDietType = _coordinator.Data.DietType;
+        _selectedDietType = DietTypeOptions.FirstOrDefault(o => o.Value == _coordinator.Data.DietType) ?? DietTypeOptions[0];
         _mealsPerDay = _coordinator.Data.MealsPerDay;
         _foodPreferences = _coordinator.Data.FoodPreferences;
         _foodDislikes = _coordinator.Data.FoodDislikes;
@@ -39,12 +40,13 @@ public partial class NutritionSetupViewModel : BaseViewModel
     public double ProgressPercentage => _coordinator.ProgressPercentage / 100.0;
     public string StepIndicator => $"Step {_coordinator.CurrentStep + 1} of {_coordinator.TotalSteps}";
 
-    public List<DietType> DietTypeOptions => Enum.GetValues<DietType>().ToList();
+    public List<PickerItem<DietType>> DietTypeOptions { get; } =
+        PickerItem<DietType>.From(Enum.GetValues<DietType>());
     public List<string> AlcoholFrequencyOptions { get; } = ["None", "Rarely", "Weekly", "Daily"];
     public List<FoodAllergy> AllAllergyOptions { get; } = Enum.GetValues<FoodAllergy>().ToList();
 
     [ObservableProperty]
-    private DietType _selectedDietType;
+    private PickerItem<DietType> _selectedDietType;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(MealsPerDayDisplay))]
@@ -105,7 +107,7 @@ public partial class NutritionSetupViewModel : BaseViewModel
     public string TDEEDisplay => $"{EstimatedTDEE:F0} kcal";
     public string CaloriesDisplay => $"{RecommendedCalories} kcal/day";
 
-    partial void OnSelectedDietTypeChanged(DietType value) => _coordinator.Data.DietType = value;
+    partial void OnSelectedDietTypeChanged(PickerItem<DietType> value) => _coordinator.Data.DietType = value.Value;
     partial void OnMealsPerDayChanged(int value) => _coordinator.Data.MealsPerDay = value;
     partial void OnFoodPreferencesChanged(string value) => _coordinator.Data.FoodPreferences = value ?? string.Empty;
     partial void OnFoodDislikesChanged(string value) => _coordinator.Data.FoodDislikes = value ?? string.Empty;
@@ -129,26 +131,21 @@ public partial class NutritionSetupViewModel : BaseViewModel
             DateOfBirth = data.DateOfBirth,
             Gender = data.Gender,
             HeightCm = data.HeightCm,
-            WeightKg = data.WeightKg
+            WeightKg = data.WeightKg,
+            ActivityLevel = data.ActivityLevel,
+            FitnessGoal = data.PrimaryFitnessGoal
         };
 
-        var bmr = _nutritionService.CalculateBMR(tempUser);
-        var tdee = _nutritionService.CalculateTDEE(bmr, data.ActivityLevel);
-        var (proteinG, carbsG, fatG) = _nutritionService.CalculateMacroTargets(tdee, data.PrimaryFitnessGoal);
+        // No assessment during onboarding — shared entry point uses the FitnessGoal path,
+        // so this preview matches the profile that CompleteOnboarding will create.
+        var t = _nutritionService.ComputeTargetsForUser(tempUser, null);
 
-        var targetCalories = data.PrimaryFitnessGoal switch
-        {
-            FitnessGoal.WeightLoss => (int)(tdee - 500),
-            FitnessGoal.MuscleBuilding => (int)(tdee + 300),
-            _ => (int)tdee
-        };
-
-        EstimatedBMR = bmr;
-        EstimatedTDEE = tdee;
-        RecommendedCalories = targetCalories;
-        RecommendedProteinG = proteinG;
-        RecommendedCarbsG = carbsG;
-        RecommendedFatG = fatG;
+        EstimatedBMR = t.Bmr;
+        EstimatedTDEE = t.Tdee;
+        RecommendedCalories = t.Calories;
+        RecommendedProteinG = t.ProteinG;
+        RecommendedCarbsG = t.CarbsG;
+        RecommendedFatG = t.FatG;
         HasSummaryData = true;
     }
 

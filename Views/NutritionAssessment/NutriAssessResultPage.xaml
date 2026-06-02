@@ -347,12 +347,27 @@
         <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="0,16,0,0">
             <Button Text="Back"
                     Command="{Binding PreviousCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}"
                     Style="{StaticResource SecondaryButton}"
                     Grid.Column="0" />
             <Button Text="Complete"
                     Command="{Binding CompleteCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}"
                     Style="{StaticResource PrimaryButton}"
                     Grid.Column="1" />
+        </Grid>
+
+        <!-- Busy overlay while the assessment saves + meal plan is generated -->
+        <Grid Grid.Row="0" Grid.RowSpan="3"
+              IsVisible="{Binding IsBusy}"
+              BackgroundColor="#CC000000">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color="{StaticResource Primary}" HeightRequest="48" WidthRequest="48" />
+                <Label Text="Building your personalized meal plan…"
+                       TextColor="White"
+                       FontSize="15"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
         </Grid>
 
     </Grid>

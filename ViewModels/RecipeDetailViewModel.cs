@@ -180,13 +180,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
             IngredientGroups = new ObservableCollection<IngredientGrouping>(Recipe.GroupedIngredients);
             DirectionGroups = new ObservableCollection<DirectionGrouping>(Recipe.GroupedDirections);
 
-            // Check if saved
-            var user = await _userService.GetCurrentUserAsync();
-            if (user != null)
-            {
-                IsSaved = await _savedRecipeService.IsRecipeSavedAsync(RecipeId, user.Id);
-                UpdateSaveButton();
-            }
+            // Cookbook recipes are favorited in place: RecipeId is the catalog
+            // row's Id, so "saved" means IsFavorite is set on that row.
+            IsSaved = await _savedRecipeService.IsFavoriteAsync(RecipeId);
+            UpdateSaveButton();
         }
         catch (Exception ex)
         {
@@ -298,20 +295,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
         try
         {
-            var user = await _userService.GetCurrentUserAsync();
-            if (user == null) return;
-
-            if (IsSaved)
-            {
-                await _savedRecipeService.RemoveSavedRecipeAsync(RecipeId, user.Id);
-                IsSaved = false;
-            }
-            else
-            {
-                await _savedRecipeService.SaveRecipeAsync(Recipe, user.Id);
-                IsSaved = true;
-            }
-
+            // Flip IsFavorite on the catalog row — same mechanism the star on
+            // the browse list uses, so the two stay in sync.
+            await _savedRecipeService.ToggleFavoriteAsync(RecipeId);
+            IsSaved = !IsSaved;
             UpdateSaveButton();
         }
         catch (Exception ex)

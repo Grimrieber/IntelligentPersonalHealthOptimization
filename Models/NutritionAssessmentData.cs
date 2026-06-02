@@ -28,6 +28,12 @@ public class NutritionAssessmentData
     public int ProteinPerShakeG { get; set; } = 30;
     public int DailyWaterGlasses { get; set; } = 8;
 
+    // Meal prep: when on, the plan cooks a few recipes and repeats each for
+    // MealPrepDays consecutive days instead of a new recipe every meal.
+    // On by default — cooking 21 different recipes a week is unrealistic.
+    public bool MealPrepMode { get; set; } = true;
+    public int MealPrepDays { get; set; } = 3;
+
     // Food Frequency Questionnaire
     public List<FoodFrequencyResponse> FoodFrequencyResponses { get; set; } = [];
 

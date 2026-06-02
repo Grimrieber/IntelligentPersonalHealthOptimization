@@ -2,10 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.NutritionAssessment"
+             xmlns:converters="clr-namespace:IntelligentPersonalHealthOptimization.Converters"
              x:Class="IntelligentPersonalHealthOptimization.Views.NutritionAssessment.BodyCompositionPage"
              x:DataType="vm:BodyCompositionViewModel"
              Title="{Binding StepTitle}"
              Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <!-- Segmented cm/in toggle: highlight the active unit. -->
+        <converters:BoolToColorConverter x:Key="CmActiveBg" TrueColor="{StaticResource Primary}" FalseColor="Transparent" />
+        <converters:BoolToColorConverter x:Key="InActiveBg" TrueColor="Transparent" FalseColor="{StaticResource Primary}" />
+        <converters:BoolToColorConverter x:Key="CmActiveText" TrueColor="White" FalseColor="{StaticResource Primary}" />
+        <converters:BoolToColorConverter x:Key="InActiveText" TrueColor="{StaticResource Primary}" FalseColor="White" />
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto" Padding="24,16">
 
@@ -31,29 +40,61 @@
                 <!-- Circumference Measurements -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="Circumference Measurements (cm)" FontSize="16" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Text="{Binding UnitTitle}" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+
+                            <!-- cm / in segmented toggle -->
+                            <Border Grid.Column="1"
+                                    Stroke="{StaticResource Primary}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="0"
+                                    HorizontalOptions="End">
+                                <Grid ColumnDefinitions="Auto,Auto">
+                                    <Button Text="cm"
+                                            Command="{Binding SetUnitCommand}"
+                                            CommandParameter="cm"
+                                            BackgroundColor="{Binding UnitIsCm, Converter={StaticResource CmActiveBg}}"
+                                            TextColor="{Binding UnitIsCm, Converter={StaticResource CmActiveText}}"
+                                            CornerRadius="0"
+                                            Padding="14,4"
+                                            HeightRequest="36"
+                                            FontSize="13" />
+                                    <Button Grid.Column="1"
+                                            Text="in"
+                                            Command="{Binding SetUnitCommand}"
+                                            CommandParameter="in"
+                                            BackgroundColor="{Binding UnitIsCm, Converter={StaticResource InActiveBg}}"
+                                            TextColor="{Binding UnitIsCm, Converter={StaticResource InActiveText}}"
+                                            CornerRadius="0"
+                                            Padding="14,4"
+                                            HeightRequest="36"
+                                            FontSize="13" />
+                                </Grid>
+                            </Border>
+                        </Grid>
 
                         <Grid ColumnDefinitions="*,120" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
                             <Label Text="Neck (across Adam's apple)" VerticalOptions="Center" FontSize="13" Grid.Row="0" />
-                            <Entry Text="{Binding NeckCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="0" Grid.Column="1" />
+                            <Entry Text="{Binding NeckText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="0" Grid.Column="1" />
 
                             <Label Text="Chest (across nipple line)" VerticalOptions="Center" FontSize="13" Grid.Row="1" />
-                            <Entry Text="{Binding ChestCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="1" Grid.Column="1" />
+                            <Entry Text="{Binding ChestText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="1" Grid.Column="1" />
 
                             <Label Text="Waist (narrowest point)" VerticalOptions="Center" FontSize="13" Grid.Row="2" />
-                            <Entry Text="{Binding WaistCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="2" Grid.Column="1" />
+                            <Entry Text="{Binding WaistText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="2" Grid.Column="1" />
 
                             <Label Text="Hips (widest point)" VerticalOptions="Center" FontSize="13" Grid.Row="3" />
-                            <Entry Text="{Binding HipsCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="3" Grid.Column="1" />
+                            <Entry Text="{Binding HipsText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="3" Grid.Column="1" />
 
                             <Label Text="Thigh (10 inches above patella)" VerticalOptions="Center" FontSize="13" Grid.Row="4" />
-                            <Entry Text="{Binding ThighCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="4" Grid.Column="1" />
+                            <Entry Text="{Binding ThighText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="4" Grid.Column="1" />
 
                             <Label Text="Calf (maximal circumference)" VerticalOptions="Center" FontSize="13" Grid.Row="5" />
-                            <Entry Text="{Binding CalfCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="5" Grid.Column="1" />
+                            <Entry Text="{Binding CalfText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="5" Grid.Column="1" />
 
                             <Label Text="Bicep (arm extended, maximal)" VerticalOptions="Center" FontSize="13" Grid.Row="6" />
-                            <Entry Text="{Binding BicepCmText}" Keyboard="Numeric" Placeholder="cm" Grid.Row="6" Grid.Column="1" />
+                            <Entry Text="{Binding BicepText}" Keyboard="Numeric" Placeholder="{Binding UnitLabel}" Grid.Row="6" Grid.Column="1" />
                         </Grid>
                     </VerticalStackLayout>
                 </Frame>

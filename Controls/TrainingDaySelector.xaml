@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:IntelligentPersonalHealthOptimization.Helpers"
+             x:Class="IntelligentPersonalHealthOptimization.Controls.TrainingDaySelector"
+             x:Name="root">
+
+    <VerticalStackLayout Spacing="8">
+
+        <FlexLayout Wrap="Wrap"
+                    Direction="Row"
+                    JustifyContent="Start"
+                    AlignItems="Center"
+                    BindableLayout.ItemsSource="{Binding Days, Source={x:Reference root}}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="helpers:DayToggle">
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="{StaticResource Primary}"
+                            BackgroundColor="Transparent"
+                            Padding="14,8"
+                            Margin="3"
+                            MinimumWidthRequest="54">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleCommand}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Label Text="{Binding Short}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+
+        <Label Text="{Binding Summary, Source={x:Reference root}}"
+               FontSize="13"
+               FontAttributes="Bold"
+               TextColor="{StaticResource Primary}" />
+
+        <Label Text="{Binding Status, Source={x:Reference root}}"
+               FontSize="12"
+               TextColor="{StaticResource Gray500}"
+               IsVisible="{Binding Status, Source={x:Reference root}, Converter={StaticResource IsNotEmptyConverter}}" />
+
+    </VerticalStackLayout>
+</ContentView>

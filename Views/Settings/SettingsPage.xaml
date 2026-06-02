@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             xmlns:controls="clr-namespace:IntelligentPersonalHealthOptimization.Controls"
              x:Class="IntelligentPersonalHealthOptimization.Views.Settings.SettingsPage"
              x:DataType="vm:SettingsViewModel"
              Title="Settings">
@@ -66,7 +67,7 @@
                                     Padding="12,4">
                                 <Picker Title="Select Activity Level"
                                         ItemsSource="{Binding ActivityLevelOptions}"
-                                        SelectedItem="{Binding EditActivityLevel}" />
+                                        SelectedItem="{Binding SelectedActivityLevelOption}" />
                             </Border>
                         </VerticalStackLayout>
 
@@ -113,16 +114,19 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Training -->
+            <!-- Training summary only — buttons moved to Workout tab where they belong -->
             <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasTrainingProfile}">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="Training" FontSize="18" FontAttributes="Bold" />
                     <Label Text="{Binding TrainingSummary}" FontSize="13" TextColor="{StaticResource Gray500}" />
-                    <Button Text="View Calendar"
-                            Command="{Binding ViewCalendarCommand}"
-                            Style="{StaticResource SecondaryButton}"
-                            FontSize="14"
-                            HeightRequest="40" />
+
+                    <Label Text="Training Days" FontSize="14" FontAttributes="Bold" Margin="0,8,0,0" />
+                    <Label Text="Tap the days you can train. This sets both which days we schedule and how many days per week."
+                           FontSize="12" TextColor="{StaticResource Gray500}" />
+                    <controls:TrainingDaySelector SelectedDaysCsv="{Binding TrainingDaysCsv}" />
+
+                    <Label Text="Manage equipment, strength baselines, and the calendar from the Workout tab."
+                           FontSize="11" TextColor="{StaticResource Gray400}" Margin="0,8,0,0" />
                 </VerticalStackLayout>
             </Frame>
 
@@ -176,6 +180,19 @@
                     <Label Text="Health Optimizer v2.0" FontSize="14" TextColor="{StaticResource Gray500}" />
                     <Label Text="Your comprehensive personal health optimization app."
                            FontSize="12" TextColor="{StaticResource Gray400}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Credits / Attribution -->
+            <Frame Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Image Credits" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="Exercise demonstration images by Free Exercise DB (MIT License) and wger.de (CC BY-SA 4.0)."
+                           FontSize="12" TextColor="{StaticResource Gray500}" />
+                    <Label Text="Free Exercise DB: github.com/yuhonas/free-exercise-db"
+                           FontSize="11" TextColor="{StaticResource Gray400}" />
+                    <Label Text="wger: wger.de"
+                           FontSize="11" TextColor="{StaticResource Gray400}" />
                 </VerticalStackLayout>
             </Frame>
 

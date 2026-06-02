@@ -111,10 +111,40 @@ public class DatabaseService : IDatabaseService
         await _connection.CreateTableAsync<SavedRecipeIngredient>();
         await _connection.CreateTableAsync<SavedRecipeDirection>();
 
+        // Equipment intel (post-CES inventory + environment + gym-chain presets)
+        await _connection.CreateTableAsync<EquipmentInventoryItem>();
+        await _connection.CreateTableAsync<TrainingEnvironment>();
+        await _connection.CreateTableAsync<GymChainEquipmentTemplate>();
+
+        // Strength baselines + per-set logging
+        await _connection.CreateTableAsync<WorkingWeight>();
+        await _connection.CreateTableAsync<ExercisePerformanceEntry>();
+
         // Seed data
         await SeedData.SeedExercisesAsync(_connection);
         await SeedData.SeedCesExercisesAsync(_connection);
         await SeedData.SeedFoodsAsync(_connection);
+        await SeedData.SeedGymChainTemplatesAsync(_connection);
+        await SeedData.SeedWikibooksRecipesAsync(_connection);
+
+        // One-shot DB fix for incorrect onboarding values. Self-gated; runs once.
+        await SeedData.ApplyOneShotProfileFixAsync(_connection);
+
+        // One-shot removal of unusable cookbook recipes. Self-gated; runs once.
+        await SeedData.ApplyRecipeCleanupAsync(_connection);
+
+        // One-shot: give "Uncategorized" recipes a real category from their name.
+        await SeedData.ApplyRecipeRecategorizeAsync(_connection);
+
+        // One-shot: remove inappropriate / non-food recipes flagged by audit.
+        await SeedData.ApplyQuestionableRecipeRemovalAsync(_connection);
+
+        // One-shot: purge duplicate "User" recipe rows left by the old meal-plan
+        // pool builder (now fixed to read the bundled catalog directly).
+        await SeedData.ApplyDuplicateRecipeCleanupAsync(_connection);
+
+        // One-shot: collapse duplicate TrainingProfile rows so the training level is consistent.
+        await SeedData.ApplyTrainingProfileDedupAsync(_connection);
     }
 
     public async Task<SQLiteAsyncConnection> GetConnectionAsync()

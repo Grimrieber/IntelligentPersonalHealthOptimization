@@ -62,29 +62,18 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Goals -->
+                <!-- Health Screening -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Goals" FontSize="16" FontAttributes="Bold"
+                        <Label Text="Health Screening" FontSize="16" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
                         <BoxView HeightRequest="1" Color="{StaticResource Gray200}" Margin="0,2" />
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
-                            <Label Text="Primary:" FontAttributes="Bold" FontSize="13" Grid.Row="0" Grid.Column="0" />
-                            <Label Text="{Binding PrimaryGoalDisplay}" FontSize="13" Grid.Row="0" Grid.Column="1" />
-                            <Label Text="Activity:" FontAttributes="Bold" FontSize="13" Grid.Row="1" Grid.Column="0" />
-                            <Label Text="{Binding ActivityLevelDisplay}" FontSize="13" Grid.Row="1" Grid.Column="1" />
-                            <Label Text="Goals:" FontAttributes="Bold" FontSize="13" Grid.Row="2" Grid.Column="0" />
-                            <Label Text="{Binding GoalsCountDisplay}" FontSize="13" Grid.Row="2" Grid.Column="1" />
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="4">
+                            <Label Text="Conditions:" FontAttributes="Bold" FontSize="13" Grid.Row="0" Grid.Column="0" />
+                            <Label Text="{Binding ConditionsDisplay}" FontSize="13" Grid.Row="0" Grid.Column="1" />
+                            <Label Text="Injuries:" FontAttributes="Bold" FontSize="13" Grid.Row="1" Grid.Column="0" />
+                            <Label Text="{Binding InjuriesDisplay}" FontSize="13" Grid.Row="1" Grid.Column="1" />
                         </Grid>
-                        <VerticalStackLayout Spacing="2"
-                                             BindableLayout.ItemsSource="{Binding GoalsSummary}"
-                                             Margin="0,4,0,0">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <Label Text="{Binding .}" FontSize="12" TextColor="{StaticResource Gray500}" />
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Frame>
 

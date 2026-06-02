@@ -43,6 +43,9 @@ public class OnboardingData
     public string CardioTestResult { get; set; } = string.Empty;
 
     // Step 8: Goals
+    // INPUT-ONLY (goals consolidation Step 3): transient wizard input. Canonical storage is
+    // User.FitnessGoal, written once in OnboardingCoordinator.CompleteOnboardingAsync. Do not
+    // read this as a source of truth post-onboarding — read User.FitnessGoal instead.
     public FitnessGoal PrimaryFitnessGoal { get; set; } = FitnessGoal.GeneralFitness;
     public ActivityLevel ActivityLevel { get; set; } = ActivityLevel.ModeratelyActive;
     public List<GoalData> Goals { get; set; } = [];

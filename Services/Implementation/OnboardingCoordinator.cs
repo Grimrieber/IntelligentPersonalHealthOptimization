@@ -22,7 +22,7 @@ public class OnboardingCoordinator : IOnboardingCoordinator
         "Welcome",
         "Personal Info",
         "Body Metrics",
-        "Your Goals",
+        "Health Screening",
         "Security",
         "Review & Finish"
     ];
@@ -32,7 +32,7 @@ public class OnboardingCoordinator : IOnboardingCoordinator
         RouteConstants.OnboardingWelcome,
         RouteConstants.OnboardingPersonalInfo,
         RouteConstants.OnboardingBodyMetrics,
-        RouteConstants.OnboardingGoals,
+        RouteConstants.OnboardingHealthScreening,
         RouteConstants.OnboardingSecurity,
         RouteConstants.OnboardingReview
     ];
@@ -109,22 +109,16 @@ public class OnboardingCoordinator : IOnboardingCoordinator
         if (!string.IsNullOrEmpty(Data.SecurityQuestion) && !string.IsNullOrEmpty(Data.SecurityAnswer))
             await _securityService.SetSecurityQuestionAsync(Data.SecurityQuestion, Data.SecurityAnswer);
 
-        // 3. Create a basic Nutrition Profile with sensible defaults
-        var bmr = _nutritionService.CalculateBMR(user);
-        var tdee = _nutritionService.CalculateTDEE(bmr, Data.ActivityLevel);
-        var (proteinG, carbsG, fatG) = _nutritionService.CalculateMacroTargets(tdee, Data.PrimaryFitnessGoal);
-        var targetCalories = Data.PrimaryFitnessGoal switch
-        {
-            FitnessGoal.WeightLoss => (int)(tdee - 500),
-            FitnessGoal.MuscleBuilding => (int)(tdee + 300),
-            _ => (int)tdee
-        };
+        // 3. Create a basic Nutrition Profile with sensible defaults.
+        // No nutrition assessment exists yet, so targets come from the FitnessGoal path
+        // via the shared entry point (keeps onboarding/settings/assessment consistent).
+        var t = _nutritionService.ComputeTargetsForUser(user, null);
 
         await _nutritionService.CreateNutritionProfileAsync(
             user.Id, DietType.Standard, 3,
             string.Empty, string.Empty, string.Empty,
             8, string.Empty, "None", 0,
-            bmr, tdee, targetCalories, proteinG, carbsG, fatG);
+            t.Bmr, t.Tdee, t.Calories, t.ProteinG, t.CarbsG, t.FatG);
 
         // 4. Create Goals
         foreach (var goalData in Data.Goals)

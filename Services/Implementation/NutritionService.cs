@@ -43,14 +43,21 @@ public partial class NutritionService : INutritionService
         return bmr * factor;
     }
 
+    /// <summary>
+    /// The single source of truth for how a <see cref="FitnessGoal"/> shifts daily calories
+    /// relative to TDEE when there is no nutrition assessment. Defined once so the
+    /// onboarding / settings / no-assessment paths can't drift apart.
+    /// </summary>
+    private static double FitnessGoalCalorieAdjustment(FitnessGoal fitnessGoal) => fitnessGoal switch
+    {
+        FitnessGoal.WeightLoss => -500,
+        FitnessGoal.MuscleBuilding => 300,
+        _ => 0
+    };
+
     public (int proteinG, int carbsG, int fatG) CalculateMacroTargets(double tdee, FitnessGoal fitnessGoal)
     {
-        var targetCalories = fitnessGoal switch
-        {
-            FitnessGoal.WeightLoss => tdee - 500,
-            FitnessGoal.MuscleBuilding => tdee + 300,
-            _ => tdee
-        };
+        var targetCalories = tdee + FitnessGoalCalorieAdjustment(fitnessGoal);
 
         double proteinPct, carbsPct, fatPct;
         switch (fitnessGoal)
@@ -78,12 +85,7 @@ public partial class NutritionService : INutritionService
 
     public (int proteinG, int carbsG, int fatG) CalculateMacroTargets(double tdee, FitnessGoal fitnessGoal, DietType dietType)
     {
-        var targetCalories = fitnessGoal switch
-        {
-            FitnessGoal.WeightLoss => tdee - 500,
-            FitnessGoal.MuscleBuilding => tdee + 300,
-            _ => tdee
-        };
+        var targetCalories = tdee + FitnessGoalCalorieAdjustment(fitnessGoal);
 
         // Diet-specific macro splits override fitness goal defaults
         double proteinPct, carbsPct, fatPct;
@@ -109,6 +111,97 @@ public partial class NutritionService : INutritionService
         var fatG = (int)(targetCalories * fatPct / 9);
 
         return (proteinG, carbsG, fatG);
+    }
+
+    /// <summary>
+    /// THE single entry point for computing a user's nutrition targets (BMR/TDEE + macros).
+    /// Every place that writes <see cref="NutritionProfile"/> targets — onboarding, the
+    /// assessment, Settings, Add-Progress — must call this so they can never drift.
+    ///
+    /// When <paramref name="assessment"/> is provided, ALL of its goal inputs (goal, diet,
+    /// target weight, timeline, workouts, focus areas, confidence, readiness) are read here
+    /// so callers can't accidentally omit them (which previously produced different macros
+    /// in Settings / Add-Progress than the assessment itself). When it is null (a freshly
+    /// onboarded user with no assessment yet) the simpler FitnessGoal-based path is used.
+    /// </summary>
+    public NutritionTargets ComputeTargetsForUser(User user, NutritionAssessment? assessment)
+    {
+        var bmr = CalculateBMR(user);
+        var tdee = CalculateTDEE(bmr, user.ActivityLevel);
+
+        if (assessment != null)
+        {
+            var (calories, proteinG, carbsG, fatG) = CalculateAssessmentTargets(
+                tdee, assessment.PrimaryGoal, assessment.SelectedDietType, user.Gender,
+                user.WeightKg, assessment.TargetWeightKg, assessment.SelectedTimeline,
+                assessment.WorkoutsPerWeek, assessment.AvgWorkoutMinutes,
+                DeserializeFocusAreas(assessment.FocusAreasJson),
+                assessment.ConfidenceLevel, assessment.ReadinessScore);
+            return new NutritionTargets(bmr, tdee, calories, proteinG, carbsG, fatG);
+        }
+        else
+        {
+            var (proteinG, carbsG, fatG) = CalculateMacroTargets(tdee, user.FitnessGoal);
+            var calories = (int)(tdee + FitnessGoalCalorieAdjustment(user.FitnessGoal));
+            return new NutritionTargets(bmr, tdee, calories, proteinG, carbsG, fatG);
+        }
+    }
+
+    // One-shot marker for the goals-consolidation Step 4 backfill. Self-gated by a file
+    // so it runs exactly once per install. New marker (do NOT reuse the recipe/profile
+    // one-shot markers — those reset other data).
+    private const string TargetReconcileMarker = "nutrition_target_reconcile_2026_06_01_v1.done";
+
+    /// <summary>
+    /// One-shot, non-destructive backfill (goals consolidation Step 4). Installs created
+    /// before the shared <see cref="ComputeTargetsForUser"/> entry point may have saved
+    /// NutritionProfile macro targets that drifted — Settings / Add-Progress used to call
+    /// the calculator without the assessment's focus/confidence/readiness inputs, producing
+    /// different macros than the assessment itself. Recompute the saved profile's targets
+    /// through the single shared entry point so every screen agrees. Self-gated; runs once.
+    /// </summary>
+    public async Task ReconcileSavedTargetsAsync(User user)
+    {
+        var markerPath = Path.Combine(FileSystem.AppDataDirectory, TargetReconcileMarker);
+        if (File.Exists(markerPath))
+            return;
+
+        try
+        {
+            var profile = await GetNutritionProfileAsync(user.Id);
+            if (profile != null)
+            {
+                // Drives off the latest assessment (or the FitnessGoal path when none) —
+                // identical to what Settings/Add-Progress/onboarding now compute.
+                var assessment = await GetLatestAssessmentAsync(user.Id);
+                var t = ComputeTargetsForUser(user, assessment);
+
+                profile.BMR = t.Bmr;
+                profile.TDEE = t.Tdee;
+                profile.TargetCalories = t.Calories;
+                profile.TargetProteinG = t.ProteinG;
+                profile.TargetCarbsG = t.CarbsG;
+                profile.TargetFatG = t.FatG;
+                profile.UpdatedAt = DateTime.UtcNow;
+                await UpdateNutritionProfileAsync(profile);
+            }
+
+            // Write the marker even when there is no profile yet — nothing to reconcile,
+            // and any profile created later goes through ComputeTargetsForUser anyway.
+            File.WriteAllText(markerPath, $"applied {DateTime.UtcNow:O}");
+        }
+        catch
+        {
+            // Best-effort — don't disrupt dashboard load. Marker stays unwritten so it
+            // retries on the next launch.
+        }
+    }
+
+    private static List<NutritionFocusArea> DeserializeFocusAreas(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return new();
+        try { return System.Text.Json.JsonSerializer.Deserialize<List<NutritionFocusArea>>(json) ?? new(); }
+        catch { return new(); }
     }
 
     public (int calories, int proteinG, int carbsG, int fatG) CalculateAssessmentTargets(
@@ -269,8 +362,34 @@ public partial class NutritionService : INutritionService
         // but it feeds into the dashboard hydration tracking.
 
         var proteinG = (int)(targetCalories * proteinPct / 4);
-        var carbsG = (int)(targetCalories * carbsPct / 4);
         var fatG = (int)(targetCalories * fatPct / 9);
+
+        // Body-weight-based protein floor for muscle-focused goals.
+        // %-of-calorie protein splits under-protein large/lean athletes — this
+        // override enforces sports-nutrition g/kg minimums (ISSN guidelines).
+        var proteinFloorGPerKg = goal switch
+        {
+            PrimaryNutritionGoal.PrepareForCompetition    => 2.4, // peak cut, max LBM preservation
+            PrimaryNutritionGoal.LoseBodyFat              => 2.0,
+            PrimaryNutritionGoal.BodyRecomposition        => 2.0,
+            PrimaryNutritionGoal.AggressiveMuscleGain     => 1.8,
+            PrimaryNutritionGoal.BuildLeanMuscle          => 1.8,
+            PrimaryNutritionGoal.ImproveAthletePerformance => 1.6,
+            _ => 0.0,
+        };
+
+        if (proteinFloorGPerKg > 0 && currentWeightKg > 0)
+        {
+            var floorG = (int)Math.Round(proteinFloorGPerKg * currentWeightKg);
+            if (floorG > proteinG)
+                proteinG = floorG;
+        }
+
+        // Carbs = remaining calories after protein + fat. Keeps macro sum
+        // aligned with targetCalories regardless of whether the protein floor
+        // overrode the %-split.
+        var remainingKcal = targetCalories - (proteinG * 4) - (fatG * 9);
+        var carbsG = (int)Math.Max(0, remainingKcal / 4);
 
         return ((int)targetCalories, proteinG, carbsG, fatG);
     }
@@ -871,94 +990,143 @@ public partial class NutritionService : INutritionService
         var targetFatPct = (profile.TargetFatG * 9.0) / totalTargetCal;
 
         var startDate = DateTime.UtcNow.Date;
-        var usedRecipeIds = new HashSet<int>();
         var dayNames = new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
-        for (int d = 0; d < planDays; d++)
+        // The meal-type set repeats every day, so filter the pool once per distinct
+        // meal type instead of re-scanning all ~3,500 recipes for every one of the
+        // ~250 slots in the plan.
+        var candidatesByMealType = mealTypes
+            .Distinct()
+            .ToDictionary(mt => mt, mt => _mealPlanRecipeService.FilterForMealType(pool, mt));
+
+        // Meal prep: a cooked recipe covers `prepDays` consecutive days (batch
+        // cooking). 1 = a new recipe every day (max variety). Pre-pick the recipe
+        // for each block of days, per meal type, so a meal stays the same across
+        // its block instead of changing daily.
+        var prepDays = profile.MealPrepMode ? Math.Max(1, profile.MealPrepDays) : 1;
+        var blockCount = (planDays + prepDays - 1) / prepDays;
+        var blocksPerWeek = Math.Max(1, 7 / prepDays); // refresh the variety pool ~weekly
+
+        var distinctMealTypes = mealTypes.Distinct().ToList();
+        var recipeSchedule = distinctMealTypes.ToDictionary(mt => mt, _ => new List<SavedRecipe?>(blockCount));
+
+        // Build block-by-block (not meal-type-by-meal-type) with a used-set shared
+        // ACROSS meal slots within each block, so different slots don't land on the
+        // same recipe — e.g. lunch and dinner draw from the same pool, so without
+        // this they'd both pick the single best calorie match. usedRecent carries
+        // picks across blocks for week-to-week variety and resets each week.
+        var usedRecent = new HashSet<int>();
+        for (int b = 0; b < blockCount; b++)
         {
-            var date = startDate.AddDays(d);
-            var weekNum = d / 7 + 1;
+            if (b % blocksPerWeek == 0) usedRecent.Clear(); // allow repeats across weeks
+            var usedThisBlock = new HashSet<int>(usedRecent);
 
-            // Reset used IDs each week for variety
-            if (d % 7 == 0)
-                usedRecipeIds.Clear();
-
-            var mealDay = new MealPlanDay
-            {
-                MealPlanId = plan.Id,
-                DayNumber = d + 1,
-                DayName = $"Week {weekNum} - {dayNames[(int)date.DayOfWeek]}",
-                Date = date
-            };
-            await _databaseService.InsertAsync(mealDay);
-
-            double dailyCalories = 0;
-            int order = 0;
-
-            foreach (var mealType in mealTypes)
+            foreach (var mealType in distinctMealTypes)
             {
                 var isSnack = mealType is MealType.MorningSnack or MealType.AfternoonSnack or MealType.EveningSnack;
-                var targetCal = isSnack ? snackCalTarget : mainCalTarget;
-
-                var candidates = _mealPlanRecipeService.FilterForMealType(pool, mealType);
-                var recipe = _mealPlanRecipeService.SelectBestMatch(candidates, targetCal, usedRecipeIds,
-                    targetProteinPct, targetCarbsPct, targetFatPct);
-
-                if (recipe != null)
+                var slotTarget = isSnack ? snackCalTarget : mainCalTarget;
+                var picked = _mealPlanRecipeService.SelectBestMatch(candidatesByMealType[mealType], slotTarget,
+                    usedThisBlock, targetProteinPct, targetCarbsPct, targetFatPct);
+                if (picked != null)
                 {
-                    usedRecipeIds.Add(recipe.Id);
-                    var recipeCal = recipe.CaloriesPerServing ?? 1;
-                    var servings = recipeCal > 0 ? Math.Round(targetCal / recipeCal, 1) : 1;
-                    servings = Math.Max(1, Math.Min(servings, 5)); // clamp to 1-5 servings
-
-                    var item = new MealPlanItem
-                    {
-                        MealPlanDayId = mealDay.Id,
-                        SavedRecipeId = recipe.Id,
-                        MealType = mealType,
-                        MealName = recipe.RecipeName,
-                        Servings = servings,
-                        Calories = Math.Round(recipeCal * servings),
-                        ProteinG = Math.Round((recipe.ProteinGrams ?? 0) * servings, 1),
-                        CarbsG = Math.Round((recipe.CarbsGrams ?? 0) * servings, 1),
-                        FatG = Math.Round((recipe.FatGrams ?? 0) * servings, 1),
-                        OrderIndex = order++
-                    };
-                    await _databaseService.InsertAsync(item);
-                    dailyCalories += item.Calories;
+                    usedThisBlock.Add(picked.Id);
+                    usedRecent.Add(picked.Id);
                 }
+                recipeSchedule[mealType].Add(picked);
             }
-
-            // Add protein shakes
-            if (wheyFood != null && profile.UsesProteinShakes && profile.ShakesPerDay > 0)
-            {
-                var shakeSlots = GetProteinShakeSlots(profile.ShakesPerDay);
-                var factor = shakeServingG / 100.0;
-                int shakeOrder = 100;
-
-                foreach (var slotType in shakeSlots)
-                {
-                    var shakeItem = new MealPlanItem
-                    {
-                        MealPlanDayId = mealDay.Id,
-                        FoodId = wheyFood.Id,
-                        MealType = slotType,
-                        MealName = "Protein Shake",
-                        ServingSizeG = shakeServingG,
-                        Calories = Math.Round(wheyFood.CaloriesPer100g * factor, 1),
-                        ProteinG = Math.Round(wheyFood.ProteinPer100g * factor, 1),
-                        CarbsG = Math.Round(wheyFood.CarbsPer100g * factor, 1),
-                        FatG = Math.Round(wheyFood.FatPer100g * factor, 1),
-                        OrderIndex = shakeOrder++
-                    };
-                    await _databaseService.InsertAsync(shakeItem);
-                    dailyCalories += shakeItem.Calories;
-                }
-            }
-
-            mealDay.TotalCalories = (int)dailyCalories;
-            await _databaseService.UpdateAsync(mealDay);
         }
+
+        // All inputs (recipe pool, profile, meal types) are already in memory, so
+        // build the whole multi-week plan inside ONE transaction with synchronous
+        // inserts. Previously each day + meal was a separate awaited insert — ~400+
+        // individually-fsync'd writes on the encrypted DB, which took minutes for a
+        // 12-week plan. One transaction commits in ~1 second.
+        await db.RunInTransactionAsync(conn =>
+        {
+            for (int d = 0; d < planDays; d++)
+            {
+                var date = startDate.AddDays(d);
+                var weekNum = d / 7 + 1;
+                var blockIndex = d / prepDays;
+
+                var mealDay = new MealPlanDay
+                {
+                    MealPlanId = plan.Id,
+                    DayNumber = d + 1,
+                    DayName = $"Week {weekNum} - {dayNames[(int)date.DayOfWeek]}",
+                    Date = date
+                };
+                conn.Insert(mealDay);
+
+                double dailyCalories = 0;
+                int order = 0;
+
+                foreach (var mealType in mealTypes)
+                {
+                    var isSnack = mealType is MealType.MorningSnack or MealType.AfternoonSnack or MealType.EveningSnack;
+                    var targetCal = isSnack ? snackCalTarget : mainCalTarget;
+
+                    // Same recipe for every day in the current block (meal prep).
+                    var recipe = recipeSchedule[mealType][blockIndex];
+
+                    if (recipe != null)
+                    {
+                        var recipeCal = recipe.CaloriesPerServing ?? 1;
+                        var servings = recipeCal > 0 ? Math.Round(targetCal / recipeCal, 1) : 1;
+                        // Allow scaling below one serving so a recipe larger than the
+                        // slot target is portioned down to hit the calories, instead
+                        // of overshooting at a forced 1x. 0.5–5 servings, 0.1 precision.
+                        servings = Math.Max(0.5, Math.Min(servings, 5));
+
+                        var item = new MealPlanItem
+                        {
+                            MealPlanDayId = mealDay.Id,
+                            SavedRecipeId = recipe.Id,
+                            MealType = mealType,
+                            MealName = recipe.RecipeName,
+                            Servings = servings,
+                            Calories = Math.Round(recipeCal * servings),
+                            ProteinG = Math.Round((recipe.ProteinGrams ?? 0) * servings, 1),
+                            CarbsG = Math.Round((recipe.CarbsGrams ?? 0) * servings, 1),
+                            FatG = Math.Round((recipe.FatGrams ?? 0) * servings, 1),
+                            OrderIndex = order++
+                        };
+                        conn.Insert(item);
+                        dailyCalories += item.Calories;
+                    }
+                }
+
+                // Add protein shakes
+                if (wheyFood != null && profile.UsesProteinShakes && profile.ShakesPerDay > 0)
+                {
+                    var shakeSlots = GetProteinShakeSlots(profile.ShakesPerDay);
+                    var factor = shakeServingG / 100.0;
+                    int shakeOrder = 100;
+
+                    foreach (var slotType in shakeSlots)
+                    {
+                        var shakeItem = new MealPlanItem
+                        {
+                            MealPlanDayId = mealDay.Id,
+                            FoodId = wheyFood.Id,
+                            MealType = slotType,
+                            MealName = "Protein Shake",
+                            ServingSizeG = shakeServingG,
+                            Calories = Math.Round(wheyFood.CaloriesPer100g * factor, 1),
+                            ProteinG = Math.Round(wheyFood.ProteinPer100g * factor, 1),
+                            CarbsG = Math.Round(wheyFood.CarbsPer100g * factor, 1),
+                            FatG = Math.Round(wheyFood.FatPer100g * factor, 1),
+                            OrderIndex = shakeOrder++
+                        };
+                        conn.Insert(shakeItem);
+                        dailyCalories += shakeItem.Calories;
+                    }
+                }
+
+                mealDay.TotalCalories = (int)dailyCalories;
+                conn.Update(mealDay);
+            }
+        });
 
         return plan;
     }

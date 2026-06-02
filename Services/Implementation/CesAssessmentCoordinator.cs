@@ -106,7 +106,7 @@ public class CesAssessmentCoordinator : ICesAssessmentCoordinator
                     : "Your movement looks great! Keep up the good work."),
                 "OK");
 
-            // Navigate back to workout tab
+            // Return to the Workout tab — CES and workout-program-build are decoupled
             await Shell.Current.GoToAsync("//Workout");
         }
         catch (Exception ex)

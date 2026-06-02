@@ -34,7 +34,8 @@
                 <Frame Style="{StaticResource CardFrame}" Grid.Column="0" Padding="12,8">
                     <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
                         <Label Text="Weight" FontSize="11" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-                        <Label Text="{Binding CurrentWeight}" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="{Binding CurrentWeight}" FontSize="14" FontAttributes="Bold"
+                               HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
                     </VerticalStackLayout>
                 </Frame>
                 <Frame Style="{StaticResource CardFrame}" Grid.Column="1" Padding="12,8">

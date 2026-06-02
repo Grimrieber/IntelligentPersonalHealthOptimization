@@ -149,6 +149,10 @@ public partial class DashboardViewModel : BaseViewModel
             var user = await _userService.GetCurrentUserAsync();
             if (user == null) return;
 
+            // One-shot (self-gated): reconcile any drifted saved nutrition targets through
+            // the shared entry point so the dashboard reads consistent numbers. Runs once.
+            await _nutritionService.ReconcileSavedTargetsAsync(user);
+
             // Greeting
             var hour = DateTime.Now.Hour;
             var timeGreeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
@@ -158,7 +162,8 @@ public partial class DashboardViewModel : BaseViewModel
             var latestProgress = await _progressService.GetLatestEntryAsync(user.Id);
             var weightKg = latestProgress?.WeightKg ?? user.WeightKg;
             var weightLbs = weightKg * 2.20462;
-            CurrentWeight = $"{weightKg:F1} kg / {weightLbs:F0} lbs";
+            // Two lines so it fits the narrow stat card cleanly instead of wrapping mid-value.
+            CurrentWeight = $"{weightLbs:F0} lb\n{weightKg:F1} kg";
 
             // Latest assessment
             var latestSession = await _assessmentService.GetLatestSessionAsync(user.Id);

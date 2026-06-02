@@ -13,7 +13,7 @@ public partial class NutriGoalsViewModel : BaseViewModel
     private const int MaxFocusAreas = 5;
     private const double SafeWeeklyLossKg = 1.0;   // max safe weight loss per week
     private const double SafeWeeklyGainKg = 0.5;    // max safe weight gain per week
-    private double _currentWeightKg;
+    private User? _currentUser;
 
     public NutriGoalsViewModel(INutritionAssessmentCoordinator coordinator, IUserService userService)
     {
@@ -55,27 +55,46 @@ public partial class NutriGoalsViewModel : BaseViewModel
     [ObservableProperty]
     private GoalTimeline _selectedTimeline;
 
-    // Target weight is always stored in kg internally; both units are displayed
-    [ObservableProperty]
-    private double _targetWeight;
+    // Current weight + Target weight are stored in kg internally; both units displayed.
+    // CurrentWeight is the user's actual weight today (persisted to User.WeightKg on Save).
+    // TargetWeight is their goal weight (persisted to NutritionAssessmentData.TargetWeightKg).
+    [ObservableProperty] private double _currentWeight;
+    [ObservableProperty] private string _currentWeightKgDisplay = "—";
+    [ObservableProperty] private string _currentWeightLbDisplay = "—";
 
-    [ObservableProperty]
-    private string _targetWeightKgDisplay = "—";
+    public List<ActivityLevel> ActivityLevelOptions => Enum.GetValues<ActivityLevel>().ToList();
+    [ObservableProperty] private ActivityLevel _selectedActivityLevel;
 
-    [ObservableProperty]
-    private string _targetWeightLbDisplay = "—";
+    [ObservableProperty] private double _targetWeight;
+    [ObservableProperty] private string _targetWeightKgDisplay = "—";
+    [ObservableProperty] private string _targetWeightLbDisplay = "—";
 
     /// <summary>
     /// Must be called from OnAppearing after the Slider bindings are resolved.
-    /// Setting TargetWeight in the constructor causes MAUI's Slider to clamp the
-    /// value before Minimum/Maximum bindings are applied, losing the stored value.
+    /// Setting Current/TargetWeight in the constructor causes MAUI's Slider to
+    /// clamp the value before Min/Max bindings apply, losing the stored value.
     /// </summary>
     public void InitializeWeight()
     {
+        if (_currentUser != null && _currentUser.WeightKg > 0)
+            CurrentWeight = _currentUser.WeightKg;
+
+        if (_currentUser != null)
+            SelectedActivityLevel = _currentUser.ActivityLevel;
+
         var stored = _coordinator.Data.TargetWeightKg;
         if (stored > 0)
             TargetWeight = stored;
+        else if (CurrentWeight > 0)
+            TargetWeight = CurrentWeight;   // default target = current until user picks one
+
         UpdateWeightDisplay();
+    }
+
+    partial void OnCurrentWeightChanged(double value)
+    {
+        UpdateWeightDisplay();
+        EvaluateSafetyWarning();
     }
 
     partial void OnTargetWeightChanged(double value)
@@ -89,9 +108,7 @@ public partial class NutriGoalsViewModel : BaseViewModel
 
     public async Task LoadCurrentWeightAsync()
     {
-        var user = await _userService.GetCurrentUserAsync();
-        if (user != null)
-            _currentWeightKg = user.WeightKg;
+        _currentUser = await _userService.GetCurrentUserAsync();
     }
 
     // Safety warning properties
@@ -101,14 +118,14 @@ public partial class NutriGoalsViewModel : BaseViewModel
 
     private void EvaluateSafetyWarning()
     {
-        if (_currentWeightKg <= 0 || TargetWeight <= 0)
+        if (CurrentWeight <= 0 || TargetWeight <= 0)
         {
             ShowSafetyWarning = false;
             return;
         }
 
         var targetKg = TargetWeight;
-        var diffKg = targetKg - _currentWeightKg;
+        var diffKg = targetKg - CurrentWeight;
         var absDiffKg = Math.Abs(diffKg);
 
         if (absDiffKg < 0.5)
@@ -159,6 +176,17 @@ public partial class NutriGoalsViewModel : BaseViewModel
 
     private void UpdateWeightDisplay()
     {
+        if (CurrentWeight > 0)
+        {
+            CurrentWeightKgDisplay = $"{CurrentWeight:F1}";
+            CurrentWeightLbDisplay = $"{Math.Round(CurrentWeight * 2.20462, 1):F1}";
+        }
+        else
+        {
+            CurrentWeightKgDisplay = "—";
+            CurrentWeightLbDisplay = "—";
+        }
+
         if (TargetWeight > 0)
         {
             TargetWeightKgDisplay = $"{TargetWeight:F1}";
@@ -230,10 +258,29 @@ public partial class NutriGoalsViewModel : BaseViewModel
         _coordinator.Data.AvgWorkoutMinutes = AvgWorkoutMinutes;
     }
 
+    /// <summary>
+    /// Persist the user's current weight to the User table if it changed.
+    /// Called when navigating away from the page.
+    /// </summary>
+    private async Task PersistCurrentWeightAsync()
+    {
+        if (_currentUser == null) return;
+
+        var weightChanged = CurrentWeight > 0
+                            && Math.Abs(_currentUser.WeightKg - CurrentWeight) >= 0.05;
+        var activityChanged = _currentUser.ActivityLevel != SelectedActivityLevel;
+        if (!weightChanged && !activityChanged) return;
+
+        if (weightChanged) _currentUser.WeightKg = CurrentWeight;
+        if (activityChanged) _currentUser.ActivityLevel = SelectedActivityLevel;
+        await _userService.UpdateUserAsync(_currentUser);
+    }
+
     [RelayCommand]
     private async Task NextAsync()
     {
         SyncToCoordinator();
+        await PersistCurrentWeightAsync();
         await _coordinator.GoNextAsync();
     }
 
@@ -241,6 +288,7 @@ public partial class NutriGoalsViewModel : BaseViewModel
     private async Task PreviousAsync()
     {
         SyncToCoordinator();
+        await PersistCurrentWeightAsync();
         await _coordinator.GoPreviousAsync();
     }
 

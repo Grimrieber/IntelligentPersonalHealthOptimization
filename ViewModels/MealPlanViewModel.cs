@@ -67,6 +67,8 @@ public partial class MealPlanViewModel : BaseViewModel
 
     private MealPlan? _activePlan;
     private List<MealPlanDay> _allDays = new();
+    private bool _mealPrepMode;
+    private int _mealPrepDays = 1;
 
     partial void OnSelectedDayIndexChanged(int value)
     {
@@ -89,6 +91,11 @@ public partial class MealPlanViewModel : BaseViewModel
             HasMealPlan = _activePlan != null;
 
             if (_activePlan == null) return;
+
+            // Meal-prep settings drive the "repeats N days" labels on each meal.
+            var profile = await _nutritionService.GetNutritionProfileAsync(user.Id);
+            _mealPrepMode = profile?.MealPrepMode ?? false;
+            _mealPrepDays = Math.Max(1, profile?.MealPrepDays ?? 1);
 
             PlanName = _activePlan.PlanName;
             PlanTargetCalories = $"Target: {_activePlan.TargetCalories} kcal/day";
@@ -120,6 +127,20 @@ public partial class MealPlanViewModel : BaseViewModel
             SelectedDayName = day.DayName;
             DayTotalCalories = $"{day.TotalCalories} kcal";
             DayMacroSummary = string.Empty; // will be set after loading items
+
+            // Meal-prep label: the same meals repeat for the whole prep block, so
+            // flag whether this is the cook day or a leftovers day.
+            var mealPrepNote = string.Empty;
+            var prepActive = _mealPrepMode && _mealPrepDays > 1;
+            var isCookDay = true;
+            if (prepActive)
+            {
+                var dayInBlock = (day.DayNumber - 1) % _mealPrepDays;
+                isCookDay = dayInBlock == 0;
+                mealPrepNote = isCookDay
+                    ? $"Meal prep · cook today, covers {_mealPrepDays} days"
+                    : $"Meal prep · day {dayInBlock + 1} of {_mealPrepDays} (leftovers)";
+            }
 
             var items = await _nutritionService.GetMealItemsAsync(day.Id);
             HasMealsForDay = items.Count > 0;
@@ -170,19 +191,30 @@ public partial class MealPlanViewModel : BaseViewModel
                 var mealName = mealItems.FirstOrDefault(i => !string.IsNullOrEmpty(i.MealName))?.MealName ?? string.Empty;
                 var savedRecipeId = mealItems.FirstOrDefault(i => i.SavedRecipeId > 0)?.SavedRecipeId ?? 0;
 
-                // Calculate servings note
+                // Servings note. For meal prep the per-day portion (s) is scaled up
+                // to a batch on the cook day ("Cook 2.7x ... ~0.9/day") and shown as
+                // a reheat amount on leftover days. Otherwise it's the per-day amount.
                 var servingsNote = string.Empty;
                 var firstItem = mealItems.FirstOrDefault();
                 if (firstItem != null && savedRecipeId > 0)
                 {
                     var s = firstItem.Servings;
-                    if (s > 1.01)
+                    if (prepActive)
                     {
-                        // Round to nearest half for cleaner display
-                        var rounded = Math.Round(s * 2) / 2.0;
-                        var servingText = rounded % 1 == 0 ? $"{rounded:F0}" : $"{rounded:F1}";
-                        servingsNote = $"Make {servingText}x this recipe";
+                        if (isCookDay)
+                        {
+                            var batch = Math.Round(s * _mealPrepDays, 1);
+                            servingsNote = $"Cook {batch:0.#}x the recipe (~{s:0.#}/day)";
+                        }
+                        else
+                        {
+                            servingsNote = $"Reheat ~{s:0.#} serving{(s > 1.04 ? "s" : "")}";
+                        }
                     }
+                    else if (s >= 0.95 && s <= 1.05)
+                        servingsNote = "Make 1 serving";
+                    else
+                        servingsNote = $"Make {s:0.#}x this recipe";
                 }
 
                 groups.Add(new MealPlanMealGroup
@@ -193,10 +225,12 @@ public partial class MealPlanViewModel : BaseViewModel
                     MealTypeName = FormatMealType(mealType),
                     MealName = mealName,
                     HasMealName = !string.IsNullOrEmpty(mealName),
-                    TotalCalories = $"{mealCalories:F0} kcal",
+                    TotalCalories = prepActive ? $"{mealCalories:F0} kcal/day" : $"{mealCalories:F0} kcal",
                     TotalCaloriesNumeric = (int)mealCalories,
                     ServingsNote = servingsNote,
                     HasServingsNote = !string.IsNullOrEmpty(servingsNote),
+                    MealPrepNote = mealPrepNote,
+                    HasMealPrepNote = !string.IsNullOrEmpty(mealPrepNote),
                     MacroSummary = $"P: {mealProtein:F0}g  C: {mealCarbs:F0}g  F: {mealFat:F0}g",
                     Items = displayItems
                 });
@@ -532,6 +566,8 @@ public class MealPlanMealGroup
     public int TotalCaloriesNumeric { get; set; }
     public string ServingsNote { get; set; } = string.Empty;
     public bool HasServingsNote { get; set; }
+    public string MealPrepNote { get; set; } = string.Empty;
+    public bool HasMealPrepNote { get; set; }
     public string MacroSummary { get; set; } = string.Empty;
     public bool IsSwappable { get; set; } = true;
     public ObservableCollection<MealPlanFoodItem> Items { get; set; } = new();

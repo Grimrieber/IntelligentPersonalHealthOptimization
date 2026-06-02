@@ -19,7 +19,7 @@
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
                 <Frame Style="{StaticResource CardFrame}" Grid.Column="0">
                     <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="{Binding StreakText}"
+                        <Label Text="{Binding CurrentStreak}"
                                FontSize="16"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
@@ -73,7 +73,7 @@
                                 FontAttributes="Bold"
                                 WidthRequest="44" />
                         <Label Grid.Column="1"
-                               Text="{Binding MonthYearLabel}"
+                               Text="{Binding MonthYearText}"
                                FontSize="18"
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center"
@@ -130,8 +130,8 @@
                                             CommandParameter="{Binding .}" />
                                     </Grid.GestureRecognizers>
 
-                                    <!-- Today Border -->
-                                    <Border StrokeThickness="{Binding IsToday, Converter={StaticResource BoolToColorConverter}}"
+                                    <!-- Today Border (only rendered when IsToday, so a fixed thickness is fine) -->
+                                    <Border StrokeThickness="2"
                                             Stroke="{StaticResource Primary}"
                                             StrokeShape="RoundRectangle 8"
                                             IsVisible="{Binding IsToday}"
@@ -141,7 +141,7 @@
                                     <VerticalStackLayout VerticalOptions="Center"
                                                          HorizontalOptions="Center"
                                                          Spacing="2"
-                                                         IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}">
+                                                         IsVisible="{Binding IsBlank, Converter={StaticResource InverseBool}}">
                                         <Label Text="{Binding DayNumber}"
                                                FontSize="14"
                                                HorizontalOptions="Center"
@@ -195,7 +195,7 @@
                    BorderColor="{StaticResource Primary}">
                 <VerticalStackLayout Spacing="8">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="{Binding SelectedDayTitle}"
+                        <Label Text="{Binding SelectedDayWorkoutName}"
                                FontSize="18"
                                FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
@@ -221,8 +221,8 @@
                            IsVisible="{Binding SelectedDayExerciseCount, Converter={StaticResource IsNotEmptyConverter}}" />
 
                     <Button Text="Start Workout"
-                            Command="{Binding StartWorkoutCommand}"
-                            IsVisible="{Binding CanStartWorkout}"
+                            Command="{Binding CompleteWorkoutCommand}"
+                            IsVisible="{Binding CanCompleteSelectedWorkout}"
                             Style="{StaticResource PrimaryButton}"
                             Margin="0,4,0,0" />
                 </VerticalStackLayout>

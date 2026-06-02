@@ -56,6 +56,8 @@
                     </VerticalStackLayout>
                 </Frame>
 
+                <!-- Note: enum bindings now display humanized labels via PickerItem<T>.ToString() -->
+
                 <!-- Suggested Goal Templates -->
                 <Frame Style="{StaticResource CardFrame}"
                        IsVisible="{Binding HasTemplateSuggestions}">
@@ -144,29 +146,38 @@
                                             </Label>
 
                                             <!-- Category -->
+                                            <Label Text="Category" FontSize="12" TextColor="{StaticResource Gray500}" />
                                             <Picker Title="Category"
-                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=GoalCategoryOptions}"
+                                                    ItemsSource="{Binding CategoryOptions}"
                                                     SelectedItem="{Binding SelectedCategory}" />
 
-                                            <!-- Title -->
-                                            <Entry Text="{Binding Title}"
-                                                   Placeholder="Goal title (e.g., Lose 5kg)"
-                                                   ReturnType="Next" />
+                                            <!-- Goal type (cascades from category) -->
+                                            <Label Text="Goal type" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                            <Picker Title="Pick a goal"
+                                                    ItemsSource="{Binding AvailableGoalTypes}"
+                                                    SelectedItem="{Binding SelectedGoalType}" />
 
                                             <!-- Target Value + Unit -->
+                                            <Label Text="Target value &amp; unit" FontSize="12" TextColor="{StaticResource Gray500}" />
                                             <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                                                 <Entry Text="{Binding TargetValueText}"
                                                        Placeholder="Target value"
                                                        Keyboard="Numeric"
                                                        Grid.Column="0" />
-                                                <Entry Text="{Binding TargetUnit}"
-                                                       Placeholder="Unit (kg, min, etc.)"
-                                                       Grid.Column="1" />
+                                                <Picker Title="Unit"
+                                                        ItemsSource="{Binding UnitOptions}"
+                                                        SelectedItem="{Binding SelectedUnit}"
+                                                        Grid.Column="1" />
                                             </Grid>
+                                            <Label Text="{Binding ConversionHint}"
+                                                   FontSize="11"
+                                                   TextColor="{StaticResource Gray500}"
+                                                   IsVisible="{Binding ConversionHint, Converter={StaticResource IsNotEmptyConverter}}" />
 
                                             <!-- Timeframe -->
+                                            <Label Text="Timeframe" FontSize="12" TextColor="{StaticResource Gray500}" />
                                             <Picker Title="Timeframe"
-                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=GoalTimeframeOptions}"
+                                                    ItemsSource="{Binding TimeframeOptions}"
                                                     SelectedItem="{Binding SelectedTimeframe}" />
 
                                         </VerticalStackLayout>

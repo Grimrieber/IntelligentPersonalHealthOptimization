@@ -427,6 +427,138 @@ public static partial class SeedData
             new() { Name = "Chocolate Pudding", FoodCategory = FoodCategory.Snack, CaloriesPer100g = 119, ProteinPer100g = 3, CarbsPer100g = 20, FatPer100g = 3.5, FiberPer100g = 0.6, DefaultServingSize = 113, DefaultServingLabel = "1 cup" },
             new() { Name = "Jello", FoodCategory = FoodCategory.Snack, CaloriesPer100g = 62, ProteinPer100g = 1.2, CarbsPer100g = 14, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 96, DefaultServingLabel = "1/2 cup" },
             new() { Name = "Whipped Cream", FoodCategory = FoodCategory.Dairy, CaloriesPer100g = 257, ProteinPer100g = 3, CarbsPer100g = 13, FatPer100g = 22, FiberPer100g = 0, DefaultServingSize = 15, DefaultServingLabel = "2 tbsp" },
+
+            // ========== PANTRY: BAKING & SWEETENERS ==========
+            new() { Name = "All-Purpose Flour", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 364, ProteinPer100g = 10, CarbsPer100g = 76, FatPer100g = 1, FiberPer100g = 2.7, DefaultServingSize = 125, DefaultServingLabel = "1 cup" },
+            new() { Name = "Whole Wheat Flour", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 340, ProteinPer100g = 13, CarbsPer100g = 72, FatPer100g = 2.5, FiberPer100g = 11, DefaultServingSize = 120, DefaultServingLabel = "1 cup" },
+            new() { Name = "Cornstarch", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 381, ProteinPer100g = 0.3, CarbsPer100g = 91, FatPer100g = 0.1, FiberPer100g = 0.9, DefaultServingSize = 8, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Sugar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 387, ProteinPer100g = 0, CarbsPer100g = 100, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 4, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Brown Sugar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 380, ProteinPer100g = 0, CarbsPer100g = 98, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 4.6, DefaultServingLabel = "1 tsp packed" },
+            new() { Name = "Powdered Sugar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 389, ProteinPer100g = 0, CarbsPer100g = 100, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 4, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Baking Powder", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 53, ProteinPer100g = 0, CarbsPer100g = 28, FatPer100g = 0, FiberPer100g = 0.2, DefaultServingSize = 4.6, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Baking Soda", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 0, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 4.6, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Yeast (dry)", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 325, ProteinPer100g = 40, CarbsPer100g = 41, FatPer100g = 7.6, FiberPer100g = 27, DefaultServingSize = 3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Vanilla Extract", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 288, ProteinPer100g = 0.1, CarbsPer100g = 13, FatPer100g = 0.1, FiberPer100g = 0, DefaultServingSize = 4.2, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Cocoa Powder", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 228, ProteinPer100g = 20, CarbsPer100g = 58, FatPer100g = 14, FiberPer100g = 37, DefaultServingSize = 5, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Honey", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 304, ProteinPer100g = 0.3, CarbsPer100g = 82, FatPer100g = 0, FiberPer100g = 0.2, DefaultServingSize = 21, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Maple Syrup", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 260, ProteinPer100g = 0, CarbsPer100g = 67, FatPer100g = 0.1, FiberPer100g = 0, DefaultServingSize = 20, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Molasses", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 290, ProteinPer100g = 0, CarbsPer100g = 75, FatPer100g = 0.1, FiberPer100g = 0, DefaultServingSize = 20, DefaultServingLabel = "1 tbsp" },
+
+            // ========== PANTRY: COOKING FATS ==========
+            new() { Name = "Vegetable Oil", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 884, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Canola Oil", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 884, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Palm Oil", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 884, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Sesame Oil", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 884, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Butter", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 717, ProteinPer100g = 0.9, CarbsPer100g = 0.1, FatPer100g = 81, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Margarine", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 717, ProteinPer100g = 0.2, CarbsPer100g = 0.7, FatPer100g = 81, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Lard", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 902, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 13, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Shortening", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 884, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 13, DefaultServingLabel = "1 tbsp" },
+
+            // ========== PANTRY: SPICES & HERBS ==========
+            new() { Name = "Salt", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 0, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 5, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Black Pepper", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 251, ProteinPer100g = 10, CarbsPer100g = 64, FatPer100g = 3.3, FiberPer100g = 25, DefaultServingSize = 2.3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "White Pepper", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 296, ProteinPer100g = 10, CarbsPer100g = 69, FatPer100g = 2.1, FiberPer100g = 27, DefaultServingSize = 2.3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Cayenne Pepper", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 318, ProteinPer100g = 12, CarbsPer100g = 57, FatPer100g = 17, FiberPer100g = 27, DefaultServingSize = 1.8, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Cinnamon", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 247, ProteinPer100g = 4, CarbsPer100g = 81, FatPer100g = 1.2, FiberPer100g = 53, DefaultServingSize = 2.6, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Cumin", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 375, ProteinPer100g = 18, CarbsPer100g = 44, FatPer100g = 22, FiberPer100g = 11, DefaultServingSize = 2.1, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Paprika", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 282, ProteinPer100g = 14, CarbsPer100g = 54, FatPer100g = 13, FiberPer100g = 35, DefaultServingSize = 2.3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Turmeric", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 312, ProteinPer100g = 10, CarbsPer100g = 67, FatPer100g = 3.3, FiberPer100g = 23, DefaultServingSize = 3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Ginger", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 335, ProteinPer100g = 9, CarbsPer100g = 72, FatPer100g = 4.2, FiberPer100g = 14, DefaultServingSize = 1.8, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Nutmeg", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 525, ProteinPer100g = 6, CarbsPer100g = 49, FatPer100g = 36, FiberPer100g = 21, DefaultServingSize = 2.2, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Coriander", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 298, ProteinPer100g = 12, CarbsPer100g = 55, FatPer100g = 18, FiberPer100g = 42, DefaultServingSize = 1.8, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Thyme", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 276, ProteinPer100g = 9, CarbsPer100g = 64, FatPer100g = 7.4, FiberPer100g = 37, DefaultServingSize = 1, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Oregano", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 265, ProteinPer100g = 9, CarbsPer100g = 69, FatPer100g = 4.3, FiberPer100g = 43, DefaultServingSize = 1, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Basil", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 233, ProteinPer100g = 23, CarbsPer100g = 48, FatPer100g = 4, FiberPer100g = 37, DefaultServingSize = 1, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Rosemary", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 331, ProteinPer100g = 5, CarbsPer100g = 64, FatPer100g = 15, FiberPer100g = 42, DefaultServingSize = 1, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Bay Leaves", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 313, ProteinPer100g = 8, CarbsPer100g = 75, FatPer100g = 8, FiberPer100g = 26, DefaultServingSize = 0.6, DefaultServingLabel = "1 leaf" },
+            new() { Name = "Parsley", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 292, ProteinPer100g = 27, CarbsPer100g = 51, FatPer100g = 5.5, FiberPer100g = 27, DefaultServingSize = 1.3, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Cilantro", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 23, ProteinPer100g = 2.1, CarbsPer100g = 3.7, FatPer100g = 0.5, FiberPer100g = 2.8, DefaultServingSize = 4, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Mint", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 70, ProteinPer100g = 3.8, CarbsPer100g = 15, FatPer100g = 0.9, FiberPer100g = 8, DefaultServingSize = 3, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Curry Powder", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 325, ProteinPer100g = 14, CarbsPer100g = 56, FatPer100g = 14, FiberPer100g = 53, DefaultServingSize = 2, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Chili Powder", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 282, ProteinPer100g = 14, CarbsPer100g = 50, FatPer100g = 14, FiberPer100g = 35, DefaultServingSize = 2.7, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Garlic Powder", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 331, ProteinPer100g = 17, CarbsPer100g = 73, FatPer100g = 0.7, FiberPer100g = 9, DefaultServingSize = 3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Onion Powder", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 341, ProteinPer100g = 10, CarbsPer100g = 79, FatPer100g = 1, FiberPer100g = 15, DefaultServingSize = 2.4, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Cloves", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 274, ProteinPer100g = 6, CarbsPer100g = 66, FatPer100g = 13, FiberPer100g = 34, DefaultServingSize = 2.1, DefaultServingLabel = "1 tsp ground" },
+            new() { Name = "Cardamom", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 311, ProteinPer100g = 11, CarbsPer100g = 68, FatPer100g = 7, FiberPer100g = 28, DefaultServingSize = 2, DefaultServingLabel = "1 tsp ground" },
+
+            // ========== PANTRY: SAUCES & BROTHS ==========
+            new() { Name = "Worcestershire Sauce", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 78, ProteinPer100g = 0, CarbsPer100g = 19, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 17, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Vinegar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 18, ProteinPer100g = 0, CarbsPer100g = 0.04, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 15, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Apple Cider Vinegar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 22, ProteinPer100g = 0, CarbsPer100g = 0.9, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 15, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Balsamic Vinegar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 88, ProteinPer100g = 0.5, CarbsPer100g = 17, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 16, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Soy Sauce", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 53, ProteinPer100g = 8, CarbsPer100g = 5, FatPer100g = 0.6, FiberPer100g = 0.8, DefaultServingSize = 18, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Lemon Juice", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 22, ProteinPer100g = 0.4, CarbsPer100g = 7, FatPer100g = 0.2, FiberPer100g = 0.3, DefaultServingSize = 15, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Lime Juice", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 25, ProteinPer100g = 0.4, CarbsPer100g = 8, FatPer100g = 0.1, FiberPer100g = 0.4, DefaultServingSize = 15, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Chicken Broth", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 4, ProteinPer100g = 0.5, CarbsPer100g = 0.4, FatPer100g = 0.1, FiberPer100g = 0, DefaultServingSize = 240, DefaultServingLabel = "1 cup" },
+            new() { Name = "Beef Broth", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 7, ProteinPer100g = 1, CarbsPer100g = 0.4, FatPer100g = 0.2, FiberPer100g = 0, DefaultServingSize = 240, DefaultServingLabel = "1 cup" },
+            new() { Name = "Vegetable Broth", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 5, ProteinPer100g = 0.4, CarbsPer100g = 0.8, FatPer100g = 0.1, FiberPer100g = 0, DefaultServingSize = 240, DefaultServingLabel = "1 cup" },
+            new() { Name = "Stock Cube", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 235, ProteinPer100g = 10, CarbsPer100g = 22, FatPer100g = 12, FiberPer100g = 0, DefaultServingSize = 4, DefaultServingLabel = "1 cube" },
+            new() { Name = "Crayfish (ground, dried)", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 299, ProteinPer100g = 60, CarbsPer100g = 0, FatPer100g = 6, FiberPer100g = 0, DefaultServingSize = 5, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Water", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 0, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 240, DefaultServingLabel = "1 cup" },
+            new() { Name = "Ice", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 0, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 30, DefaultServingLabel = "1 cube" },
+
+            // ========== PANTRY: ADDITIONAL DAIRY/CREAMS ==========
+            new() { Name = "Buttermilk", FoodCategory = FoodCategory.Dairy, CaloriesPer100g = 40, ProteinPer100g = 3.3, CarbsPer100g = 4.8, FatPer100g = 0.9, FiberPer100g = 0, DefaultServingSize = 245, DefaultServingLabel = "1 cup" },
+            new() { Name = "Half-and-Half", FoodCategory = FoodCategory.Dairy, CaloriesPer100g = 131, ProteinPer100g = 3, CarbsPer100g = 4.3, FatPer100g = 11.5, FiberPer100g = 0, DefaultServingSize = 15, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Ghee", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 900, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 100, FiberPer100g = 0, DefaultServingSize = 13, DefaultServingLabel = "1 tbsp" },
+
+            // ========== PANTRY: ADDITIONAL VEG ==========
+            new() { Name = "Scallions", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 32, ProteinPer100g = 1.8, CarbsPer100g = 7.3, FatPer100g = 0.2, FiberPer100g = 2.6, DefaultServingSize = 15, DefaultServingLabel = "1 stalk" },
+            new() { Name = "Shallots", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 72, ProteinPer100g = 2.5, CarbsPer100g = 17, FatPer100g = 0.1, FiberPer100g = 3.2, DefaultServingSize = 25, DefaultServingLabel = "1 medium" },
+            new() { Name = "Lettuce", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 15, ProteinPer100g = 1.4, CarbsPer100g = 2.9, FatPer100g = 0.1, FiberPer100g = 1.3, DefaultServingSize = 47, DefaultServingLabel = "1 cup shredded" },
+            new() { Name = "Plantain", FoodCategory = FoodCategory.Fruit, CaloriesPer100g = 122, ProteinPer100g = 1.3, CarbsPer100g = 32, FatPer100g = 0.4, FiberPer100g = 2.3, DefaultServingSize = 180, DefaultServingLabel = "1 medium" },
+            new() { Name = "Yam", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 118, ProteinPer100g = 1.5, CarbsPer100g = 28, FatPer100g = 0.2, FiberPer100g = 4.1, DefaultServingSize = 200, DefaultServingLabel = "1 cup cubed" },
+            new() { Name = "Bean Sprouts", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 30, ProteinPer100g = 3, CarbsPer100g = 5.9, FatPer100g = 0.2, FiberPer100g = 1.8, DefaultServingSize = 104, DefaultServingLabel = "1 cup" },
+            new() { Name = "Green Chiles", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 40, ProteinPer100g = 1.9, CarbsPer100g = 9.5, FatPer100g = 0.2, FiberPer100g = 1.5, DefaultServingSize = 45, DefaultServingLabel = "1 pepper" },
+            new() { Name = "Black Olives", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 115, ProteinPer100g = 0.8, CarbsPer100g = 6, FatPer100g = 11, FiberPer100g = 3.2, DefaultServingSize = 16, DefaultServingLabel = "5 olives" },
+            new() { Name = "Green Olives", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 145, ProteinPer100g = 1, CarbsPer100g = 3.8, FatPer100g = 15, FiberPer100g = 3.3, DefaultServingSize = 16, DefaultServingLabel = "5 olives" },
+            new() { Name = "Capers", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 23, ProteinPer100g = 2.4, CarbsPer100g = 4.9, FatPer100g = 0.9, FiberPer100g = 3.2, DefaultServingSize = 9, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Mixed Vegetables", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 65, ProteinPer100g = 3, CarbsPer100g = 13, FatPer100g = 0.5, FiberPer100g = 4, DefaultServingSize = 100, DefaultServingLabel = "1 cup" },
+
+            // ========== PANTRY: ADDITIONAL BAKING ==========
+            new() { Name = "Cornmeal", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 384, ProteinPer100g = 8.1, CarbsPer100g = 79, FatPer100g = 3.9, FiberPer100g = 7.3, DefaultServingSize = 122, DefaultServingLabel = "1 cup" },
+            new() { Name = "Breadcrumbs", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 395, ProteinPer100g = 13, CarbsPer100g = 72, FatPer100g = 5.3, FiberPer100g = 4.5, DefaultServingSize = 108, DefaultServingLabel = "1 cup" },
+            new() { Name = "Almond Flour", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 571, ProteinPer100g = 21, CarbsPer100g = 19, FatPer100g = 50, FiberPer100g = 10, DefaultServingSize = 96, DefaultServingLabel = "1 cup" },
+            new() { Name = "Chocolate Chips", FoodCategory = FoodCategory.Snack, CaloriesPer100g = 480, ProteinPer100g = 4.2, CarbsPer100g = 63, FatPer100g = 27, FiberPer100g = 5.9, DefaultServingSize = 168, DefaultServingLabel = "1 cup" },
+
+            // ========== PANTRY: ADDITIONAL SPICES ==========
+            new() { Name = "Allspice", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 263, ProteinPer100g = 6.1, CarbsPer100g = 72, FatPer100g = 8.7, FiberPer100g = 21.6, DefaultServingSize = 1.9, DefaultServingLabel = "1 tsp ground" },
+            new() { Name = "Cream of Tartar", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 258, ProteinPer100g = 0, CarbsPer100g = 62, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 3, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Dill", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 43, ProteinPer100g = 3.5, CarbsPer100g = 7, FatPer100g = 1.1, FiberPer100g = 2.1, DefaultServingSize = 1, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Chives", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 30, ProteinPer100g = 3.3, CarbsPer100g = 4.4, FatPer100g = 0.7, FiberPer100g = 2.5, DefaultServingSize = 3, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Berbere", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 318, ProteinPer100g = 12, CarbsPer100g = 56, FatPer100g = 13, FiberPer100g = 30, DefaultServingSize = 2, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Garam Masala", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 379, ProteinPer100g = 14, CarbsPer100g = 50, FatPer100g = 15, FiberPer100g = 25, DefaultServingSize = 2, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Asafoetida", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 297, ProteinPer100g = 4, CarbsPer100g = 67, FatPer100g = 1, FiberPer100g = 4, DefaultServingSize = 0.5, DefaultServingLabel = "1 pinch" },
+            new() { Name = "Curry Leaves", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 108, ProteinPer100g = 6, CarbsPer100g = 19, FatPer100g = 1, FiberPer100g = 6.4, DefaultServingSize = 1, DefaultServingLabel = "10 leaves" },
+            new() { Name = "Sesame Seeds", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 573, ProteinPer100g = 18, CarbsPer100g = 23, FatPer100g = 50, FiberPer100g = 12, DefaultServingSize = 9, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Pecans", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 691, ProteinPer100g = 9.2, CarbsPer100g = 14, FatPer100g = 72, FiberPer100g = 9.6, DefaultServingSize = 28, DefaultServingLabel = "1 oz" },
+
+            // ========== PROTEINS: REGIONAL ==========
+            new() { Name = "Stockfish", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 322, ProteinPer100g = 78, CarbsPer100g = 0, FatPer100g = 2.6, FiberPer100g = 0, DefaultServingSize = 30, DefaultServingLabel = "1 oz" },
+            new() { Name = "Dryfish", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 305, ProteinPer100g = 62, CarbsPer100g = 0, FatPer100g = 5, FiberPer100g = 0, DefaultServingSize = 30, DefaultServingLabel = "1 oz" },
+            new() { Name = "Ponmo", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 224, ProteinPer100g = 31, CarbsPer100g = 0, FatPer100g = 10, FiberPer100g = 0, DefaultServingSize = 50, DefaultServingLabel = "1 piece" },
+            new() { Name = "Pumpkin", FoodCategory = FoodCategory.Vegetable, CaloriesPer100g = 26, ProteinPer100g = 1, CarbsPer100g = 6.5, FatPer100g = 0.1, FiberPer100g = 0.5, DefaultServingSize = 116, DefaultServingLabel = "1 cup cubed" },
+
+            // ========== ROUND 2: SAUCES & SPECIALTIES ==========
+            new() { Name = "Hot Sauce", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 11, ProteinPer100g = 0.5, CarbsPer100g = 2.3, FatPer100g = 0.3, FiberPer100g = 1, DefaultServingSize = 5, DefaultServingLabel = "1 tsp" },
+            new() { Name = "Barbecue Sauce", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 172, ProteinPer100g = 0.9, CarbsPer100g = 41, FatPer100g = 0.6, FiberPer100g = 0.8, DefaultServingSize = 17, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Hoisin Sauce", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 220, ProteinPer100g = 3.3, CarbsPer100g = 44, FatPer100g = 3.4, FiberPer100g = 2.8, DefaultServingSize = 16, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Oyster Sauce", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 51, ProteinPer100g = 1.4, CarbsPer100g = 11, FatPer100g = 0.3, FiberPer100g = 0.3, DefaultServingSize = 18, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Ketchup", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 101, ProteinPer100g = 1.7, CarbsPer100g = 27, FatPer100g = 0.4, FiberPer100g = 0.3, DefaultServingSize = 17, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Mayonnaise", FoodCategory = FoodCategory.Fat, CaloriesPer100g = 680, ProteinPer100g = 0.9, CarbsPer100g = 0.6, FatPer100g = 75, FiberPer100g = 0, DefaultServingSize = 14, DefaultServingLabel = "1 tbsp" },
+
+            // ========== ROUND 2: ALCOHOL (calories from ethanol) ==========
+            new() { Name = "Brandy", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 231, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 30, DefaultServingLabel = "1 oz" },
+            new() { Name = "Rum", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 231, ProteinPer100g = 0, CarbsPer100g = 0, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 30, DefaultServingLabel = "1 oz" },
+            new() { Name = "Sherry", FoodCategory = FoodCategory.Beverage, CaloriesPer100g = 116, ProteinPer100g = 0.2, CarbsPer100g = 4.3, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 60, DefaultServingLabel = "2 oz" },
+
+            // ========== ROUND 2: LONG-TAIL BAKING / FRUITS ==========
+            new() { Name = "Semolina", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 360, ProteinPer100g = 13, CarbsPer100g = 73, FatPer100g = 1.1, FiberPer100g = 3.9, DefaultServingSize = 167, DefaultServingLabel = "1 cup" },
+            new() { Name = "Raisins", FoodCategory = FoodCategory.Fruit, CaloriesPer100g = 299, ProteinPer100g = 3.1, CarbsPer100g = 79, FatPer100g = 0.5, FiberPer100g = 3.7, DefaultServingSize = 165, DefaultServingLabel = "1 cup" },
+            new() { Name = "Peaches", FoodCategory = FoodCategory.Fruit, CaloriesPer100g = 39, ProteinPer100g = 0.9, CarbsPer100g = 10, FatPer100g = 0.3, FiberPer100g = 1.5, DefaultServingSize = 150, DefaultServingLabel = "1 medium" },
+            new() { Name = "Jam", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 278, ProteinPer100g = 0.4, CarbsPer100g = 69, FatPer100g = 0.1, FiberPer100g = 1.1, DefaultServingSize = 20, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Golden Syrup", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 322, ProteinPer100g = 0.3, CarbsPer100g = 79, FatPer100g = 0, FiberPer100g = 0, DefaultServingSize = 21, DefaultServingLabel = "1 tbsp" },
+            new() { Name = "Fenugreek Seeds", FoodCategory = FoodCategory.Condiment, CaloriesPer100g = 323, ProteinPer100g = 23, CarbsPer100g = 58, FatPer100g = 6.4, FiberPer100g = 24.6, DefaultServingSize = 3.7, DefaultServingLabel = "1 tsp" },
         };
     }
 }

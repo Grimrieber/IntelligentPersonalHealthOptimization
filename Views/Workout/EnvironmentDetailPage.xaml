@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Workout"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Workout.EnvironmentDetailPage"
+             x:DataType="vm:EnvironmentDetailViewModel"
+             Title="Your Environment">
+
+    <Grid RowDefinitions="*,Auto" Padding="0">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="24,16" Spacing="16">
+
+                <Label Text="Tell us about your space"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <Label Text="These constraints help us avoid prescribing things that don't fit your environment."
+                       FontSize="13"
+                       TextColor="{StaticResource Gray500}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Ceiling height" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Affects overhead pressing, jumps, swings"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding CeilingOptions}" SelectedItem="{Binding SelectedCeiling}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Noise tolerance" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Affects plyometrics, dropping weights, kettlebell snatches"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding NoiseOptions}" SelectedItem="{Binding SelectedNoise}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Floor space" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Affects deadlift setup, broad jumps, sled work"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding FloorSpaceOptions}" SelectedItem="{Binding SelectedFloorSpace}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <HorizontalStackLayout Spacing="8">
+                        <CheckBox IsChecked="{Binding HasOutdoorAccess}" />
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Outdoor access (yard / park / driveway)" FontSize="14" FontAttributes="Bold" />
+                            <Label Text="Unlocks sprints, hill repeats, sled drag" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Grid.Column="0" Text="Back"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1" Text="Continue"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

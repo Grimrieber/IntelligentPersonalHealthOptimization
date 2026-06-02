@@ -36,6 +36,8 @@ public class NutritionAssessment
     public bool UsesProteinShakes { get; set; }
     public int ShakesPerDay { get; set; }
     public int ProteinPerShakeG { get; set; }
+    public bool MealPrepMode { get; set; }
+    public int MealPrepDays { get; set; } = 3;
 
     // Food Frequency (JSON)
     [MaxLength(5000)]

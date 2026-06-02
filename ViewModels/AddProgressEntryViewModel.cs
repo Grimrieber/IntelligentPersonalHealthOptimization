@@ -124,24 +124,21 @@ public partial class AddProgressEntryViewModel : BaseViewModel
                     .FirstOrDefaultAsync(p => p.UserId == user.Id);
                 if (profile != null)
                 {
-                    var bmr = _nutritionService.CalculateBMR(user);
-                    var tdee = _nutritionService.CalculateTDEE(bmr, user.ActivityLevel);
-
+                    // Shared entry point: pulls every goal input off the latest assessment
+                    // so a new-weight recompute matches the assessment's own macros.
                     var assessment = await _nutritionService.GetLatestAssessmentAsync(user.Id);
+                    var t = _nutritionService.ComputeTargetsForUser(user, assessment);
+
                     if (assessment != null)
                     {
-                        var (calories, proteinG, carbsG, fatG) = _nutritionService.CalculateAssessmentTargets(
-                            tdee, assessment.PrimaryGoal, assessment.SelectedDietType, user.Gender,
-                            user.WeightKg, assessment.TargetWeightKg, assessment.SelectedTimeline);
-
-                        profile.TargetCalories = calories;
-                        profile.TargetProteinG = proteinG;
-                        profile.TargetCarbsG = carbsG;
-                        profile.TargetFatG = fatG;
+                        profile.TargetCalories = t.Calories;
+                        profile.TargetProteinG = t.ProteinG;
+                        profile.TargetCarbsG = t.CarbsG;
+                        profile.TargetFatG = t.FatG;
                     }
 
-                    profile.BMR = bmr;
-                    profile.TDEE = tdee;
+                    profile.BMR = t.Bmr;
+                    profile.TDEE = t.Tdee;
                     profile.UpdatedAt = DateTime.UtcNow;
                     await _databaseService.UpdateAsync(profile);
                 }

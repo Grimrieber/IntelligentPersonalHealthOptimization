@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Workout"
+             xmlns:enums="clr-namespace:IntelligentPersonalHealthOptimization.Models.Enums"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Workout.EquipmentDetailPage"
+             x:DataType="vm:EquipmentDetailViewModel"
+             Title="Your Equipment">
+
+    <Grid RowDefinitions="*,Auto" Padding="0">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="24,16" Spacing="16">
+
+                <Label Text="Tell us what you have"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <Label Text="Pre-checked items came from your onboarding answers. Add or remove anything as needed."
+                       FontSize="13"
+                       TextColor="{StaticResource Gray500}" />
+
+
+                <!-- Gym Chain (Gym/Both only) -->
+                <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding ShowGymBranch}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Which gym do you train at?" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Picking a chain pre-fills typical inventory; review and uncheck what your location is missing."
+                               FontSize="12"
+                               TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{StaticResource Gray200}"
+                                Padding="12,4">
+                            <Picker Title="Select chain"
+                                    ItemsSource="{Binding ChainOptions}"
+                                    SelectedItem="{Binding SelectedChain}" />
+                        </Border>
+                        <Button Text="Apply chain preset"
+                                Command="{Binding ApplyChainPresetCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="13"
+                                HeightRequest="36"
+                                IsEnabled="{Binding SelectedChain, Converter={StaticResource IsNotEmptyConverter}}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Dumbbell weight detail -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Dumbbell detail" FontSize="16" FontAttributes="Bold" />
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding HasAdjustableDumbbells}" />
+                            <Label Text="Adjustable dumbbells" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Label Text="Max weight per dumbbell" FontSize="13" TextColor="{StaticResource Gray500}" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
+                            <Label Grid.Column="0"
+                                   Text="{Binding DumbbellWeightKgDisplay}"
+                                   FontSize="20" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding DumbbellWeightLbDisplay}"
+                                   FontSize="20" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                        </Grid>
+                        <Slider Minimum="2.5" Maximum="50"
+                                Value="{Binding DumbbellMaxKg}"
+                                ThumbColor="{StaticResource Primary}"
+                                MinimumTrackColor="{StaticResource Primary}" />
+                        <Grid ColumnDefinitions="*,*">
+                            <Label Text="2.5 kg / 5 lb" FontSize="10" TextColor="{StaticResource Gray400}" />
+                            <Label Text="50 kg / 110 lb" FontSize="10" TextColor="{StaticResource Gray400}"
+                                   HorizontalOptions="End" Grid.Column="1" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Cardio opt-in -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <HorizontalStackLayout Spacing="8">
+                        <CheckBox IsChecked="{Binding IncludeCardio}" />
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Include cardio in my program" FontSize="14" FontAttributes="Bold" />
+                            <Label Text="Adds a cardio equipment section below" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <!-- Equipment Sections -->
+                <CollectionView ItemsSource="{Binding Sections}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:EquipmentSectionGroup">
+                            <Frame Style="{StaticResource CardFrame}" Margin="0,4">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" />
+                                    <CollectionView ItemsSource="{Binding Items}">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:EquipmentItemToggle">
+                                                <HorizontalStackLayout Spacing="8" Padding="0,4">
+                                                    <CheckBox IsChecked="{Binding IsChecked}" />
+                                                    <Label Text="{Binding DisplayName}"
+                                                           VerticalOptions="Center"
+                                                           FontSize="14" />
+                                                </HorizontalStackLayout>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Grid.Column="0" Text="Back"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1" Text="Continue"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

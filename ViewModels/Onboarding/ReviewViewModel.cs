@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IntelligentPersonalHealthOptimization.Services.Interfaces;
@@ -54,15 +55,19 @@ public partial class ReviewViewModel : BaseViewModel
         }
     }
 
-    // Goals Summary
-    public string PrimaryGoalDisplay => _coordinator.Data.PrimaryFitnessGoal.ToString();
-    public string ActivityLevelDisplay => _coordinator.Data.ActivityLevel.ToString();
-    public string GoalsCountDisplay =>
-        _coordinator.Data.Goals.Count > 0
-            ? $"{_coordinator.Data.Goals.Count} goal(s) defined"
-            : "No specific goals";
-    public List<string> GoalsSummary =>
-        _coordinator.Data.Goals.Select(g => $"{g.GoalCategory}: {g.Title}").ToList();
+    // Health Screening Summary
+    public string ConditionsDisplay =>
+        _coordinator.Data.MedicalConditions.Count > 0
+            ? string.Join(", ", _coordinator.Data.MedicalConditions)
+            : "None reported";
+
+    public string InjuriesDisplay =>
+        _coordinator.Data.InjuryAreas.Count > 0
+            ? string.Join(", ", _coordinator.Data.InjuryAreas)
+            : "None reported";
+
+    private static string Humanize(string input) =>
+        string.IsNullOrEmpty(input) ? input : Regex.Replace(input, @"(?<=[a-z])([A-Z])", " $1");
 
     // Disclaimer
     [ObservableProperty]

@@ -196,6 +196,8 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
             UsesProteinShakes = Data.UsesProteinShakes,
             ShakesPerDay = Data.ShakesPerDay,
             ProteinPerShakeG = Data.ProteinPerShakeG,
+            MealPrepMode = Data.MealPrepMode,
+            MealPrepDays = Data.MealPrepDays,
 
             // Food Frequency
             FoodFrequencyJson = JsonSerializer.Serialize(Data.FoodFrequencyResponses),
@@ -235,7 +237,9 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
         var foodsToAvoidStr = Data.FoodsToAvoid.Count > 0
             ? string.Join(",", Data.FoodsToAvoid) : string.Empty;
         var eatingPatternsJson = JsonSerializer.Serialize(Data.SelectedEatingPatterns);
-        var focusAreasJson = JsonSerializer.Serialize(Data.SelectedFocusAreas);
+        // NOTE: focus areas, confidence, and readiness live on the NutritionAssessment
+        // (written above). Do NOT mirror them into NutritionProfile — those columns are
+        // deprecated. See project_goals_consolidation Step 2.
 
         if (profile == null)
         {
@@ -247,12 +251,11 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
                 bmr, tdee, targetCalories, proteinG, carbsG, fatG);
             profile.FoodsToAvoid = foodsToAvoidStr;
             profile.EatingPatternsJson = eatingPatternsJson;
-            profile.FocusAreasJson = focusAreasJson;
-            profile.ConfidenceLevel = Data.ConfidenceLevel;
-            profile.ReadinessScore = readinessScore;
             profile.UsesProteinShakes = Data.UsesProteinShakes;
             profile.ShakesPerDay = Data.ShakesPerDay;
             profile.ProteinPerShakeG = Data.ProteinPerShakeG;
+            profile.MealPrepMode = Data.MealPrepMode;
+            profile.MealPrepDays = Data.MealPrepDays;
             await _databaseService.UpdateAsync(profile);
         }
         else
@@ -268,13 +271,12 @@ public class NutritionAssessmentCoordinator : INutritionAssessmentCoordinator
             profile.Allergies = string.Join(",", Data.SelectedAllergies);
             profile.FoodsToAvoid = foodsToAvoidStr;
             profile.EatingPatternsJson = eatingPatternsJson;
-            profile.FocusAreasJson = focusAreasJson;
-            profile.ConfidenceLevel = Data.ConfidenceLevel;
-            profile.ReadinessScore = readinessScore;
             profile.DailyWaterGlasses = Data.DailyWaterGlasses;
             profile.UsesProteinShakes = Data.UsesProteinShakes;
             profile.ShakesPerDay = Data.ShakesPerDay;
             profile.ProteinPerShakeG = Data.ProteinPerShakeG;
+            profile.MealPrepMode = Data.MealPrepMode;
+            profile.MealPrepDays = Data.MealPrepDays;
             profile.UpdatedAt = DateTime.UtcNow;
             await _databaseService.UpdateAsync(profile);
         }

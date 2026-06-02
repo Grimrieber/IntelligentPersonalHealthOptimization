@@ -32,4 +32,10 @@ public class WorkoutExercise
 
     [MaxLength(500)]
     public string Notes { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Engine-suggested working weight in kg. Null when no working max is mapped
+    /// (e.g. bodyweight exercises, accessories without a derivation).
+    /// </summary>
+    public decimal? RecommendedWeightKg { get; set; }
 }

@@ -106,24 +106,9 @@ public partial class AssessmentResultViewModel : BaseViewModel
     [RelayCommand]
     private async Task GenerateProgramAsync()
     {
-        IsBusy = true;
-        try
-        {
-            var user = await _userService.GetCurrentUserAsync();
-            if (user == null) return;
-
-            var program = await _prescriptionEngine.GenerateProgramAsync(user.Id, SessionId);
-            ProgramGenerated = true;
-            GeneratedProgramName = program.ProgramName;
-        }
-        catch (Exception ex)
-        {
-            await Shell.Current.DisplayAlert("Error", $"Could not generate program: {ex.Message}", "OK");
-        }
-        finally
-        {
-            IsBusy = false;
-        }
+        // Route through the equipment intel flow before program generation.
+        // Engine call lives on ProgramPreviewPage now.
+        await Shell.Current.GoToAsync($"{RouteConstants.EquipmentIntro}?sessionId={SessionId}");
     }
 
     [RelayCommand]

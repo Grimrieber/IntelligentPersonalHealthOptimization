@@ -6,7 +6,7 @@ namespace IntelligentPersonalHealthOptimization.Rules;
 public class RuleContext
 {
     public User User { get; set; } = null!;
-    public AssessmentSession Session { get; set; } = null!;
+    public AssessmentSession? Session { get; set; }
     public List<AssessmentResult> Results { get; set; } = new();
     public List<MovementCompensation> AllCompensations { get; set; } = new();
     public int OverallMovementScore { get; set; }

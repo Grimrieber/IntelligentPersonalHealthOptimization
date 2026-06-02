@@ -68,16 +68,14 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
         IsBusy = true;
         try
         {
-            var user = await _userService.GetCurrentUserAsync();
-            if (user == null) return;
-
-            // Load from local saved recipes cache
-            var savedRecipes = await _savedRecipeService.GetSavedRecipesAsync(user.Id);
-
-            // Only recipes with nutrition data
-            var withNutrition = savedRecipes
-                .Where(r => r.CaloriesPerServing.HasValue && r.CaloriesPerServing > 0)
-                .ToList();
+            // Load from the bundled recipe catalog (shared, stored with UserId=0)
+            // — every recipe with nutrition data. Previously used
+            // GetSavedRecipesAsync(user.Id), which only returns per-user rows and
+            // is empty for the bundled catalog, so the swap list showed nothing.
+            var db = await _databaseService.GetConnectionAsync();
+            var withNutrition = await db.QueryAsync<SavedRecipe>(
+                "SELECT * FROM SavedRecipe WHERE SourceProvider = 'Wikibooks' " +
+                "AND CaloriesPerServing IS NOT NULL AND CaloriesPerServing > 0");
 
             _allMeals = withNutrition.Select(r =>
             {

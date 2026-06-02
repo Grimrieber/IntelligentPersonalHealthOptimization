@@ -42,6 +42,15 @@ public partial class CalendarViewModel : BaseViewModel
     private string _selectedDayStatus = string.Empty;
 
     [ObservableProperty]
+    private string _selectedDayStatusColor = "#9E9E9E";
+
+    [ObservableProperty]
+    private string _selectedDayFocus = string.Empty;
+
+    [ObservableProperty]
+    private string _selectedDayExerciseCount = string.Empty;
+
+    [ObservableProperty]
     private bool _hasSelectedDay;
 
     [ObservableProperty]
@@ -146,19 +155,38 @@ public partial class CalendarViewModel : BaseViewModel
                 var workoutDay = await db.Table<WorkoutDay>()
                     .FirstOrDefaultAsync(d => d.Id == workout.WorkoutDayId.Value);
                 SelectedDayWorkoutName = workoutDay?.DayName ?? "Workout";
+                SelectedDayFocus = workoutDay?.Focus ?? string.Empty;
+
+                if (workoutDay != null)
+                {
+                    var exCount = await db.Table<WorkoutExercise>()
+                        .Where(e => e.WorkoutDayId == workoutDay.Id)
+                        .ToListAsync();
+                    SelectedDayExerciseCount = exCount.Count > 0 ? $"{exCount.Count} exercises" : string.Empty;
+                }
+                else
+                {
+                    SelectedDayExerciseCount = string.Empty;
+                }
             }
             else
             {
                 SelectedDayWorkoutName = "Workout";
+                SelectedDayFocus = string.Empty;
+                SelectedDayExerciseCount = string.Empty;
             }
 
             SelectedDayStatus = day.Status.ToString();
+            SelectedDayStatusColor = day.StatusColor;
             CanCompleteSelectedWorkout = day.Status == WorkoutStatus.Scheduled;
         }
         else
         {
             SelectedDayWorkoutName = "Rest Day";
             SelectedDayStatus = "No workout scheduled";
+            SelectedDayStatusColor = "#9E9E9E";
+            SelectedDayFocus = string.Empty;
+            SelectedDayExerciseCount = string.Empty;
             CanCompleteSelectedWorkout = false;
         }
     }
@@ -174,6 +202,13 @@ public partial class CalendarViewModel : BaseViewModel
     private async Task NextMonthAsync()
     {
         DisplayMonth = DisplayMonth.AddMonths(1);
+        await LoadDataAsync();
+    }
+
+    [RelayCommand]
+    private async Task GoToTodayAsync()
+    {
+        DisplayMonth = DateTime.Today;
         await LoadDataAsync();
     }
 

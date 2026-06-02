@@ -29,6 +29,8 @@ public partial class DietPlanViewModel : BaseViewModel
         _shakesPerDay = _coordinator.Data.ShakesPerDay;
         _proteinPerShakeG = _coordinator.Data.ProteinPerShakeG;
         _dailyWaterGlasses = _coordinator.Data.DailyWaterGlasses;
+        _mealPrepMode = _coordinator.Data.MealPrepMode;
+        _mealPrepDays = _coordinator.Data.MealPrepDays;
 
         foreach (var allergy in _coordinator.Data.SelectedAllergies)
             SelectedAllergies.Add(allergy);
@@ -73,6 +75,15 @@ public partial class DietPlanViewModel : BaseViewModel
     private int _dailyWaterGlasses;
 
     public string WaterGlassesDisplay => $"{DailyWaterGlasses} glasses/day";
+
+    [ObservableProperty]
+    private bool _mealPrepMode;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MealPrepDaysDisplay))]
+    private int _mealPrepDays;
+
+    public string MealPrepDaysDisplay => $"Cook every {MealPrepDays} day{(MealPrepDays != 1 ? "s" : "")}";
 
     public ObservableCollection<FoodAllergy> SelectedAllergies { get; } = [];
     public ObservableCollection<string> FoodsToAvoid { get; } = [];
@@ -182,6 +193,18 @@ public partial class DietPlanViewModel : BaseViewModel
         if (DailyWaterGlasses > 4) DailyWaterGlasses--;
     }
 
+    [RelayCommand]
+    private void IncrementMealPrepDays()
+    {
+        if (MealPrepDays < 7) MealPrepDays++;
+    }
+
+    [RelayCommand]
+    private void DecrementMealPrepDays()
+    {
+        if (MealPrepDays > 2) MealPrepDays--;
+    }
+
     public void SyncToCoordinator()
     {
         _coordinator.Data.SelectedDietType = SelectedDietType;
@@ -192,6 +215,8 @@ public partial class DietPlanViewModel : BaseViewModel
         _coordinator.Data.ShakesPerDay = ShakesPerDay;
         _coordinator.Data.ProteinPerShakeG = ProteinPerShakeG;
         _coordinator.Data.DailyWaterGlasses = DailyWaterGlasses;
+        _coordinator.Data.MealPrepMode = MealPrepMode;
+        _coordinator.Data.MealPrepDays = MealPrepDays;
     }
 
     [RelayCommand]

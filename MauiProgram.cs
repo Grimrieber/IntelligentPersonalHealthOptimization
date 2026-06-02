@@ -19,6 +19,7 @@ using IntelligentPersonalHealthOptimization.Views.WellnessCheckIn;
 using IntelligentPersonalHealthOptimization.Views.Workout;
 using CesVm = IntelligentPersonalHealthOptimization.ViewModels.CesAssessment;
 using IntelligentPersonalHealthOptimization.ViewModels.WellnessCheckIn;
+using IntelligentPersonalHealthOptimization.ViewModels.Workout;
 using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
 
@@ -32,6 +33,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitMediaElement()
             .UseMicrocharts()
             .ConfigureFonts(fonts =>
             {
@@ -56,11 +58,16 @@ public static class MauiProgram
         builder.Services.AddSingleton<INutritionAssessmentCoordinator, NutritionAssessmentCoordinator>();
         builder.Services.AddSingleton<IWellnessCheckInCoordinator, WellnessCheckInCoordinator>();
         builder.Services.AddSingleton<ICesAssessmentCoordinator, CesAssessmentCoordinator>();
-#if WINDOWS
-        builder.Services.AddSingleton<IRecipeService, SqlRecipeService>();
-#else
-        builder.Services.AddSingleton<IRecipeService, ApiRecipeService>();
-#endif
+        builder.Services.AddSingleton<IEquipmentIntelService, EquipmentIntelService>();
+        builder.Services.AddSingleton<IExerciseMediaService, WgerExerciseMediaService>();
+        builder.Services.AddSingleton<IBundledExerciseMediaService, BundledExerciseMediaService>();
+        builder.Services.AddSingleton<IWorkingWeightService, WorkingWeightService>();
+        builder.Services.AddSingleton<IExercisePerformanceService, ExercisePerformanceService>();
+        // Recipes are now served from the on-device SQLite bundle (Wikibooks
+        // Cookbook, seeded on first launch). The MSSQL / API implementations
+        // remain in the repo for reference but aren't wired up — the bundle
+        // works offline on every platform.
+        builder.Services.AddSingleton<IRecipeService, LocalRecipeService>();
         builder.Services.AddSingleton<ISavedRecipeService, SavedRecipeService>();
 
         // ===== ViewModels =====
@@ -86,6 +93,14 @@ public static class MauiProgram
         builder.Services.AddTransient<AssessmentResultViewModel>();
         builder.Services.AddTransient<WorkoutProgramViewModel>();
         builder.Services.AddTransient<WorkoutDayViewModel>();
+
+        // Equipment Intel (post-CES)
+        builder.Services.AddTransient<EquipmentIntroViewModel>();
+        builder.Services.AddTransient<EquipmentDetailViewModel>();
+        builder.Services.AddTransient<EnvironmentDetailViewModel>();
+        builder.Services.AddTransient<ProgramPreviewViewModel>();
+        builder.Services.AddTransient<ExerciseVideoViewModel>();
+        builder.Services.AddTransient<WorkingWeightsViewModel>();
         builder.Services.AddTransient<ProgressViewModel>();
         builder.Services.AddTransient<AddProgressEntryViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
@@ -163,6 +178,14 @@ public static class MauiProgram
         builder.Services.AddTransient<AssessmentResultPage>();
         builder.Services.AddTransient<WorkoutProgramPage>();
         builder.Services.AddTransient<WorkoutDayPage>();
+
+        // Equipment Intel pages
+        builder.Services.AddTransient<EquipmentIntroPage>();
+        builder.Services.AddTransient<EquipmentDetailPage>();
+        builder.Services.AddTransient<EnvironmentDetailPage>();
+        builder.Services.AddTransient<ProgramPreviewPage>();
+        builder.Services.AddTransient<ExerciseVideoPage>();
+        builder.Services.AddTransient<WorkingWeightsPage>();
         builder.Services.AddTransient<ProgressPage>();
         builder.Services.AddTransient<AddProgressEntryPage>();
         builder.Services.AddTransient<SettingsPage>();

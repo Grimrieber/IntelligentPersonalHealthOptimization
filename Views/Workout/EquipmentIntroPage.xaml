@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Workout"
+             xmlns:controls="clr-namespace:IntelligentPersonalHealthOptimization.Controls"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Workout.EquipmentIntroPage"
+             x:DataType="vm:EquipmentIntroViewModel"
+             Title="Equipment Intel"
+             Shell.NavBarIsVisible="True">
+
+    <Grid RowDefinitions="*,Auto" Padding="0">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="24,16" Spacing="16">
+
+                <Label Text="Equipment &amp; Environment"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <Label Text="{Binding SummaryLine}"
+                       FontSize="15"
+                       LineHeight="1.4"
+                       TextColor="{StaticResource Gray600}" />
+
+                <!-- Training Location (editable) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Training Location" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Where you primarily train. This drives which equipment we ask about next."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding LocationOptions}"
+                                    SelectedItem="{Binding SelectedLocation}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Fitness Goal (editable) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Primary Goal" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Drives which exercises we prioritize and how we set sets/reps."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding GoalOptions}"
+                                    SelectedItem="{Binding SelectedGoal}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Workout Level (editable) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Workout Level" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Your current training experience. Beginner programs use more stabilization work; Advanced/Elite get heavier loads and stricter tempos."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding ExperienceLevelOptions}"
+                                    SelectedItem="{Binding SelectedExperienceLevel}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Training Days (tap to select — sets both which days and how many per week) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Training Days" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Tap the days you can train. This sets both which days we schedule and how many days per week (which drives the program split)."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <controls:TrainingDaySelector SelectedDaysCsv="{Binding AvailableDaysCsv}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Session duration (editable) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Time per Session (minutes)" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="How long you can spend on one workout. We'll tailor the number of exercises per day to fit this window."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Border StrokeShape="RoundRectangle 8" Stroke="{StaticResource Gray200}" Padding="12,4">
+                            <Picker ItemsSource="{Binding SessionMinutesOptions}"
+                                    SelectedItem="{Binding SelectedSessionMinutes}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Injury Flags (editable) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Injury Flags" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Check anything that applies. We'll route around heavy axial loading or prioritize safer alternatives where needed."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding HasKneeIssue}" />
+                            <Label Text="Knee" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding HasShoulderIssue}" />
+                            <Label Text="Shoulder" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding HasBackIssue}" />
+                            <Label Text="Back / lower spine" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Auto-save indicator -->
+                <Label Text="{Binding SaveStatus}"
+                       FontSize="12"
+                       TextColor="{StaticResource Primary}"
+                       IsVisible="{Binding SaveStatus, Converter={StaticResource IsNotEmptyConverter}}" />
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="What's next" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Gray900}" />
+                        <Label Text="1. Confirm your equipment inventory" FontSize="14" TextColor="{StaticResource Gray600}" />
+                        <Label Text="2. (Home users) Tell us about ceiling, noise, floor space" FontSize="14" TextColor="{StaticResource Gray600}" />
+                        <Label Text="3. Review your program preview and generate" FontSize="14" TextColor="{StaticResource Gray600}" />
+                        <Label Text="About 2 minutes." FontSize="13" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Label Text="Tip: skip this for now and we'll use your onboarding answers — but your program will be less tailored."
+                       FontSize="12"
+                       TextColor="{StaticResource Gray500}"
+                       IsVisible="{Binding HasExistingInventory, Converter={StaticResource InverseBool}}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1" Padding="24,12" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Grid.Column="0" Text="Skip for now"
+                    Command="{Binding SkipCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="1" Text="Continue"
+                    Command="{Binding NextCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

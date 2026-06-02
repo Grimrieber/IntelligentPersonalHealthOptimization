@@ -15,5 +15,13 @@ public interface ISavedRecipeService
     Task<SavedRecipe?> GetSavedRecipeAsync(int savedRecipeId);
     Task<List<SavedRecipeIngredient>> GetSavedIngredientsAsync(int savedRecipeId);
     Task<List<SavedRecipeDirection>> GetSavedDirectionsAsync(int savedRecipeId);
+
+    // --- Favorites ("My Saved") -------------------------------------------
+    // Every cookbook recipe is already a SavedRecipe row (the bundled Wikibooks
+    // catalog). "Saving" a recipe = flipping IsFavorite on its existing row;
+    // the "My Saved" tab and the star toggle both run off this flag, keyed by
+    // SavedRecipe.Id (which is the RecipeItem.RecipeID for catalog recipes).
+    Task<bool> IsFavoriteAsync(int savedRecipeId);
     Task ToggleFavoriteAsync(int savedRecipeId);
+    Task<List<SavedRecipe>> GetFavoriteRecipesAsync();
 }

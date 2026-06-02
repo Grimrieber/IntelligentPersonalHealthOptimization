@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Workout"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Workout.ProgramPreviewPage"
+             x:DataType="vm:ProgramPreviewViewModel"
+             Title="Program Preview">
+
+    <Grid RowDefinitions="*,Auto" Padding="0">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="24,16" Spacing="16">
+
+                <Label Text="Your Program Preview"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Gray900}" />
+
+                <!-- Degraded banner -->
+                <Frame BackgroundColor="{StaticResource Magenta}"
+                       Padding="12,10"
+                       IsVisible="{Binding ShowDegradedBanner}">
+                    <Label Text="Based on minimal equipment intel — add detail for a better-tailored program."
+                           FontSize="13"
+                           TextColor="White" />
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{Binding PhaseLine}" FontSize="14" />
+                        <Label Text="{Binding DaysLine}" FontSize="14" />
+                        <Label Text="{Binding DurationLine}" FontSize="14" />
+                        <Label Text="{Binding EquipmentLine}" FontSize="14" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}">
+                    <Label Text="{Binding TailoringLine}"
+                           FontSize="13"
+                           LineHeight="1.5"
+                           TextColor="{StaticResource Gray600}" />
+                </Frame>
+
+                <!-- Generation success -->
+                <Frame Style="{StaticResource CardFrame}"
+                       IsVisible="{Binding ProgramGenerated}"
+                       BackgroundColor="{StaticResource Tertiary}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Program generated!" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="{Binding GeneratedProgramName}" FontSize="14" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1" Padding="24,12" RowDefinitions="Auto,Auto" RowSpacing="8">
+            <Button Grid.Row="0" Text="Generate my program"
+                    Command="{Binding GenerateCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    IsVisible="{Binding ProgramGenerated, Converter={StaticResource InverseBool}}" />
+            <Button Grid.Row="0" Text="View my program"
+                    Command="{Binding ViewProgramCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    IsVisible="{Binding ProgramGenerated}" />
+            <Button Grid.Row="1" Text="Back"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    IsVisible="{Binding ProgramGenerated, Converter={StaticResource InverseBool}}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

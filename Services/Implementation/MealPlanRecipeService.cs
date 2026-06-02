@@ -52,58 +52,24 @@ public class MealPlanRecipeService : IMealPlanRecipeService
 
     public async Task<List<SavedRecipe>> BuildRecipePoolAsync(int userId)
     {
-        // Try to fetch from API and save locally
-        try
-        {
-            if (!await _recipeService.TestConnectionAsync())
-                return await GetRecipePoolAsync(userId);
-
-            var categories = await _recipeService.GetCategoriesAsync();
-
-            foreach (var category in categories)
-            {
-                var recipes = await _recipeService.GetRecipesByCategoryAsync(category.CategoryID);
-
-                // Only fetch details for recipes with nutrition data
-                var withNutrition = recipes.Where(r => r.HasNutrition).ToList();
-
-                // Batch: process 5 at a time to avoid overwhelming the API
-                for (int i = 0; i < withNutrition.Count; i += 5)
-                {
-                    var batch = withNutrition.Skip(i).Take(5);
-
-                    foreach (var recipe in batch)
-                    {
-                        // Skip if already saved
-                        if (await _savedRecipeService.IsRecipeSavedAsync(recipe.RecipeID, userId))
-                            continue;
-
-                        var detail = await _recipeService.GetRecipeDetailAsync(recipe.RecipeID);
-                        if (detail?.Nutrition != null)
-                        {
-                            await _savedRecipeService.SaveRecipeAsync(detail, userId);
-                        }
-                    }
-
-                    // Small delay between batches
-                    if (i + 5 < withNutrition.Count)
-                        await Task.Delay(100);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Recipe pool build error (using cache): {ex.Message}");
-        }
-
+        // The recipe catalog is bundled on-device (LocalRecipeService), so the pool
+        // is simply the local recipes that have nutrition — no API fetch/caching.
+        //
+        // This previously iterated every category, re-fetched each recipe's detail,
+        // and re-saved a copy with a 100ms delay between batches. Against the bundled
+        // catalog that did nothing useful but took minutes and created thousands of
+        // duplicate "User" rows. See ApplyDuplicateRecipeCleanupAsync.
         return await GetRecipePoolAsync(userId);
     }
 
     public async Task<List<SavedRecipe>> GetRecipePoolAsync(int userId)
     {
-        var all = await _savedRecipeService.GetSavedRecipesAsync(userId);
-        // Only return recipes with nutrition data
-        return all.Where(r => r.CaloriesPerServing.HasValue && r.CaloriesPerServing > 0).ToList();
+        var conn = await _databaseService.GetConnectionAsync();
+        // The bundled catalog is shared (stored with UserId=0), so don't filter by
+        // user — just take the Wikibooks recipes that have a calorie value.
+        return await conn.QueryAsync<SavedRecipe>(
+            "SELECT * FROM SavedRecipe WHERE SourceProvider = 'Wikibooks' " +
+            "AND CaloriesPerServing IS NOT NULL AND CaloriesPerServing > 0");
     }
 
     public List<SavedRecipe> FilterForMealType(List<SavedRecipe> pool, MealType mealType)

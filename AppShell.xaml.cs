@@ -57,6 +57,14 @@ public partial class AppShell : Shell
         // Workout routes
         Routing.RegisterRoute("workoutday", typeof(WorkoutDayPage));
         Routing.RegisterRoute("workoutcomplete", typeof(WorkoutCompletePage));
+        Routing.RegisterRoute("exercisevideo", typeof(ExerciseVideoPage));
+        Routing.RegisterRoute("workingweights", typeof(WorkingWeightsPage));
+
+        // Equipment & Environment intel routes (post-CES, pre-program)
+        Routing.RegisterRoute("equipmentintro", typeof(EquipmentIntroPage));
+        Routing.RegisterRoute("equipmentdetail", typeof(EquipmentDetailPage));
+        Routing.RegisterRoute("environmentdetail", typeof(EnvironmentDetailPage));
+        Routing.RegisterRoute("programpreview", typeof(ProgramPreviewPage));
 
         // Nutrition routes
         Routing.RegisterRoute("foodlog", typeof(FoodLogPage));

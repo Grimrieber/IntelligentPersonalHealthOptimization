@@ -40,7 +40,7 @@
                            FontSize="16"
                            TextColor="{StaticResource Gray500}"
                            HorizontalTextAlignment="Center" />
-                    <Label Text="Generate a meal plan first to build your recipe library"
+                    <Label Text="Try a different search term"
                            FontSize="14"
                            TextColor="{StaticResource Gray300}"
                            HorizontalTextAlignment="Center" />

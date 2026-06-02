@@ -142,6 +142,13 @@ public class SavedRecipeService : ISavedRecipeService
             .ToListAsync();
     }
 
+    public async Task<bool> IsFavoriteAsync(int savedRecipeId)
+    {
+        var conn = await _db.GetConnectionAsync();
+        var saved = await conn.FindAsync<SavedRecipe>(savedRecipeId);
+        return saved?.IsFavorite ?? false;
+    }
+
     public async Task ToggleFavoriteAsync(int savedRecipeId)
     {
         var conn = await _db.GetConnectionAsync();
@@ -150,5 +157,13 @@ public class SavedRecipeService : ISavedRecipeService
 
         saved.IsFavorite = !saved.IsFavorite;
         await conn.UpdateAsync(saved);
+    }
+
+    public async Task<List<SavedRecipe>> GetFavoriteRecipesAsync()
+    {
+        var conn = await _db.GetConnectionAsync();
+        // Raw SQL — sqlite-net's LINQ doesn't always translate bool filters well.
+        return await conn.QueryAsync<SavedRecipe>(
+            "SELECT * FROM SavedRecipe WHERE IsFavorite = 1 ORDER BY RecipeName");
     }
 }

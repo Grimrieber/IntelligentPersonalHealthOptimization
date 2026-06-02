@@ -15,6 +15,8 @@ public interface INutritionService
         int workoutsPerWeek = 0, int avgWorkoutMinutes = 0,
         List<NutritionFocusArea>? focusAreas = null, int confidenceLevel = 5,
         double readinessScore = 5.0);
+    NutritionTargets ComputeTargetsForUser(User user, NutritionAssessment? assessment);
+    Task ReconcileSavedTargetsAsync(User user);
     Task<NutritionProfile> CreateNutritionProfileAsync(int userId, DietType dietType, int mealsPerDay,
         string allergies, string foodPreferences, string foodDislikes, int waterGlasses,
         string supplements, string alcoholFrequency, int caffeinePerDay,
@@ -33,6 +35,9 @@ public interface INutritionService
     Task<MealPlan> GenerateRecipeMealPlanAsync(int userId, int nutritionProfileId);
     Task<List<MealPlanItem>> GetTodaysMealPlanItemsAsync(int userId);
 }
+
+/// <summary>Computed nutrition targets for a user: energy + macro grams.</summary>
+public record NutritionTargets(double Bmr, double Tdee, int Calories, int ProteinG, int CarbsG, int FatG);
 
 public class MealTemplateInfo
 {

@@ -34,6 +34,14 @@ public static class RouteConstants
     // Workout
     public const string WorkoutDay = "workoutday";
     public const string WorkoutComplete = "workoutcomplete";
+    public const string ExerciseVideo = "exercisevideo";
+    public const string WorkingWeights = "workingweights";
+
+    // Equipment & Environment intel (post-CES, pre-program)
+    public const string EquipmentIntro = "equipmentintro";
+    public const string EquipmentDetail = "equipmentdetail";
+    public const string EnvironmentDetail = "environmentdetail";
+    public const string ProgramPreview = "programpreview";
 
     // Nutrition
     public const string NutritionDashboard = "nutritiondashboard";
