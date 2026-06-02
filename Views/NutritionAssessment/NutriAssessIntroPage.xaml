@@ -32,7 +32,7 @@
                     <VerticalStackLayout Spacing="12">
                         <Label Text="What to Expect" FontSize="18" FontAttributes="Bold" />
 
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="12">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="12">
                             <Label Text="1." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="0" />
                             <VerticalStackLayout Grid.Row="0" Grid.Column="1">
                                 <Label Text="Body Measurements" FontSize="15" FontAttributes="Bold" />
@@ -47,24 +47,18 @@
 
                             <Label Text="3." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="2" />
                             <VerticalStackLayout Grid.Row="2" Grid.Column="1">
-                                <Label Text="Food Frequency" FontSize="15" FontAttributes="Bold" />
-                                <Label Text="How often you eat various food groups" FontSize="13" TextColor="{StaticResource Gray500}" />
+                                <Label Text="Eating Patterns" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="Your meal regularity and routine" FontSize="13" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
 
                             <Label Text="4." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="3" />
                             <VerticalStackLayout Grid.Row="3" Grid.Column="1">
-                                <Label Text="Eating Patterns" FontSize="15" FontAttributes="Bold" />
-                                <Label Text="Your meal regularity and eating behaviors" FontSize="13" TextColor="{StaticResource Gray500}" />
-                            </VerticalStackLayout>
-
-                            <Label Text="5." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="4" />
-                            <VerticalStackLayout Grid.Row="4" Grid.Column="1">
                                 <Label Text="Motivation &amp; Barriers" FontSize="15" FontAttributes="Bold" />
                                 <Label Text="What drives you and what challenges you face" FontSize="13" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
 
-                            <Label Text="6." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="5" />
-                            <VerticalStackLayout Grid.Row="5" Grid.Column="1">
+                            <Label Text="5." FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" Grid.Row="4" />
+                            <VerticalStackLayout Grid.Row="4" Grid.Column="1">
                                 <Label Text="Nutrition Goals" FontSize="15" FontAttributes="Bold" />
                                 <Label Text="Select your primary goal, focus areas, and timeline" FontSize="13" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
