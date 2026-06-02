@@ -49,6 +49,10 @@ public class PrescriptionEngine : IPrescriptionEngine
 
         var exercises = await db.Table<Exercise>().Where(e => e.IsActive).ToListAsync();
 
+        // Injury flags the user set in Equipment Intel (CSV of "knee"/"shoulder"/"back").
+        // Used below to lighten load and add a caution note on exercises that load a flagged area.
+        var injuredAreas = ParseInjuredAreas(user.InjuryAreas);
+
         // Load expanded data. Use the latest profile row (by Id) so the generator
         // always reads the same row the UI updates, even if duplicate rows exist.
         var trainingProfile = await db.Table<TrainingProfile>()
@@ -242,6 +246,21 @@ public class PrescriptionEngine : IPrescriptionEngine
                     ? await _workingWeights.RecommendWeightKgAsync(userId, exDef.Name, me.RepsMin, me.RepsMax)
                     : null;
 
+                // Injury-aware adjustment: if this exercise loads a flagged injury area,
+                // lighten the recommended load and add a caution note the user will see.
+                var injuryNote = string.Empty;
+                if (exDef != null && injuredAreas.Count > 0)
+                {
+                    var flagged = AffectedInjuryAreas(exDef, injuredAreas);
+                    if (flagged.Count > 0)
+                    {
+                        var loadReduced = recommended.HasValue;
+                        if (loadReduced)
+                            recommended = Math.Round(recommended!.Value * InjuryLoadFactor, 1);
+                        injuryNote = BuildInjuryCaution(flagged, loadReduced);
+                    }
+                }
+
                 await db.InsertAsync(new WorkoutExercise
                 {
                     WorkoutDayId = day.Id,
@@ -253,7 +272,8 @@ public class PrescriptionEngine : IPrescriptionEngine
                     RepsMax = me.RepsMax,
                     Tempo = me.Tempo,
                     RestSeconds = me.RestSeconds,
-                    RecommendedWeightKg = recommended
+                    RecommendedWeightKg = recommended,
+                    Notes = injuryNote
                 });
             }
 
@@ -277,6 +297,54 @@ public class PrescriptionEngine : IPrescriptionEngine
         }
 
         return program;
+    }
+
+    // ---- Injury-aware programming -------------------------------------------------
+    // Lighten flagged exercises by ~25% and note the caution. "Avoid entirely" can be
+    // layered on top of this later (e.g. a severity toggle that excludes instead of lightens).
+    private const decimal InjuryLoadFactor = 0.75m;
+
+    // Maps a user-reported injury area to the muscles whose loading we treat as a risk.
+    private static readonly Dictionary<string, (string Label, MuscleGroup[] Muscles)> InjuryMuscleMap = new()
+    {
+        ["knee"] = ("Knee", new[] { MuscleGroup.Quadriceps, MuscleGroup.Hamstrings, MuscleGroup.Glutes, MuscleGroup.Calves }),
+        ["shoulder"] = ("Shoulder", new[] { MuscleGroup.Shoulders, MuscleGroup.RotatorCuff, MuscleGroup.Chest }),
+        ["back"] = ("Back", new[] { MuscleGroup.LowerBack, MuscleGroup.ErectorSpinae }),
+    };
+
+    private static List<string> ParseInjuredAreas(string? injuryAreas) =>
+        (injuryAreas ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim().ToLowerInvariant())
+            .Where(InjuryMuscleMap.ContainsKey)
+            .Distinct()
+            .ToList();
+
+    // Returns the labels of the flagged areas this exercise loads (primary or secondary muscle).
+    private static List<string> AffectedInjuryAreas(Exercise ex, List<string> injuredAreas)
+    {
+        var muscles = new HashSet<MuscleGroup> { ex.PrimaryMuscle };
+        foreach (var token in (ex.SecondaryMuscles ?? string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (Enum.TryParse<MuscleGroup>(token.Trim(), out var mg))
+                muscles.Add(mg);
+        }
+
+        var hits = new List<string>();
+        foreach (var area in injuredAreas)
+        {
+            var (label, areaMuscles) = InjuryMuscleMap[area];
+            if (areaMuscles.Any(muscles.Contains))
+                hits.Add(label);
+        }
+        return hits;
+    }
+
+    private static string BuildInjuryCaution(List<string> areas, bool loadReduced)
+    {
+        var which = string.Join(" / ", areas);
+        var lead = loadReduced ? "load reduced ~25%" : "keep the load light";
+        return $"⚠️ {which} injury flagged — {lead}. Stay pain-free and prioritize control; skip if it aggravates.";
     }
 
     private static (string name, MuscleGroup[] muscles)[] GetDaySplits(int daysPerWeek)
