@@ -294,11 +294,11 @@ public partial class NutriGoalsViewModel : BaseViewModel
 
     private static List<CheckableItem<NutritionFocusArea>> CreateFocusAreaItems() =>
     [
-        new() { Value = NutritionFocusArea.IncreaseProtein, DisplayName = "Increase protein", Description = "Higher protein target in your macro split" },
+        new() { Value = NutritionFocusArea.IncreaseProtein, DisplayName = "Increase protein", Description = "Higher protein in your macro split" },
         new() { Value = NutritionFocusArea.IncludeHealthyFats, DisplayName = "Include healthy fats", Description = "Higher fat target (omega-3s, unsaturated)" },
         new() { Value = NutritionFocusArea.EatMoreFiber, DisplayName = "Eat more fiber", Description = "Shifts carbs toward fiber-rich foods" },
         new() { Value = NutritionFocusArea.EatMoreWholeGrains, DisplayName = "Eat more whole grains", Description = "Shifts carbs toward whole grains" },
         new() { Value = NutritionFocusArea.ReduceSugar, DisplayName = "Reduce sugar", Description = "Shifts macros away from simple carbs" },
-        new() { Value = NutritionFocusArea.ReduceProcessedFood, DisplayName = "Reduce processed food", Description = "Shifts macros away from simple carbs" }
+        new() { Value = NutritionFocusArea.ReduceProcessedFood, DisplayName = "Reduce processed food", Description = "Favors whole foods over processed" }
     ];
 }

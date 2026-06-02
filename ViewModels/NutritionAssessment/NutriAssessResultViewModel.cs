@@ -53,8 +53,15 @@ public partial class NutriAssessResultViewModel : BaseViewModel
     [ObservableProperty] private string _readinessDisplay = "—";
     [ObservableProperty] private string _readinessInterpretation = string.Empty;
     [ObservableProperty] private int _confidenceLevel;
-    [ObservableProperty] private int _motivationCount;
-    [ObservableProperty] private int _challengeCount;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MotivationLabel))]
+    private int _motivationCount;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ChallengeLabel))]
+    private int _challengeCount;
+
+    public string MotivationLabel => MotivationCount == 1 ? "Motivation" : "Motivations";
+    public string ChallengeLabel => ChallengeCount == 1 ? "Challenge" : "Challenges";
 
     // Goals
     [ObservableProperty] private string _primaryGoalDisplay = "—";

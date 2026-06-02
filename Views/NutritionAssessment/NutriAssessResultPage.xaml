@@ -154,13 +154,13 @@
                                 <Label Text="{Binding MotivationCount}"
                                        FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
                                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                <Label Text="Motivations" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding MotivationLabel}" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout HorizontalOptions="Center" Grid.Column="2">
                                 <Label Text="{Binding ChallengeCount}"
                                        FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
                                        TextColor="OrangeRed" />
-                                <Label Text="Challenges" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding ChallengeLabel}" FontSize="12" HorizontalOptions="Center" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
                         </Grid>
 
