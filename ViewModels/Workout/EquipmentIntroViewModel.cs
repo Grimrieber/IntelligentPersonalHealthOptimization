@@ -43,6 +43,7 @@ public partial class EquipmentIntroViewModel : BaseViewModel
     [ObservableProperty] private bool _hasKneeIssue;
     [ObservableProperty] private bool _hasShoulderIssue;
     [ObservableProperty] private bool _hasBackIssue;
+    [ObservableProperty] private bool _hasAvoidInjuries;
     [ObservableProperty] private string _saveStatus = string.Empty;
     [ObservableProperty] private bool _hasExistingInventory;
 
@@ -92,6 +93,7 @@ public partial class EquipmentIntroViewModel : BaseViewModel
             HasKneeIssue = ctx.HasKneeIssue;
             HasShoulderIssue = ctx.HasShoulderIssue;
             HasBackIssue = ctx.HasBackIssue;
+            HasAvoidInjuries = user.AvoidInjuredExercises;
         }
         catch (Exception ex)
         {
@@ -298,6 +300,7 @@ public partial class EquipmentIntroViewModel : BaseViewModel
     partial void OnHasKneeIssueChanged(bool value) { if (!_isInitializing) _ = SaveInjuryFlagsAsync(); }
     partial void OnHasShoulderIssueChanged(bool value) { if (!_isInitializing) _ = SaveInjuryFlagsAsync(); }
     partial void OnHasBackIssueChanged(bool value) { if (!_isInitializing) _ = SaveInjuryFlagsAsync(); }
+    partial void OnHasAvoidInjuriesChanged(bool value) { if (!_isInitializing) _ = SaveInjuryFlagsAsync(); }
 
     private async Task SaveInjuryFlagsAsync()
     {
@@ -323,6 +326,7 @@ public partial class EquipmentIntroViewModel : BaseViewModel
             if (HasBackIssue) existing.Add("back");
 
             user.InjuryAreas = string.Join(", ", existing);
+            user.AvoidInjuredExercises = HasAvoidInjuries;
             user.UpdatedAt = DateTime.UtcNow;
             await _userService.UpdateUserAsync(user);
 

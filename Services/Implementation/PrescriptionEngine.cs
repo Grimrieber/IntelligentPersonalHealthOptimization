@@ -52,6 +52,8 @@ public class PrescriptionEngine : IPrescriptionEngine
         // Injury flags the user set in Equipment Intel (CSV of "knee"/"shoulder"/"back").
         // Used below to lighten load and add a caution note on exercises that load a flagged area.
         var injuredAreas = ParseInjuredAreas(user.InjuryAreas);
+        // When true, exercises that DIRECTLY load a flagged area are dropped instead of lightened.
+        var avoidInjured = user.AvoidInjuredExercises;
 
         // Load expanded data. Use the latest profile row (by Id) so the generator
         // always reads the same row the UI updates, even if duplicate rows exist.
@@ -246,11 +248,15 @@ public class PrescriptionEngine : IPrescriptionEngine
                     ? await _workingWeights.RecommendWeightKgAsync(userId, exDef.Name, me.RepsMin, me.RepsMax)
                     : null;
 
-                // Injury-aware adjustment: if this exercise loads a flagged injury area,
+                // Injury-aware adjustment. If "avoid" is on and this exercise directly loads a
+                // flagged area, drop it entirely. Otherwise, if it broadly loads a flagged area,
                 // lighten the recommended load and add a caution note the user will see.
                 var injuryNote = string.Empty;
                 if (exDef != null && injuredAreas.Count > 0)
                 {
+                    if (avoidInjured && DirectlyLoadsInjuredArea(exDef, injuredAreas))
+                        continue; // user opted to skip exercises that directly load the injury
+
                     var flagged = AffectedInjuryAreas(exDef, injuredAreas);
                     if (flagged.Count > 0)
                     {
@@ -305,12 +311,36 @@ public class PrescriptionEngine : IPrescriptionEngine
     private const decimal InjuryLoadFactor = 0.75m;
 
     // Maps a user-reported injury area to the muscles whose loading we treat as a risk.
+    // Broad map — used for the lighten-and-caution path (erring toward cautioning more).
     private static readonly Dictionary<string, (string Label, MuscleGroup[] Muscles)> InjuryMuscleMap = new()
     {
         ["knee"] = ("Knee", new[] { MuscleGroup.Quadriceps, MuscleGroup.Hamstrings, MuscleGroup.Glutes, MuscleGroup.Calves }),
         ["shoulder"] = ("Shoulder", new[] { MuscleGroup.Shoulders, MuscleGroup.RotatorCuff, MuscleGroup.Chest }),
         ["back"] = ("Back", new[] { MuscleGroup.LowerBack, MuscleGroup.ErectorSpinae }),
     };
+
+    // Narrow map — the muscles whose exercises most directly load the injured joint. Used for the
+    // "avoid entirely" path so we only drop the prime stressors (e.g. squats for a knee), not
+    // knee-safe accessory work like hip thrusts or calf raises.
+    private static readonly Dictionary<string, MuscleGroup[]> InjuryDirectLoadMap = new()
+    {
+        ["knee"] = new[] { MuscleGroup.Quadriceps },
+        ["shoulder"] = new[] { MuscleGroup.Shoulders },
+        ["back"] = new[] { MuscleGroup.LowerBack, MuscleGroup.ErectorSpinae },
+    };
+
+    // True when the exercise's primary or secondary muscles directly load any flagged area.
+    private static bool DirectlyLoadsInjuredArea(Exercise ex, List<string> injuredAreas)
+    {
+        var muscles = new HashSet<MuscleGroup> { ex.PrimaryMuscle };
+        foreach (var token in (ex.SecondaryMuscles ?? string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (Enum.TryParse<MuscleGroup>(token.Trim(), out var mg))
+                muscles.Add(mg);
+        }
+        return injuredAreas.Any(area =>
+            InjuryDirectLoadMap.TryGetValue(area, out var direct) && direct.Any(muscles.Contains));
+    }
 
     private static List<string> ParseInjuredAreas(string? injuryAreas) =>
         (injuryAreas ?? string.Empty)

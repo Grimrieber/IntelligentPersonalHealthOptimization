@@ -33,6 +33,12 @@ public class User
     [MaxLength(1000)]
     public string InjuryAreas { get; set; } = string.Empty;
 
+    /// <summary>
+    /// When true, exercises that directly load a flagged injury area are excluded from the
+    /// program entirely. When false (default), they're kept but lightened with a caution note.
+    /// </summary>
+    public bool AvoidInjuredExercises { get; set; }
+
     [MaxLength(500)]
     public string MedicalNotes { get; set; } = string.Empty;
 

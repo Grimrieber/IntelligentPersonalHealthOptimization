@@ -103,6 +103,15 @@
                             <CheckBox IsChecked="{Binding HasBackIssue}" />
                             <Label Text="Back / lower spine" VerticalOptions="Center" />
                         </HorizontalStackLayout>
+
+                        <BoxView HeightRequest="1" Color="{StaticResource Gray200}" Margin="0,8" />
+
+                        <HorizontalStackLayout Spacing="8">
+                            <CheckBox IsChecked="{Binding HasAvoidInjuries}" />
+                            <Label Text="Avoid these entirely" FontAttributes="Bold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Label Text="On: we drop exercises that directly load a flagged area (e.g. squats for a knee). Off: we keep them but lighten the load and add a caution."
+                               FontSize="12" TextColor="{StaticResource Gray500}" />
                     </VerticalStackLayout>
                 </Frame>
 
