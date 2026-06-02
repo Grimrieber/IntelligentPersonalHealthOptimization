@@ -357,10 +357,6 @@ public partial class NutritionService : INutritionService
             fatPct = Math.Clamp(fatPct, 0.15, 0.70);
         }
 
-        // Water goal influence: if DrinkMoreWater is a focus area, the profile's
-        // DailyWaterGlasses target is already set. No calorie adjustment needed
-        // but it feeds into the dashboard hydration tracking.
-
         var proteinG = (int)(targetCalories * proteinPct / 4);
         var fatG = (int)(targetCalories * fatPct / 9);
 

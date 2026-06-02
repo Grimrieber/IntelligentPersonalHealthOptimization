@@ -42,22 +42,20 @@ public enum NutritionChallenge
     Motivation
 }
 
+// Only focus areas that actually adjust the macro split are kept (see
+// NutritionService.CalculateAssessmentTargets). Explicit integer values preserve
+// the original mapping so previously-stored FocusAreasJson still deserializes.
+// Removed (cosmetic / untrackable): EatMoreVegetables(0), ControlPortions(2),
+// DrinkMoreWater(5), ReduceSodium(7), ReduceFastFood(10), CookMoreAtHome(11),
+// ConsistentMealSchedule(12), ReduceSnacking(13).
 public enum NutritionFocusArea
 {
-    EatMoreVegetables,
-    ReduceProcessedFood,
-    ControlPortions,
-    IncreaseProtein,
-    ReduceSugar,
-    DrinkMoreWater,
-    EatMoreFiber,
-    ReduceSodium,
-    EatMoreWholeGrains,
-    IncludeHealthyFats,
-    ReduceFastFood,
-    CookMoreAtHome,
-    ConsistentMealSchedule,
-    ReduceSnacking
+    ReduceProcessedFood = 1,
+    IncreaseProtein = 3,
+    ReduceSugar = 4,
+    EatMoreFiber = 6,
+    EatMoreWholeGrains = 8,
+    IncludeHealthyFats = 9
 }
 
 public enum PrimaryNutritionGoal

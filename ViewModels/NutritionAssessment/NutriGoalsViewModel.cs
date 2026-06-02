@@ -294,19 +294,11 @@ public partial class NutriGoalsViewModel : BaseViewModel
 
     private static List<CheckableItem<NutritionFocusArea>> CreateFocusAreaItems() =>
     [
-        new() { Value = NutritionFocusArea.EatMoreVegetables, DisplayName = "Eat more vegetables", Description = "Increase daily vegetable servings" },
-        new() { Value = NutritionFocusArea.ReduceProcessedFood, DisplayName = "Reduce processed food", Description = "Cut back on packaged and processed meals" },
-        new() { Value = NutritionFocusArea.ControlPortions, DisplayName = "Control portions", Description = "Eat appropriate serving sizes" },
-        new() { Value = NutritionFocusArea.IncreaseProtein, DisplayName = "Increase protein", Description = "Eat more lean protein sources" },
-        new() { Value = NutritionFocusArea.ReduceSugar, DisplayName = "Reduce sugar", Description = "Limit added sugars and sweets" },
-        new() { Value = NutritionFocusArea.DrinkMoreWater, DisplayName = "Drink more water", Description = "Stay properly hydrated throughout the day" },
-        new() { Value = NutritionFocusArea.EatMoreFiber, DisplayName = "Eat more fiber", Description = "Include more fiber-rich foods" },
-        new() { Value = NutritionFocusArea.ReduceSodium, DisplayName = "Reduce sodium", Description = "Lower salt intake" },
-        new() { Value = NutritionFocusArea.EatMoreWholeGrains, DisplayName = "Eat more whole grains", Description = "Choose whole grains over refined" },
-        new() { Value = NutritionFocusArea.IncludeHealthyFats, DisplayName = "Include healthy fats", Description = "Add more omega-3s and unsaturated fats" },
-        new() { Value = NutritionFocusArea.ReduceFastFood, DisplayName = "Reduce fast food", Description = "Eat less fast food and takeout" },
-        new() { Value = NutritionFocusArea.CookMoreAtHome, DisplayName = "Cook more at home", Description = "Prepare more meals yourself" },
-        new() { Value = NutritionFocusArea.ConsistentMealSchedule, DisplayName = "Consistent meal schedule", Description = "Eat meals at regular times" },
-        new() { Value = NutritionFocusArea.ReduceSnacking, DisplayName = "Reduce snacking", Description = "Cut back on between-meal snacking" }
+        new() { Value = NutritionFocusArea.IncreaseProtein, DisplayName = "Increase protein", Description = "Higher protein target in your macro split" },
+        new() { Value = NutritionFocusArea.IncludeHealthyFats, DisplayName = "Include healthy fats", Description = "Higher fat target (omega-3s, unsaturated)" },
+        new() { Value = NutritionFocusArea.EatMoreFiber, DisplayName = "Eat more fiber", Description = "Shifts carbs toward fiber-rich foods" },
+        new() { Value = NutritionFocusArea.EatMoreWholeGrains, DisplayName = "Eat more whole grains", Description = "Shifts carbs toward whole grains" },
+        new() { Value = NutritionFocusArea.ReduceSugar, DisplayName = "Reduce sugar", Description = "Shifts macros away from simple carbs" },
+        new() { Value = NutritionFocusArea.ReduceProcessedFood, DisplayName = "Reduce processed food", Description = "Shifts macros away from simple carbs" }
     ];
 }
