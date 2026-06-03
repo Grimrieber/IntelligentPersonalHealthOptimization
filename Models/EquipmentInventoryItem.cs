@@ -17,11 +17,6 @@ public class EquipmentInventoryItem
     public TrainingLocation Location { get; set; }
 
     public decimal? MaxLoadKg { get; set; }
-    public decimal? MinLoadKg { get; set; }
-    public decimal? IncrementKg { get; set; }
-
-    [MaxLength(200)]
-    public string Notes { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

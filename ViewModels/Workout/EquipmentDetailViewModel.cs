@@ -155,8 +155,7 @@ public partial class EquipmentDetailViewModel : BaseViewModel
             {
                 ItemType = s,
                 Location = TrainingLocation,
-                MaxLoadKg = IsDumbbell(s) ? (decimal)DumbbellMaxKg : null,
-                IncrementKg = IsDumbbell(s) ? 2.5m : null
+                MaxLoadKg = IsDumbbell(s) ? (decimal)DumbbellMaxKg : null
             }).ToList();
 
             // If they picked adjustable, swap fixed → adjustable
@@ -173,8 +172,7 @@ public partial class EquipmentDetailViewModel : BaseViewModel
                     {
                         ItemType = EquipmentItemType.AdjustableDumbbells,
                         Location = TrainingLocation,
-                        MaxLoadKg = (decimal)DumbbellMaxKg,
-                        IncrementKg = 2.5m
+                        MaxLoadKg = (decimal)DumbbellMaxKg
                     });
                 }
             }

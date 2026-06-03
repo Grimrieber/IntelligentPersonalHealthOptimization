@@ -15,8 +15,6 @@ public class TrainingProfile
 
     public ExperienceLevel ExperienceLevel { get; set; }
 
-    public int TrainingMonths { get; set; }
-
     public int CurrentFrequency { get; set; }
 
     public int SessionDurationMinutes { get; set; }
@@ -29,9 +27,6 @@ public class TrainingProfile
 
     [MaxLength(50)]
     public string PreferredTimeOfDay { get; set; } = string.Empty;
-
-    [MaxLength(200)]
-    public string SportOrActivity { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
