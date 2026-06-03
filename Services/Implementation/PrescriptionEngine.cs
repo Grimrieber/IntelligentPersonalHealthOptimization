@@ -90,6 +90,29 @@ public class PrescriptionEngine : IPrescriptionEngine
             }
         }
 
+        // CES integration: when the user has completed a CES movement assessment, use it to drive
+        // corrective exercises and the movement score. The legacy AssessmentSession flow is no
+        // longer populated, so without this the corrective pipeline always ran on empty data.
+        var latestCes = await db.Table<CesAssessment>()
+            .Where(c => c.UserId == userId)
+            .OrderByDescending(c => c.Id)
+            .FirstOrDefaultAsync();
+
+        if (latestCes != null)
+        {
+            // Dynamic movement compensations feed the corrective rules directly; static-posture
+            // findings additionally route through PostureAnalysisRules like the legacy path.
+            foreach (var comp in MapCesToCompensations(latestCes))
+                if (!allCompensations.Contains(comp)) allCompensations.Add(comp);
+
+            foreach (var dev in MapCesToPostureDeviations(latestCes))
+            {
+                if (!postureDeviations.Contains(dev)) postureDeviations.Add(dev);
+                foreach (var comp in PostureAnalysisRules.MapToCompensations(dev))
+                    if (!allCompensations.Contains(comp)) allCompensations.Add(comp);
+            }
+        }
+
         // Parse available equipment — prefer new EquipmentInventoryItem rows; fall back to legacy CSV
         var availableEquipment = new List<string> { "Bodyweight" };
         var inventory = await db.Table<EquipmentInventoryItem>()
@@ -124,11 +147,12 @@ public class PrescriptionEngine : IPrescriptionEngine
             daysPerWeek = Math.Clamp(days.Length, 2, 6);
         }
 
-        // When no CES session, derive a sensible movement-score default from the user's GOAL
-        // (primary signal) modified by experience level (mild adjustment). Without this,
-        // every beginner gets locked into Stabilization regardless of what they want to do —
-        // and a beginner who chose "Muscle Building" needs Hypertrophy-phase programming.
-        var movementScore = session?.OverallMovementScore
+        // Prefer the CES movement score when available. Otherwise derive a sensible default from
+        // the user's GOAL (primary signal) modified by experience level. Without a fallback, every
+        // beginner gets locked into Stabilization regardless of what they want to do — and a
+        // beginner who chose "Muscle Building" needs Hypertrophy-phase programming.
+        var movementScore = latestCes?.OverallMovementScore
+            ?? session?.OverallMovementScore
             ?? DefaultMovementScore(trainingProfile?.ExperienceLevel, user.FitnessGoal);
 
         var context = new RuleContext
@@ -443,6 +467,76 @@ public class PrescriptionEngine : IPrescriptionEngine
         var which = string.Join(" / ", areas);
         var lead = loadReduced ? "load reduced ~25%" : "keep the load light";
         return $"⚠️ {which} injury flagged — {lead}. Stay pain-free and prioritize control; skip if it aggravates.";
+    }
+
+    // ---- CES → prescription mapping ----------------------------------------------
+    // Only surface findings at moderate severity or worse (0-3 scale) so the corrective pipeline
+    // targets meaningful compensations rather than every trace finding.
+    private const int CesSeverityThreshold = 2;
+
+    // Dynamic movement compensations (overhead squat / single-leg / push-pull) → corrective rules.
+    private static List<MovementCompensation> MapCesToCompensations(CesAssessment c)
+    {
+        var list = new List<MovementCompensation>();
+        void Add(int sev, MovementCompensation comp)
+        {
+            if (sev >= CesSeverityThreshold && !list.Contains(comp)) list.Add(comp);
+        }
+
+        Add(c.OhsFeetTurnOut, MovementCompensation.FeetTurnOut);
+        Add(c.OhsFeetFlatten, MovementCompensation.FeetFlatten);
+        Add(c.OhsKneesValgus, MovementCompensation.KneesValgus);
+        Add(c.OhsForwardLean, MovementCompensation.ExcessiveForwardLean);
+        Add(c.OhsLowBackArch, MovementCompensation.LowBackArches);
+        Add(c.OhsLowBackRound, MovementCompensation.LowBackRounds);
+        Add(c.OhsAsymmetricShift, MovementCompensation.AsymmetricShift);
+        Add(c.OhsArmsFallForward, MovementCompensation.ArmsForward);
+
+        // Single-leg findings — take the worse side.
+        Add(Math.Max(c.SlsLeftKneeValgus, c.SlsRightKneeValgus), MovementCompensation.KneesValgus);
+        Add(Math.Max(c.SlsLeftHipDrop, c.SlsRightHipDrop), MovementCompensation.HipDrop);
+        Add(Math.Max(c.SlsLeftTrunkLean, c.SlsRightTrunkLean), MovementCompensation.TrunkLateralLean);
+        Add(Math.Max(c.SlsLeftFootPronation, c.SlsRightFootPronation), MovementCompensation.AnklePronation);
+
+        Add(Math.Max(c.PushShoulderHiking, c.PullShoulderHiking), MovementCompensation.ShoulderElevation);
+
+        if (c.PainDuringAssessment && !list.Contains(MovementCompensation.PainReported))
+            list.Add(MovementCompensation.PainReported);
+        return list;
+    }
+
+    // Static-posture + push/pull findings → PostureDeviation (then mapped to compensations).
+    private static List<PostureDeviation> MapCesToPostureDeviations(CesAssessment c)
+    {
+        var list = new List<PostureDeviation>();
+        void Add(int sev, PostureDeviation dev)
+        {
+            if (sev >= CesSeverityThreshold && !list.Contains(dev)) list.Add(dev);
+        }
+
+        Add(c.FeetTurnedOut, PostureDeviation.FeetTurnedOut);
+        Add(c.FeetPronated, PostureDeviation.FeetPronated);
+        Add(c.FeetSupinated, PostureDeviation.FeetSupinated);
+        Add(c.KneesValgus, PostureDeviation.KneesValgus);
+        Add(c.KneesVarus, PostureDeviation.KneesVarus);
+        Add(c.UnevenHips, PostureDeviation.UnevenHips);
+        Add(c.UnevenShoulders, PostureDeviation.UnevenShoulders);
+        Add(c.ForwardHead, PostureDeviation.ForwardHead);
+        Add(c.RoundedShoulders, PostureDeviation.RoundedShoulders);
+        Add(c.ThoracicKyphosis, PostureDeviation.Kyphosis);
+        Add(c.LumbarLordosis, PostureDeviation.Lordosis);
+        Add(c.FlatBack, PostureDeviation.FlatBack);
+        Add(c.AnteriorPelvicTilt, PostureDeviation.AnteriorPelvicTilt);
+        Add(c.PosteriorPelvicTilt, PostureDeviation.PosteriorPelvicTilt);
+        Add(c.KneeHyperextension, PostureDeviation.KneesHyperextended);
+        Add(c.ScapularWinging, PostureDeviation.ScapularWinging);
+        Add(c.SpinalDeviation, PostureDeviation.SpinalDeviation);
+        Add(c.CalcanealEversion, PostureDeviation.CalcanealEversion);
+        Add(Math.Max(c.PushShoulderHiking, c.PullShoulderHiking), PostureDeviation.ShoulderHiking);
+        Add(Math.Max(c.PushForwardHeadPoke, c.PullHeadProtrusion), PostureDeviation.HeadProtrusion);
+        Add(c.PushLowBackSag, PostureDeviation.LowBackSag);
+        Add(c.PullLowBackExtension, PostureDeviation.LowBackExtension);
+        return list;
     }
 
     private static (string name, MuscleGroup[] muscles)[] GetDaySplits(int daysPerWeek)
