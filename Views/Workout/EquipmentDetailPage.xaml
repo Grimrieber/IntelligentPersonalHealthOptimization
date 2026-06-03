@@ -99,12 +99,12 @@
                                     <CollectionView ItemsSource="{Binding Items}">
                                         <CollectionView.ItemTemplate>
                                             <DataTemplate x:DataType="vm:EquipmentItemToggle">
-                                                <HorizontalStackLayout Spacing="8" Padding="0,4">
-                                                    <CheckBox IsChecked="{Binding IsChecked}" />
-                                                    <Label Text="{Binding DisplayName}"
+                                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Padding="0,4">
+                                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked}" VerticalOptions="Center" />
+                                                    <Label Grid.Column="1" Text="{Binding DisplayName}"
                                                            VerticalOptions="Center"
                                                            FontSize="14" />
-                                                </HorizontalStackLayout>
+                                                </Grid>
                                             </DataTemplate>
                                         </CollectionView.ItemTemplate>
                                     </CollectionView>

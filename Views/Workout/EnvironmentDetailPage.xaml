@@ -57,13 +57,13 @@
                 </Frame>
 
                 <Frame Style="{StaticResource CardFrame}">
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding HasOutdoorAccess}" />
-                        <VerticalStackLayout VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <CheckBox Grid.Column="0" IsChecked="{Binding HasOutdoorAccess}" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                             <Label Text="Outdoor access (yard / park / driveway)" FontSize="14" FontAttributes="Bold" />
                             <Label Text="Unlocks sprints, hill repeats, sled drag" FontSize="12" TextColor="{StaticResource Gray500}" />
                         </VerticalStackLayout>
-                    </HorizontalStackLayout>
+                    </Grid>
                 </Frame>
 
             </VerticalStackLayout>
