@@ -38,35 +38,35 @@
 
                 <Frame Style="{StaticResource CardFrame}" Padding="16">
                     <VerticalStackLayout Spacing="16">
-                        <HorizontalStackLayout Spacing="12">
-                            <Frame BackgroundColor="{StaticResource Primary}" CornerRadius="14" WidthRequest="28" HeightRequest="28" Padding="0" HasShadow="False">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Frame Grid.Column="0" VerticalOptions="Start" BackgroundColor="{StaticResource Primary}" CornerRadius="14" WidthRequest="28" HeightRequest="28" Padding="0" HasShadow="False">
                                 <Label Text="1" TextColor="White" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center" />
                             </Frame>
-                            <VerticalStackLayout Spacing="2">
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
                                 <Label Text="How You Feel About Food" FontSize="15" FontAttributes="Bold" />
                                 <Label Text="A few questions about your relationship with food and eating" FontSize="13" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
-                        </HorizontalStackLayout>
+                        </Grid>
 
-                        <HorizontalStackLayout Spacing="12">
-                            <Frame BackgroundColor="{StaticResource Primary}" CornerRadius="14" WidthRequest="28" HeightRequest="28" Padding="0" HasShadow="False">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Frame Grid.Column="0" VerticalOptions="Start" BackgroundColor="{StaticResource Primary}" CornerRadius="14" WidthRequest="28" HeightRequest="28" Padding="0" HasShadow="False">
                                 <Label Text="2" TextColor="White" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center" />
                             </Frame>
-                            <VerticalStackLayout Spacing="2">
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
                                 <Label Text="Your Patterns and Habits" FontSize="15" FontAttributes="Bold" />
                                 <Label Text="Check any patterns that apply to you" FontSize="13" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
-                        </HorizontalStackLayout>
+                        </Grid>
 
-                        <HorizontalStackLayout Spacing="12">
-                            <Frame BackgroundColor="{StaticResource Primary}" CornerRadius="14" WidthRequest="28" HeightRequest="28" Padding="0" HasShadow="False">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Frame Grid.Column="0" VerticalOptions="Start" BackgroundColor="{StaticResource Primary}" CornerRadius="14" WidthRequest="28" HeightRequest="28" Padding="0" HasShadow="False">
                                 <Label Text="3" TextColor="White" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center" />
                             </Frame>
-                            <VerticalStackLayout Spacing="2">
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
                                 <Label Text="Your Personalized Results" FontSize="15" FontAttributes="Bold" />
                                 <Label Text="Recommendations tailored to your responses" FontSize="13" TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
-                        </HorizontalStackLayout>
+                        </Grid>
                     </VerticalStackLayout>
                 </Frame>
 

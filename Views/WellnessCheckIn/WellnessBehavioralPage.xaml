@@ -35,38 +35,38 @@
 
                 <Frame Style="{StaticResource CardFrame}" Padding="12">
                     <VerticalStackLayout Spacing="4">
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding BingeEating}" />
-                            <Label Text="I sometimes eat large amounts of food and feel out of control" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding RestrictToControl}" />
-                            <Label Text="I restrict food intake to control my weight" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding GuiltAfterEating}" />
-                            <Label Text="I feel guilty or ashamed after eating" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding EarnFoodExercise}" />
-                            <Label Text="I 'earn' food through exercise" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding SkipMeals}" />
-                            <Label Text="I skip meals intentionally (not because I'm busy)" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding EatInSecret}" />
-                            <Label Text="I eat in secret or hide what I eat from others" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding RigidFoodRules}" />
-                            <Label Text="I have rigid, stressful rules about eating" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding UseLaxativesDietPills}" />
-                            <Label Text="I use laxatives, diet pills, or supplements to control weight" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding BingeEating}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I sometimes eat large amounts of food and feel out of control" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding RestrictToControl}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I restrict food intake to control my weight" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding GuiltAfterEating}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I feel guilty or ashamed after eating" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding EarnFoodExercise}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I 'earn' food through exercise" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding SkipMeals}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I skip meals intentionally (not because I'm busy)" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding EatInSecret}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I eat in secret or hide what I eat from others" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding RigidFoodRules}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I have rigid, stressful rules about eating" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding UseLaxativesDietPills}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I use laxatives, diet pills, or supplements to control weight" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
                     </VerticalStackLayout>
                 </Frame>
 
@@ -76,34 +76,34 @@
 
                 <Frame Style="{StaticResource CardFrame}" Padding="12">
                     <VerticalStackLayout Spacing="4">
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding LabelFoodsGoodBad}" />
-                            <Label Text="I label foods as 'good' or 'bad'" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding MoodAffectedByFood}" />
-                            <Label Text="My mood is strongly affected by what I eat or weigh" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding PreoccupiedWithFood}" />
-                            <Label Text="I frequently think about food or my body (multiple times per hour)" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding CompareBody}" />
-                            <Label Text="I compare my body to others regularly" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding AvoidSocialFood}" />
-                            <Label Text="I avoid social situations involving food" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding AnxiousWithoutTracking}" />
-                            <Label Text="I feel anxious if I can't track what I'm eating" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding WorthTiedToWeight}" />
-                            <Label Text="My self-worth is connected to my weight or appearance" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding LabelFoodsGoodBad}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I label foods as 'good' or 'bad'" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding MoodAffectedByFood}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="My mood is strongly affected by what I eat or weigh" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding PreoccupiedWithFood}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I frequently think about food or my body (multiple times per hour)" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding CompareBody}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I compare my body to others regularly" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding AvoidSocialFood}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I avoid social situations involving food" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding AnxiousWithoutTracking}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I feel anxious if I can't track what I'm eating" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding WorthTiedToWeight}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="My self-worth is connected to my weight or appearance" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
                     </VerticalStackLayout>
                 </Frame>
 
@@ -113,34 +113,34 @@
 
                 <Frame Style="{StaticResource CardFrame}" Padding="12">
                     <VerticalStackLayout Spacing="4">
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding FrequentFatigue}" />
-                            <Label Text="Frequent fatigue, dizziness, or lightheadedness" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding RapidWeightChange}" />
-                            <Label Text="Rapid weight loss or gain (10+ lbs in a month)" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding HormonalIssues}" />
-                            <Label Text="Hormonal issues (missed periods, low energy, etc.)" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding DentalThroatIssues}" />
-                            <Label Text="Dental problems, frequent sore throats, or swollen glands" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding CompulsiveExercise}" />
-                            <Label Text="I exercise even when sick or injured because I feel I 'have to'" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding ColdOrHairLoss}" />
-                            <Label Text="I feel cold all the time or have noticed hair thinning" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding Fainting}" />
-                            <Label Text="I have fainted or nearly fainted" FontSize="14" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding FrequentFatigue}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Frequent fatigue, dizziness, or lightheadedness" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding RapidWeightChange}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Rapid weight loss or gain (10+ lbs in a month)" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding HormonalIssues}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Hormonal issues (missed periods, low energy, etc.)" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding DentalThroatIssues}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Dental problems, frequent sore throats, or swollen glands" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding CompulsiveExercise}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I exercise even when sick or injured because I feel I 'have to'" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding ColdOrHairLoss}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I feel cold all the time or have noticed hair thinning" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding Fainting}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="I have fainted or nearly fainted" FontSize="14" VerticalOptions="Center" />
+                        </Grid>
                     </VerticalStackLayout>
                 </Frame>
 
