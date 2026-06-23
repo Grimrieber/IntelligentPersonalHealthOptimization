@@ -55,6 +55,8 @@ public static partial class SeedData
             new() { Name = "Greek Yogurt (plain, nonfat)", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 59, ProteinPer100g = 10, CarbsPer100g = 3.6, FatPer100g = 0.4, FiberPer100g = 0, DefaultServingSize = 170, DefaultServingLabel = "1 cup" },
             new() { Name = "Cottage Cheese (low-fat)", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 72, ProteinPer100g = 12, CarbsPer100g = 2.7, FatPer100g = 1, FiberPer100g = 0, DefaultServingSize = 113, DefaultServingLabel = "1/2 cup" },
             new() { Name = "Whey Protein Powder", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 370, ProteinPer100g = 80, CarbsPer100g = 5, FatPer100g = 3, FiberPer100g = 0, DefaultServingSize = 30, DefaultServingLabel = "1 scoop" },
+            // Plant-based protein for vegan / dairy-free meal plans (pea protein isolate).
+            new() { Name = "Pea Protein Powder", FoodCategory = FoodCategory.Protein, CaloriesPer100g = 380, ProteinPer100g = 80, CarbsPer100g = 5, FatPer100g = 6, FiberPer100g = 5, DefaultServingSize = 30, DefaultServingLabel = "1 scoop" },
 
             // ========== GRAINS ==========
             new() { Name = "White Rice (cooked)", FoodCategory = FoodCategory.Grain, CaloriesPer100g = 130, ProteinPer100g = 2.7, CarbsPer100g = 28, FatPer100g = 0.3, FiberPer100g = 0.4, DefaultServingSize = 158, DefaultServingLabel = "1 cup" },

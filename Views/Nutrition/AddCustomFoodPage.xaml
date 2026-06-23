@@ -51,6 +51,7 @@
                                    TextColor="{StaticResource Gray500}" />
                             <Picker ItemsSource="{Binding FoodCategories}"
                                     SelectedItem="{Binding SelectedCategory}"
+                                    ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}"
                                     Title="Select category" />
                         </VerticalStackLayout>
 

@@ -55,6 +55,11 @@ public partial class NutritionService : INutritionService
         _ => 0
     };
 
+    /// <summary>Protein-powder food name to use for meal-plan shakes, by diet.
+    /// Vegan/dairy-free get plant (pea) protein; everyone else gets whey.</summary>
+    private static string ProteinPowderNameFor(DietType diet) =>
+        diet is DietType.Vegan or DietType.DairyFree ? "Pea Protein Powder" : "Whey Protein Powder";
+
     public (int proteinG, int carbsG, int fatG) CalculateMacroTargets(double tdee, FitnessGoal fitnessGoal)
     {
         var targetCalories = tdee + FitnessGoalCalorieAdjustment(fitnessGoal);
@@ -500,7 +505,7 @@ public partial class NutritionService : INutritionService
 
         if (profile.UsesProteinShakes && profile.ShakesPerDay > 0 && profile.ProteinPerShakeG > 0)
         {
-            if (foodLookup.TryGetValue("Whey Protein Powder", out wheyFood))
+            if (foodLookup.TryGetValue(ProteinPowderNameFor(profile.DietType), out wheyFood))
             {
                 shakeServingG = Math.Round(profile.ProteinPerShakeG / (wheyFood.ProteinPer100g / 100.0));
                 var shakeFactor = shakeServingG / 100.0;
@@ -541,14 +546,13 @@ public partial class NutritionService : INutritionService
         var snackFat = foodTargetFat * snackFraction;
 
         // Pre-shuffle templates per meal type for weekly variety
-        var rng = new Random();
         var templatesByMealType = new Dictionary<MealType, List<MealTemplate>>();
         foreach (var mt in mealTypes)
         {
             var candidates = _mealTemplates
                 .Where(t => t.ApplicableMealTypes.Contains(mt) &&
                             compatibleCategories.Contains(t.Category))
-                .OrderBy(_ => rng.Next())
+                .OrderBy(_ => Random.Shared.Next())
                 .ToList();
             templatesByMealType[mt] = candidates;
         }
@@ -718,11 +722,11 @@ public partial class NutritionService : INutritionService
         return (int)(baseCal * scaleFactor);
     }
 
-    private static int EstimateTemplateCalories(MealTemplate template)
-    {
-        // Rough calorie estimate based on known food calorie densities at default serving
-        // This avoids needing DB access; just a reference for the UI
-        var knownCalories = new Dictionary<string, (double calPer100g, double defaultServing)>(StringComparer.OrdinalIgnoreCase)
+    // Known food calorie densities (cal/100g, default serving g) for the meal-picker
+    // calorie preview. Hoisted to a static field so it's built once instead of being
+    // re-allocated on every EstimateTemplateCalories call.
+    private static readonly Dictionary<string, (double calPer100g, double defaultServing)> KnownFoodCalories =
+        new(StringComparer.OrdinalIgnoreCase)
         {
             ["Chicken Breast (cooked)"] = (165, 120), ["Chicken Thigh (cooked)"] = (209, 115),
             ["Turkey Breast (cooked)"] = (135, 120), ["Ground Turkey (cooked)"] = (170, 115),
@@ -786,10 +790,12 @@ public partial class NutritionService : INutritionService
             ["Chocolate Milk"] = (83, 240), ["Coconut Water"] = (19, 240),
         };
 
+    private static int EstimateTemplateCalories(MealTemplate template)
+    {
         double total = 0;
         foreach (var (foodName, multiplier) in template.Components)
         {
-            if (knownCalories.TryGetValue(foodName, out var info))
+            if (KnownFoodCalories.TryGetValue(foodName, out var info))
                 total += info.calPer100g * info.defaultServing * multiplier / 100.0;
         }
         return (int)total;
@@ -835,7 +841,7 @@ public partial class NutritionService : INutritionService
 
         if (profile.UsesProteinShakes && profile.ShakesPerDay > 0 && profile.ProteinPerShakeG > 0)
         {
-            if (foodLookup.TryGetValue("Whey Protein Powder", out var wheyFood))
+            if (foodLookup.TryGetValue(ProteinPowderNameFor(profile.DietType), out var wheyFood))
             {
                 var servingG = Math.Round(profile.ProteinPerShakeG / (wheyFood.ProteinPer100g / 100.0));
                 var fac = servingG / 100.0;
@@ -917,7 +923,7 @@ public partial class NutritionService : INutritionService
 
         // Build/refresh the recipe pool from API (or use cache)
         var pool = await _mealPlanRecipeService.BuildRecipePoolAsync(userId);
-        pool = _mealPlanRecipeService.FilterByDiet(pool, profile);
+        pool = await _mealPlanRecipeService.FilterByDietAsync(pool, profile);
 
         if (pool.Count < 5)
             throw new InvalidOperationException(
@@ -961,8 +967,9 @@ public partial class NutritionService : INutritionService
         if (profile.UsesProteinShakes && profile.ShakesPerDay > 0 && profile.ProteinPerShakeG > 0)
         {
             var allFoods = await db.Table<Food>().Where(f => f.IsActive).ToListAsync();
+            var powderName = ProteinPowderNameFor(profile.DietType);
             wheyFood = allFoods.FirstOrDefault(f =>
-                f.Name.Equals("Whey Protein Powder", StringComparison.OrdinalIgnoreCase));
+                f.Name.Equals(powderName, StringComparison.OrdinalIgnoreCase));
             if (wheyFood != null)
             {
                 shakeServingG = Math.Round(profile.ProteinPerShakeG / (wheyFood.ProteinPer100g / 100.0));

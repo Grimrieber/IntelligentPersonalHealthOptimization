@@ -29,6 +29,11 @@ public class RecipeItem : INotifyPropertyChanged
     public int DirectionCount { get; set; }
     public bool HasNutrition { get; set; }
 
+    /// <summary>Per-serving calories for list display. Only populated when the
+    /// recipe has a real Servings value (so the figure is genuinely per-serving,
+    /// not a whole-recipe total). Null otherwise — see [[project]] backfill note.</summary>
+    public int? CaloriesPerServing { get; set; }
+
     private bool _isSaved;
     /// <summary>True when this recipe is in the user's local "My Saved" library.
     /// Not from MSSQL — populated by the view model after a list loads, and

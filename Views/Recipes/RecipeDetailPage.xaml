@@ -59,10 +59,19 @@
 
             <!-- Servings -->
             <Frame Style="{StaticResource CardFrame}" Padding="12,8">
-                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                    <Label Text="Servings:" FontSize="14" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
-                    <Label Text="{Binding Servings}" FontSize="14" FontAttributes="Bold" VerticalOptions="Center" />
-                </HorizontalStackLayout>
+                <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                    <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Servings:" FontSize="14" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                        <Label Text="{Binding Servings}" FontSize="14" FontAttributes="Bold" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <!-- Provenance note, e.g. "Estimated (~5 servings)" or "Per serving (of 2)" -->
+                    <Label Text="{Binding ServingSizeNote}"
+                           IsVisible="{Binding ServingSizeNote, Converter={StaticResource IsNotEmptyConverter}}"
+                           FontSize="11" FontAttributes="Italic"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
             </Frame>
 
             <!-- ===== INGREDIENTS ===== -->

@@ -172,10 +172,15 @@
                                     <Label Text="{Binding CookTime}" FontSize="12" FontAttributes="Bold" />
                                 </HorizontalStackLayout>
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12">
-                                <Label Text="{Binding Servings, StringFormat='Serving Size: {0}'}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <FlexLayout Grid.Row="2" Grid.Column="0" Wrap="Wrap" AlignItems="Center">
+                                <Label Text="{Binding Servings, StringFormat='Serves {0}'}"
+                                       IsVisible="{Binding Servings, Converter={StaticResource IsNotEmptyConverter}}"
+                                       FontSize="12" TextColor="{StaticResource Gray500}" Margin="0,0,12,0" />
+                                <Label Text="{Binding CaloriesPerServing, StringFormat='{0} cal/serving'}"
+                                       IsVisible="{Binding CaloriesPerServing, Converter={StaticResource IsNotEmptyConverter}}"
+                                       FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Gray500}" Margin="0,0,12,0" />
                                 <Label Text="{Binding IngredientCount, StringFormat='{0} ingredients'}" FontSize="12" TextColor="{StaticResource Gray500}" />
-                            </HorizontalStackLayout>
+                            </FlexLayout>
 
                             <!-- Star: save / unsave this recipe to "My Saved".
                                  Emoji ⭐ renders via the system color font (OpenSans

@@ -52,7 +52,9 @@ def main():
         """
         SELECT WikibooksRecipeID, WikibooksCategoryID, RecipeName,
                PrepTime, CookTime, RestTime, Servings, Difficulty,
-               Source, Notes
+               Source, Notes,
+               IsVegetarian, IsVegan, IsPescatarian, IsGlutenFree, IsDairyFree,
+               IsKeto, IsPaleo, IsHalal, IsKosher, IsMediterranean
         FROM WIKIBOOKS_Recipes
         WHERE IsExcluded = 0
         ORDER BY WikibooksRecipeID
@@ -71,6 +73,17 @@ def main():
             "difficulty": row[7],
             "source": row[8],
             "notes": row[9],
+            # Precomputed diet-compatibility flags (see Tools/diet classifier).
+            "isVegetarian": bool(row[10]),
+            "isVegan": bool(row[11]),
+            "isPescatarian": bool(row[12]),
+            "isGlutenFree": bool(row[13]),
+            "isDairyFree": bool(row[14]),
+            "isKeto": bool(row[15]),
+            "isPaleo": bool(row[16]),
+            "isHalal": bool(row[17]),
+            "isKosher": bool(row[18]),
+            "isMediterranean": bool(row[19]),
             "ingredients": [],
             "directions": [],
             "nutrition": None,

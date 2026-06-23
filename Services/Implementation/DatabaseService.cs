@@ -146,6 +146,20 @@ public class DatabaseService : IDatabaseService
         // pool builder (now fixed to read the bundled catalog directly).
         await SeedData.ApplyDuplicateRecipeCleanupAsync(_connection);
 
+        // One-shot: backfill servings + per-serving nutrition for catalog recipes
+        // that shipped without them (refreshes existing rows from the new bundle,
+        // preserving favorites). Self-gated; runs once.
+        await SeedData.ApplyServingsBackfillAsync(_connection);
+
+        // One-shot: drop catalog recipes the nutrition audit excluded (no usable
+        // calories) and refresh servings/nutrition for the rest from the cleaned
+        // bundle. Self-gated; runs once.
+        await SeedData.ApplyRecipeAuditFixAsync(_connection);
+
+        // One-shot: delete non-meal catalog recipes (drinks, sauces, spice mixes…) to
+        // save space. Deterministic — purges by category, independent of the bundle.
+        await SeedData.ApplyNonMealPurgeAsync(_connection);
+
         // One-shot: collapse duplicate TrainingProfile rows so the training level is consistent.
         await SeedData.ApplyTrainingProfileDedupAsync(_connection);
     }

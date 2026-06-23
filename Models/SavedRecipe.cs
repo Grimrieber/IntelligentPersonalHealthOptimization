@@ -65,6 +65,20 @@ public class SavedRecipe
     [MaxLength(200)]
     public string? ServingSizeNote { get; set; }
 
+    // Precomputed diet-compatibility flags (classified offline from the full
+    // ingredient list; see the diet classifier + DietConflictKeywords fallback).
+    // Used by meal-plan generation and the swap picker so a diet can never be violated.
+    public bool IsVegetarian { get; set; }
+    public bool IsVegan { get; set; }
+    public bool IsPescatarian { get; set; }
+    public bool IsGlutenFree { get; set; }
+    public bool IsDairyFree { get; set; }
+    public bool IsKeto { get; set; }
+    public bool IsPaleo { get; set; }
+    public bool IsHalal { get; set; }
+    public bool IsKosher { get; set; }
+    public bool IsMediterranean { get; set; }
+
     [MaxLength(500)]
     public string? TagsJson { get; set; }
 

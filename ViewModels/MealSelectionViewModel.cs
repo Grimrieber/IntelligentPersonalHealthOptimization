@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using IntelligentPersonalHealthOptimization.Data;
 using IntelligentPersonalHealthOptimization.Models;
 using IntelligentPersonalHealthOptimization.Models.Enums;
 using IntelligentPersonalHealthOptimization.Services.Interfaces;
@@ -14,15 +15,17 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
     private readonly ISavedRecipeService _savedRecipeService;
     private readonly IUserService _userService;
     private readonly IDatabaseService _databaseService;
+    private readonly IMealPlanRecipeService _mealPlanRecipeService;
 
     public MealSelectionViewModel(INutritionService nutritionService,
         ISavedRecipeService savedRecipeService, IUserService userService,
-        IDatabaseService databaseService)
+        IDatabaseService databaseService, IMealPlanRecipeService mealPlanRecipeService)
     {
         _nutritionService = nutritionService;
         _savedRecipeService = savedRecipeService;
         _userService = userService;
         _databaseService = databaseService;
+        _mealPlanRecipeService = mealPlanRecipeService;
         Title = "Choose a Meal";
     }
 
@@ -73,11 +76,33 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
             // GetSavedRecipesAsync(user.Id), which only returns per-user rows and
             // is empty for the bundled catalog, so the swap list showed nothing.
             var db = await _databaseService.GetConnectionAsync();
-            var withNutrition = await db.QueryAsync<SavedRecipe>(
+            var allWithNutrition = await db.QueryAsync<SavedRecipe>(
                 "SELECT * FROM SavedRecipe WHERE SourceProvider = 'Wikibooks' " +
                 "AND CaloriesPerServing IS NOT NULL AND CaloriesPerServing > 0");
+            // Exclude drinks and pure components (sauces/spice mixes/etc.) — they aren't
+            // meals, so they shouldn't appear as swap options either. Smoothies/shakes kept.
+            var withNutrition = allWithNutrition
+                .Where(r => RecipeCategoryGroups.IsMealPlanEligible(r.CategoryName)).ToList();
 
-            _allMeals = withNutrition.Select(r =>
+            // Restrict to recipes appropriate for this meal type (breakfast/lunch/
+            // dinner/snack) so e.g. a drink doesn't show up as a lunch swap. Falls
+            // back to the full list when too few match (see FilterForMealType).
+            var candidates = _mealPlanRecipeService.FilterForMealType(withNutrition, _mealType);
+
+            // Also respect the user's diet type, allergies, and foods-to-avoid so a
+            // manual swap can't pick a recipe that conflicts with their diet (the
+            // auto-generated plan already does this). Fall back to the unfiltered
+            // meal-type list if diet filtering would leave nothing to pick.
+            var user = await _userService.GetCurrentUserAsync();
+            var profile = user != null ? await _nutritionService.GetNutritionProfileAsync(user.Id) : null;
+            if (profile != null)
+            {
+                var dietFiltered = await _mealPlanRecipeService.FilterByDietAsync(candidates, profile);
+                if (dietFiltered.Count > 0)
+                    candidates = dietFiltered;
+            }
+
+            _allMeals = candidates.Select(r =>
             {
                 var recipeCal = r.CaloriesPerServing ?? 1;
                 var servings = Math.Round((_targetCaloriesForSlot / (double)recipeCal) * 2) / 2.0;

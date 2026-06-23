@@ -68,14 +68,6 @@ public class LocalRecipeService : IRecipeService
             "ORDER BY RecipeName LIMIT 200",
             BundledSource, like);
 
-        try
-        {
-            File.AppendAllText(
-                Path.Combine(FileSystem.AppDataDirectory, "search_diag.txt"),
-                $"@ {DateTime.Now:HH:mm:ss}  term=\"{searchTerm}\"  pattern=\"{like}\"  hits={rows.Count}\n");
-        }
-        catch { /* best-effort */ }
-
         return await MapWithCountsAsync(conn, rows);
     }
 
@@ -211,6 +203,12 @@ public class LocalRecipeService : IRecipeService
             Rating = r.Rating,
             IsFavorite = r.IsFavorite,
             HasNutrition = r.CaloriesPerServing.HasValue,
+            // Only surface per-serving calories on cards when a real Servings
+            // value exists AND the figure is a real positive number — a 0/null
+            // means nutrition couldn't be computed, so don't show "0 cal/serving".
+            CaloriesPerServing =
+                (!string.IsNullOrWhiteSpace(r.Servings) && r.CaloriesPerServing is > 0)
+                    ? r.CaloriesPerServing : null,
             // IngredientCount / DirectionCount are not stored on SavedRecipe;
             // a 0 here is fine for list views (they don't render the count).
         };

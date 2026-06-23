@@ -172,40 +172,6 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                         latestAssess.ConfidenceLevel,
                         latestAssess.ReadinessScore);
 
-                    // === DIAGNOSTIC DUMP ===
-                    // Write inputs + intermediates to a file in the app's private
-                    // files directory. Readable via: adb shell run-as <pkg> cat files/calorie_diag.txt
-                    try
-                    {
-                        var ageNow = DateTime.Today.Year - user.DateOfBirth.Year;
-                        if (user.DateOfBirth.Date > DateTime.Today.AddYears(-ageNow)) ageNow--;
-                        var dumpPath = Path.Combine(FileSystem.AppDataDirectory, "calorie_diag.txt");
-                        var dump =
-                            $"===== profile dump @ {DateTime.Now:yyyy-MM-dd HH:mm:ss} =====\n" +
-                            $"user.WeightKg = {user.WeightKg}\n" +
-                            $"user.HeightCm = {user.HeightCm}\n" +
-                            $"user.DateOfBirth = {user.DateOfBirth:yyyy-MM-dd} (age {ageNow})\n" +
-                            $"user.Gender = {user.Gender}\n" +
-                            $"user.ActivityLevel = {user.ActivityLevel}\n" +
-                            $"assess.PrimaryGoal = {latestAssess.PrimaryGoal}\n" +
-                            $"assess.TargetWeightKg = {latestAssess.TargetWeightKg}\n" +
-                            $"assess.SelectedTimeline = {latestAssess.SelectedTimeline}\n" +
-                            $"assess.WorkoutsPerWeek = {latestAssess.WorkoutsPerWeek}\n" +
-                            $"assess.AvgWorkoutMinutes = {latestAssess.AvgWorkoutMinutes}\n" +
-                            $"assess.ConfidenceLevel = {latestAssess.ConfidenceLevel}\n" +
-                            $"assess.ReadinessScore = {latestAssess.ReadinessScore}\n" +
-                            $"assess.AssessmentDate = {latestAssess.AssessmentDate:yyyy-MM-dd HH:mm:ss}\n" +
-                            $"profile.DietType = {profile.DietType}\n" +
-                            $"BMR(live) = {bmrLive:F1}\n" +
-                            $"TDEE(live) = {tdeeLive:F1}\n" +
-                            $"TARGET CALORIES = {cal}\n" +
-                            $"protein/carbs/fat = {p}/{c}/{f}\n" +
-                            $"profile.TargetCalories(stored, pre-update) = {profile.TargetCalories}\n" +
-                            $"=====================\n";
-                        File.WriteAllText(dumpPath, dump);
-                    }
-                    catch { /* best-effort diagnostic */ }
-
                     CaloriesTarget = cal;
                     ProteinTarget = p;
                     CarbsTarget = c;
@@ -430,6 +396,8 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 {
                     MealPlanItemId = items.First().Id,
                     SavedRecipeId = savedRecipeId,
+                    MealPlanDayId = items.First().MealPlanDayId,
+                    IsSwappable = items.First().MealPlanDayId > 0,
                     MealTypeName = FormatMealType(group.Key),
                     RecipeName = mealName,
                     Calories = prepActive ? $"{totalCal:F0} kcal/day" : $"{totalCal:F0} kcal",
@@ -454,6 +422,13 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 var shakeLogged = todayLog.FirstOrDefault(l =>
                     l.Notes == "Protein Shake" && l.MealType == shake.MealType);
 
+                // Tag plant-protein shakes so vegan/dairy-free users can see the
+                // powder is plant-based (pea), not whey.
+                var shakeFood = shake.FoodId > 0 ? await _foodService.GetFoodByIdAsync(shake.FoodId) : null;
+                var powderBadge = shakeFood != null && shakeFood.Name.Contains("Pea", StringComparison.OrdinalIgnoreCase)
+                    ? "Vegan · Pea Protein"
+                    : string.Empty;
+
                 TodaysPlannedMeals.Add(new PlannedMealItem
                 {
                     MealPlanItemId = shake.Id,
@@ -461,6 +436,7 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                     RecipeName = "Protein Shake",
                     Calories = $"{shake.Calories:F0} kcal",
                     MacroSummary = $"P: {shake.ProteinG:F0}g  C: {shake.CarbsG:F0}g  F: {shake.FatG:F0}g",
+                    DietBadge = powderBadge,
                     CaloriesValue = shake.Calories,
                     ProteinValue = shake.ProteinG,
                     CarbsValue = shake.CarbsG,
@@ -689,7 +665,8 @@ public partial class NutritionDashboardViewModel : BaseViewModel
             return;
         }
 
-        // Template-based: try searching the recipe API by name
+        // Template/legacy meals with no SavedRecipeId: match a bundled recipe by
+        // name and open it (the catalog is local — no network involved).
         if (!string.IsNullOrEmpty(meal.RecipeName) && meal.RecipeName != "Protein Shake")
         {
             try
@@ -701,12 +678,43 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                     return;
                 }
             }
-            catch { /* API unavailable */ }
+            catch { /* no match — fall through to the info dialog */ }
         }
 
         // Fallback: show basic info
         await Shell.Current.DisplayAlert(meal.RecipeName,
             $"{meal.MealTypeName}\n{meal.Calories}\n{meal.MacroSummary}", "OK");
+    }
+
+    [RelayCommand]
+    private async Task SwapPlannedMealAsync(PlannedMealItem meal)
+    {
+        if (meal == null || meal.MealPlanDayId <= 0) return;
+
+        var user = await _userService.GetCurrentUserAsync();
+        if (user == null) return;
+
+        var profile = await _nutritionService.GetNutritionProfileAsync(user.Id);
+        if (profile == null) return;
+
+        // Target the replacement at this slot's current calories (same logic the
+        // Meal Plan page uses), so the swap stays nutritionally equivalent.
+        var slotCalories = meal.CaloriesValue > 0
+            ? meal.CaloriesValue
+            : profile.TargetCalories / Math.Max(1, profile.MealsPerDay);
+
+        var parameters = new Dictionary<string, object>
+        {
+            ["mealType"] = (int)meal.MealType,
+            ["dietType"] = (int)profile.DietType,
+            ["mealPlanDayId"] = meal.MealPlanDayId,
+            ["nutritionProfileId"] = profile.Id,
+            ["targetCalories"] = slotCalories
+        };
+
+        // The MealSelection picker writes the replacement and pops back; the
+        // dashboard reloads in OnAppearing, so the new meal shows automatically.
+        await Shell.Current.GoToAsync(RouteConstants.MealSelection, parameters);
     }
 
     [RelayCommand]
@@ -803,11 +811,19 @@ public partial class PlannedMealItem : ObservableObject
 {
     public int MealPlanItemId { get; set; }
     public int SavedRecipeId { get; set; }
+    public int MealPlanDayId { get; set; }
+    /// <summary>True for real meal-plan slots (not protein shakes or orphan logged
+    /// meals) — gates the "Swap" button.</summary>
+    public bool IsSwappable { get; set; }
     public MealType MealType { get; set; }
     public string MealTypeName { get; set; } = string.Empty;
     public string RecipeName { get; set; } = string.Empty;
     public string Calories { get; set; } = string.Empty;
     public string MacroSummary { get; set; } = string.Empty;
+    /// <summary>Optional diet tag shown on the card, e.g. "Vegan · Pea Protein" for
+    /// plant-protein shakes. Empty = no badge.</summary>
+    public string DietBadge { get; set; } = string.Empty;
+    public bool HasDietBadge => !string.IsNullOrEmpty(DietBadge);
     public string ServingsNote { get; set; } = string.Empty;
     public bool HasServingsNote { get; set; }
     public string MealPrepNote { get; set; } = string.Empty;

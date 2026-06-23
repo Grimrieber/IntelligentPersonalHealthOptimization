@@ -15,17 +15,20 @@ public class FoodService : IFoodService
 
     public async Task<List<Food>> SearchFoodsAsync(string query, int limit = 20)
     {
-        var db = await _databaseService.GetConnectionAsync();
-        var lowerQuery = query.ToLowerInvariant();
-        var foods = await db.Table<Food>()
-            .Where(f => f.IsActive)
-            .ToListAsync();
+        if (string.IsNullOrWhiteSpace(query))
+            return new List<Food>();
 
-        return foods
-            .Where(f => f.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                        (f.Brand != null && f.Brand.Contains(query, StringComparison.OrdinalIgnoreCase)))
-            .Take(limit)
-            .ToList();
+        var db = await _databaseService.GetConnectionAsync();
+        // Filter in SQL with LIKE + COLLATE NOCASE rather than loading every food
+        // and filtering in memory. (Raw SQL because sqlite-net's LINQ translation
+        // of .Contains() in a compound Where is unreliable — same reason as
+        // LocalRecipeService.SearchRecipesAsync.)
+        var like = "%" + query.Trim() + "%";
+        return await db.QueryAsync<Food>(
+            "SELECT * FROM Food WHERE IsActive = 1 AND " +
+            "(Name LIKE ? COLLATE NOCASE OR (Brand IS NOT NULL AND Brand LIKE ? COLLATE NOCASE)) " +
+            "ORDER BY Name LIMIT ?",
+            like, like, limit);
     }
 
     public async Task<Food?> GetFoodByBarcodeAsync(string barcode)

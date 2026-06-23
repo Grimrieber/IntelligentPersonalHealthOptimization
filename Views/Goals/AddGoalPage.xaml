@@ -27,6 +27,7 @@
                                    TextColor="{StaticResource Gray500}" />
                             <Picker ItemsSource="{Binding GoalCategories}"
                                     SelectedItem="{Binding SelectedCategory}"
+                                    ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}"
                                     Title="Select category" />
                         </VerticalStackLayout>
 
@@ -110,6 +111,7 @@
                                    TextColor="{StaticResource Gray500}" />
                             <Picker ItemsSource="{Binding GoalTimeframes}"
                                     SelectedItem="{Binding SelectedTimeframe}"
+                                    ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}"
                                     Title="Select timeframe" />
                         </VerticalStackLayout>
 

@@ -40,7 +40,8 @@
                                 Padding="12,4">
                             <Picker Title="Select Diet"
                                     ItemsSource="{Binding DietTypeOptions}"
-                                    SelectedItem="{Binding SelectedDietType}" />
+                                    SelectedItem="{Binding SelectedDietType}"
+                                    ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}" />
                         </Border>
                     </VerticalStackLayout>
                 </Frame>

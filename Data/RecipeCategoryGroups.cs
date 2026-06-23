@@ -43,6 +43,21 @@ public static class RecipeCategoryGroups
         "venezuelan","vietnamese","welsh","zambian","zimbabwean",
     };
 
+    /// <summary>
+    /// True if a recipe in this category belongs in a generated MEAL PLAN. Drinks
+    /// (beverages, cocktails, juice, wine…) and pure components (sauces, dressings,
+    /// marinades, spice mixes, syrups, jams, stocks…) are NOT meals and are excluded.
+    /// Smoothies/shakes are meal-replacement-like and kept. (This only affects meal-plan
+    /// generation — the full catalog is still browsable in the Recipes tab.)
+    /// </summary>
+    public static bool IsMealPlanEligible(string? categoryName)
+    {
+        var c = (categoryName ?? string.Empty).ToLowerInvariant();
+        if (c.Contains("smoothie") || c.Contains("shake")) return true; // shake-like — keep
+        var group = GroupFor(categoryName);
+        return group != "Drinks" && group != "Sauces & Condiments";
+    }
+
     public static string GroupFor(string? categoryName)
     {
         var c = (categoryName ?? string.Empty).ToLowerInvariant()

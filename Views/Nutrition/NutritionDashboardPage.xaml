@@ -50,6 +50,9 @@
                         <Button Text="Re-assess"
                                 Command="{Binding StartNutritionAssessmentCommand}"
                                 Style="{StaticResource SecondaryButton}"
+                                BackgroundColor="White"
+                                TextColor="{StaticResource Primary}"
+                                FontAttributes="Bold"
                                 FontSize="13"
                                 HeightRequest="36"
                                 VerticalOptions="Center"
@@ -91,6 +94,9 @@
                         <Button Text="Re-check"
                                 Command="{Binding StartWellnessCheckInCommand}"
                                 Style="{StaticResource SecondaryButton}"
+                                BackgroundColor="White"
+                                TextColor="{StaticResource Primary}"
+                                FontAttributes="Bold"
                                 FontSize="13"
                                 HeightRequest="36"
                                 VerticalOptions="Center"
@@ -300,21 +306,41 @@
                                                FontSize="11" FontAttributes="Bold"
                                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
                                     </Border>
+                                    <!-- Diet badge (e.g. "Vegan · Pea Protein" on plant-protein shakes) -->
+                                    <Border IsVisible="{Binding HasDietBadge}"
+                                            Stroke="Transparent"
+                                            BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}"
+                                            StrokeShape="RoundRectangle 6"
+                                            Padding="8,3"
+                                            HorizontalOptions="Start"
+                                            Margin="0,4,0,0">
+                                        <Label Text="{Binding DietBadge}"
+                                               FontSize="11" FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#1B5E20, Dark={StaticResource White}}" />
+                                    </Border>
                                     <!-- Servings note -->
                                     <Label Text="{Binding ServingsNote}" FontSize="12" FontAttributes="Italic"
                                            TextColor="{StaticResource Primary}"
                                            IsVisible="{Binding HasServingsNote}" />
-                                    <!-- Macros + Log/Unlog button -->
-                                    <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
-                                        <Label Text="{Binding MacroSummary}" FontSize="11"
-                                               TextColor="{StaticResource Gray400}"
-                                               VerticalOptions="Center" />
+                                    <!-- Macros -->
+                                    <Label Text="{Binding MacroSummary}" FontSize="11"
+                                           TextColor="{StaticResource Gray400}"
+                                           LineBreakMode="WordWrap"
+                                           Margin="0,4,0,0" />
+                                    <!-- Swap (equivalent-calorie replacement) + Log/Unlog buttons -->
+                                    <HorizontalStackLayout Spacing="8" HorizontalOptions="End" Margin="0,4,0,0">
+                                        <Button Text="Swap" FontSize="12" HeightRequest="32" Padding="12,0"
+                                                Style="{StaticResource SecondaryButton}"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding IsSwappable}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NutritionDashboardViewModel}}, Path=SwapPlannedMealCommand}"
+                                                CommandParameter="{Binding .}" />
                                         <Button Text="{Binding LogButtonText}" FontSize="12" HeightRequest="32" Padding="12,0"
                                                 Style="{StaticResource SecondaryButton}"
-                                                Grid.Column="1" VerticalOptions="Center"
+                                                VerticalOptions="Center"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NutritionDashboardViewModel}}, Path=LogPlannedMealCommand}"
                                                 CommandParameter="{Binding .}" />
-                                    </Grid>
+                                    </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </Frame>
                         </DataTemplate>

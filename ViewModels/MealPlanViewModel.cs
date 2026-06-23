@@ -501,25 +501,20 @@ public partial class MealPlanViewModel : BaseViewModel
             return;
         }
 
-        // Template-based meals: search for a matching recipe by name in the recipe database
-        // and navigate to it if found
+        // Template/legacy meals with no SavedRecipeId: match a bundled recipe by
+        // name and open it (the catalog is local — no network involved).
         if (!string.IsNullOrEmpty(group.MealName) && group.MealName != "Protein Shake")
         {
             try
             {
-                var user = await _userService.GetCurrentUserAsync();
-                if (user != null)
+                var results = await _recipeService.SearchRecipesAsync(group.MealName);
+                if (results.Count > 0)
                 {
-                    // For template meals, try to find a matching recipe in the API
-                    var results = await _recipeService.SearchRecipesAsync(group.MealName);
-                    if (results.Count > 0)
-                    {
-                        await Shell.Current.GoToAsync($"RecipeDetail?recipeId={results[0].RecipeID}");
-                        return;
-                    }
+                    await Shell.Current.GoToAsync($"RecipeDetail?recipeId={results[0].RecipeID}");
+                    return;
                 }
             }
-            catch { /* fall through to info display */ }
+            catch { /* no match — fall through to the info dialog */ }
         }
 
         // Protein shakes or items with no recipe match: show detailed info

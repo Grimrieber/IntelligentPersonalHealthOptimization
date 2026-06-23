@@ -1,4 +1,5 @@
 using System.Text.Json;
+using IntelligentPersonalHealthOptimization.Data;
 using IntelligentPersonalHealthOptimization.Models;
 using IntelligentPersonalHealthOptimization.Models.Enums;
 using IntelligentPersonalHealthOptimization.Models.Recipe;
@@ -24,21 +25,11 @@ public class MealPlanRecipeService : IMealPlanRecipeService
     private static readonly string[] DessertKeywords =
         ["dessert", "sweet", "cake", "cookie", "pie", "pudding", "ice cream"];
 
-    // Keywords to check against ingredients for diet type conflicts
-    private static readonly Dictionary<DietType, string[]> DietConflictKeywords = new()
-    {
-        [DietType.Vegan] = ["chicken", "beef", "pork", "lamb", "turkey", "fish", "salmon", "tuna",
-            "shrimp", "crab", "lobster", "egg", "milk", "cream", "cheese", "butter", "yogurt",
-            "honey", "bacon", "sausage", "ham", "steak", "ground beef", "ground turkey"],
-        [DietType.Vegetarian] = ["chicken", "beef", "pork", "lamb", "turkey", "fish", "salmon", "tuna",
-            "shrimp", "crab", "lobster", "bacon", "sausage", "ham", "steak", "ground beef", "ground turkey"],
-        [DietType.Pescatarian] = ["chicken", "beef", "pork", "lamb", "turkey",
-            "bacon", "sausage", "ham", "steak", "ground beef", "ground turkey"],
-        [DietType.GlutenFree] = ["flour", "bread", "pasta", "noodle", "cracker", "tortilla",
-            "breadcrumb", "panko", "soy sauce", "barley", "wheat"],
-        [DietType.DairyFree] = ["milk", "cream", "cheese", "butter", "yogurt", "sour cream",
-            "whipped cream", "cream cheese", "mozzarella", "cheddar", "parmesan"],
-    };
+    // Diet-type conflicts are NO LONGER decided by runtime keyword matching — every
+    // catalog recipe carries precomputed IsVegan/IsVegetarian/IsPescatarian/
+    // IsGlutenFree/IsDairyFree flags (classified offline from the full ingredient
+    // list, conservative on ambiguous ingredients). FilterByDietAsync reads those.
+    // Allergies / foods-to-avoid are still ingredient-scanned (free-text, per-user).
 
     public MealPlanRecipeService(
         IRecipeService recipeService,
@@ -67,9 +58,13 @@ public class MealPlanRecipeService : IMealPlanRecipeService
         var conn = await _databaseService.GetConnectionAsync();
         // The bundled catalog is shared (stored with UserId=0), so don't filter by
         // user — just take the Wikibooks recipes that have a calorie value.
-        return await conn.QueryAsync<SavedRecipe>(
+        var pool = await conn.QueryAsync<SavedRecipe>(
             "SELECT * FROM SavedRecipe WHERE SourceProvider = 'Wikibooks' " +
             "AND CaloriesPerServing IS NOT NULL AND CaloriesPerServing > 0");
+        // Drinks (beverages/cocktails/juice/wine) and pure components (sauces, spice
+        // mixes, dressings, syrups…) are not meals — keep them in the catalog but out
+        // of meal plans. Smoothies/shakes are kept (see RecipeCategoryGroups).
+        return pool.Where(r => RecipeCategoryGroups.IsMealPlanEligible(r.CategoryName)).ToList();
     }
 
     public List<SavedRecipe> FilterForMealType(List<SavedRecipe> pool, MealType mealType)
@@ -98,43 +93,56 @@ public class MealPlanRecipeService : IMealPlanRecipeService
         return matches;
     }
 
-    public List<SavedRecipe> FilterByDiet(List<SavedRecipe> pool, NutritionProfile profile)
+    public async Task<List<SavedRecipe>> FilterByDietAsync(List<SavedRecipe> pool, NutritionProfile profile)
     {
-        // Batch-load ALL ingredients in one query instead of N+1 queries
-        var ingredientCache = new Dictionary<int, List<string>>();
-        var conn = _databaseService.GetConnectionAsync().GetAwaiter().GetResult();
-        var allIngredients = conn.Table<SavedRecipeIngredient>().ToListAsync().GetAwaiter().GetResult();
+        // Diet type: filter by the precomputed per-recipe flag (authoritative,
+        // classified offline from the full ingredient list). Keto/Paleo/Mediterranean/
+        // Standard/Halal/Kosher have no recipe-level flag — macros handle those.
+        var filtered = profile.DietType switch
+        {
+            DietType.Vegan => pool.Where(r => r.IsVegan).ToList(),
+            DietType.Vegetarian => pool.Where(r => r.IsVegetarian).ToList(),
+            DietType.Pescatarian => pool.Where(r => r.IsPescatarian).ToList(),
+            DietType.GlutenFree => pool.Where(r => r.IsGlutenFree).ToList(),
+            DietType.DairyFree => pool.Where(r => r.IsDairyFree).ToList(),
+            DietType.Keto => pool.Where(r => r.IsKeto).ToList(),
+            DietType.Paleo => pool.Where(r => r.IsPaleo).ToList(),
+            DietType.Halal => pool.Where(r => r.IsHalal).ToList(),
+            DietType.Kosher => pool.Where(r => r.IsKosher).ToList(),
+            DietType.Mediterranean => pool.Where(r => r.IsMediterranean).ToList(),
+            _ => pool.ToList(), // Standard: no recipe-level exclusions
+        };
 
+        // Allergies + foods-to-avoid are free-text per-user, so still need an
+        // ingredient scan — but only load ingredients when one is actually set.
+        var hasAllergies = !string.IsNullOrEmpty(profile.Allergies);
+        var hasAvoid = !string.IsNullOrEmpty(profile.FoodsToAvoid);
+        if (!hasAllergies && !hasAvoid)
+            return filtered;
+
+        var conn = await _databaseService.GetConnectionAsync();
+        var allIngredients = await conn.Table<SavedRecipeIngredient>().ToListAsync();
+        var ingredientCache = new Dictionary<int, List<string>>();
         foreach (var ing in allIngredients)
         {
-            if (!ingredientCache.ContainsKey(ing.SavedRecipeId))
-                ingredientCache[ing.SavedRecipeId] = new List<string>();
-            ingredientCache[ing.SavedRecipeId].Add(ing.Description.ToLowerInvariant());
+            if (!ingredientCache.TryGetValue(ing.SavedRecipeId, out var list))
+            {
+                list = new List<string>();
+                ingredientCache[ing.SavedRecipeId] = list;
+            }
+            list.Add(ing.Description.ToLowerInvariant());
         }
 
-        var filtered = pool.ToList();
-
-        // Filter by diet type
-        if (DietConflictKeywords.TryGetValue(profile.DietType, out var conflicts))
-        {
-            filtered = filtered.Where(r => !HasIngredientConflict(r, conflicts, ingredientCache)).ToList();
-        }
-
-        // Filter by allergies
-        if (!string.IsNullOrEmpty(profile.Allergies))
+        if (hasAllergies)
         {
             var allergies = profile.Allergies.Split(',', StringSplitOptions.TrimEntries)
                 .Where(a => !string.Equals(a, "None", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
-
             if (allergies.Length > 0)
-            {
                 filtered = filtered.Where(r => !HasIngredientConflict(r, allergies, ingredientCache)).ToList();
-            }
         }
 
-        // Filter by foods to avoid
-        if (!string.IsNullOrEmpty(profile.FoodsToAvoid))
+        if (hasAvoid)
         {
             var avoid = profile.FoodsToAvoid.Split(',', StringSplitOptions.TrimEntries);
             filtered = filtered.Where(r => !HasIngredientConflict(r, avoid, ingredientCache)).ToList();
@@ -190,8 +198,7 @@ public class MealPlanRecipeService : IMealPlanRecipeService
 
         // Pick randomly from top 5 best matches for variety
         var topCount = Math.Min(5, scored.Count);
-        var rng = new Random();
-        return scored[rng.Next(topCount)].recipe;
+        return scored[Random.Shared.Next(topCount)].recipe;
     }
 
     private static bool MatchesKeywords(SavedRecipe recipe, string[] keywords)

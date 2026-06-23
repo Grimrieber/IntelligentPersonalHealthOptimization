@@ -127,6 +127,7 @@
                                TextColor="{StaticResource Gray500}" />
                         <Picker ItemsSource="{Binding MealTypes}"
                                 SelectedItem="{Binding SelectedMealType}"
+                                ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToString}}"
                                 Title="Select meal type" />
 
                         <!-- Nutrition Estimates -->

@@ -96,13 +96,13 @@ public partial class DietPlanViewModel : BaseViewModel
     {
         var unselected = AllAllergyOptions
             .Where(a => !SelectedAllergies.Contains(a))
-            .Select(a => a.ToString()).ToArray();
+            .Select(a => Helpers.EnumDisplay.Humanize(a.ToString())).ToArray();
         if (unselected.Length == 0) return;
 
         var result = await Shell.Current.DisplayActionSheet("Select Allergy", "Cancel", null, unselected);
         if (string.IsNullOrEmpty(result) || result == "Cancel") return;
 
-        if (Enum.TryParse<FoodAllergy>(result, out var allergy))
+        if (Enum.TryParse<FoodAllergy>(result.Replace(" ", ""), out var allergy))
         {
             if (allergy == FoodAllergy.None)
             {
