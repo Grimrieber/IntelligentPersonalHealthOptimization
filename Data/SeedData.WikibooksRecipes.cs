@@ -58,6 +58,7 @@ public static partial class SeedData
                 Difficulty = Trunc(r.Difficulty, 20),
                 Source = Trunc(r.Source, 200),
                 Notes = r.Notes,
+                ImageUrl = Trunc(r.ImageUrl, 500),
                 Rating = null,
                 IsFavorite = false,
                 CaloriesPerServing = nut?.CaloriesPerServing,
@@ -145,6 +146,160 @@ public static partial class SeedData
     /// (IsFavorite), ratings, and saved-at timestamps are preserved. New installs
     /// get the correct values straight from the seeder and skip this. Self-gated.
     /// </summary>
+    // Bump suffix to re-run after a future bundle image refresh.
+    // v2: every recipe now has an image (category food photos fill the ~80% with no page photo).
+    // v3: tighter category queries — dessert pools stay desserts, less off-topic (no beef-on-brownie).
+    // v4: per-recipe name matching — each recipe gets its OWN photo (category fallback only when no match).
+    // v5: QUALITY RESET — auto-matched images produced garbage (canal on "Grand Union Bacon",
+    //     slow cookers, humans). Keep ONLY verified Wikibooks page photos; everything else
+    //     falls back to the emoji tile. This migration also CLEARS bad urls from prior versions.
+    // v6: real Pexels dish photos (curated food library, human-filtered) fill the recipes
+    //     without a page photo. ~91%+ now have a real photo; rest emoji until fetch completes.
+    // v7: full Pexels coverage (99.96%, 2847/2848) + "descenery" re-pass that replaced
+    //     place-named matches which returned scenery/animals (Buffalo Wings→a buffalo,
+    //     Austrian Meatloaf→a mountain lake) with food-biased, caption-filtered dish photos.
+    // v8: patched the last remaining imageless recipe (Rosto) → 100% coverage (2848/2848).
+    // v9: de-duplicated same-name recipe groups (e.g. the 9 "Meatloaf" recipes each got a
+    //     distinct photo from a deep 80-result pool) — Pexels had returned #1 for all of them.
+    // v10: full cross-query dedup via Pixabay (100/min) — every recipe now has a UNIQUE photo
+    //      (0 shared, was 65% shared). Mix: Pixabay fills dupes, Pexels/Wikimedia keep uniques.
+    // v11: finished-dish audit — reject raw/prep/ingredient shots, prefer plated/cooked, and
+    //      dedup by Pixabay IMAGE ID (webformatURL differs per-search for the same photo, so
+    //      url-dedup let visual dupes through). Beef-stew family hand-picked via vision.
+    // v12: SPECIFIC-name queries (was collapsing "Mexican Rice"→"rice" → sushi). Re-fetched all
+    //      non-wiki by full dish name; fixes wrong-dish picks (Feijoada was a cake). Rice family
+    //      hand-verified. Ongoing: category-by-category vision review tracked in used_ids ledger.
+    // v13: category vision-review in progress — same-name families (meatloaf, meatballs, …)
+    //      hand-picked from deep dish pools. Tracked in tools/used_ids.json ledger.
+    // v24: full multi-pass re-audit to true 100%. Every one of 224 flagged recipes (9 HARD +
+    //      215 MED "wrong specific dish") individually re-examined across 3 image APIs
+    //      (Pixabay + Pexels + Wikimedia Commons). Obscure dishes recovered via native-name
+    //      Commons search (dabo kolo, key wat, kesari, mopane worms, nsima, sauce feuilles…).
+    //      Bundle schemaVersion 55. All 224 verified as accurate finished-dish photos.
+    //      Then a "dig" pass on 10 borderline/best-available picks (blondies, toum, Louis
+    //      dressing, tiramisu, stifado, creamed corn, charoset, lod-chong, okra stew, rice
+    //      bake) replaced them with exact-dish photos → schemaVersion 56. Marker unchanged
+    //      (v24 never deployed, so first install still re-applies the v56 images).
+    // v25: durable-ledger re-audit (tools/recipe_image_ledger.json). EVERY recipe re-pooled
+    //      across all 3 APIs and every candidate visually verified via labeled montage boards;
+    //      only STABLE urls kept (upload.wikimedia.org + images.pexels.com — no expiring pixabay
+    //      get-urls). Result: 2573 verified stable photos (1402 wikimedia + 1171 pexels), 275
+    //      recipes with no accurate candidate nulled → clean emoji category fallback (better than
+    //      shipping a wrong/human/scenery shot). schemaVersion 57. Zero expiring urls in bundle.
+    // v26: emoji-fallback rescue. Re-hunted the 275 needs_fix recipes across ALL 3 APIs together
+    //      (Pixabay's 100/min speed unblocked the Pexels-only bottleneck) with combined boards.
+    //      Recovered ~150 (Fried Green Tomatoes, brownies, meatloaf, Duck a l'Orange, many ethnic
+    //      dishes). Pexels/Commons picks stay stable hotlinks; Pixabay picks are DOWNLOADED and
+    //      bundled locally under Resources/Raw/recipe_fix/ (imageUrl "asset:<id>.jpg") since
+    //      Pixabay hotlinks expire — extracted to app storage + FileImageSource at migration.
+    // v27: reliability fix. upload.wikimedia.org rate-limits (HTTP 429) BURSTS of thumbnail
+    //      requests, so the browse list intermittently fell back to the emoji for the ~1400
+    //      wikimedia-hosted recipes (half the catalog) even though the data was correct — a
+    //      detail page (one request) always loaded fine. Fix: download+downscale all verified
+    //      wikimedia thumbnails to Resources/Raw/recipe_fix/<id>.jpg and serve them as local
+    //      FileImageSource ("asset:<id>.jpg"), same proven path as the Pixabay locals. Pexels
+    //      (real CDN, no throttle) stays a stable hotlink. Now list thumbnails never throttle,
+    //      never rot, work offline. schemaVersion 59.
+    private const string RecipeImagesMarker = "recipe_images_2026_07_11_v27.done";
+
+    /// <summary>
+    /// One-shot: sync <see cref="SavedRecipe.ImageUrl"/> to the bundle EXACTLY — sets the
+    /// verified page photo where the bundle has one, and CLEARS it (→ emoji fallback) where
+    /// it doesn't. This removes the auto-matched garbage from earlier image versions.
+    /// Matches by RecipeName, preserves favorites/ratings. Self-gated.
+    /// </summary>
+    public static async Task ApplyRecipeImagesAsync(SQLiteAsyncConnection connection)
+    {
+        var markerPath = Path.Combine(FileSystem.AppDataDirectory, RecipeImagesMarker);
+        if (File.Exists(markerPath))
+            return;
+
+        try
+        {
+            WikibooksBundle? bundle;
+            using (var asset = await FileSystem.OpenAppPackageFileAsync(WikibooksBundleAsset))
+            using (var gz = new GZipStream(asset, CompressionMode.Decompress))
+            {
+                bundle = await JsonSerializer.DeserializeAsync<WikibooksBundle>(
+                    gz, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            if (bundle?.Recipes == null || bundle.Recipes.Count == 0)
+                return;
+
+            // The bundle now carries a real dish photo for ~100% of recipes; absent = no image.
+            // A value of "asset:<file>" means the photo is bundled locally (Pixabay picks whose
+            // remote urls expire): extract it from the app package to app storage and bind the
+            // local file path so it never rots. Remote https urls (Pexels/Wikimedia) pass through.
+            var imageByName = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+            foreach (var r in bundle.Recipes)
+            {
+                if (r.Name == null) continue;   // defensive: never key the map on null
+                var url = r.ImageUrl;
+                if (!string.IsNullOrEmpty(url) && url.StartsWith("asset:", StringComparison.Ordinal))
+                    url = await ExtractLocalRecipeImageAsync(url.Substring("asset:".Length));
+                imageByName[r.Name] = string.IsNullOrEmpty(url) ? null : url;
+            }
+
+            var rows = await connection.QueryAsync<SavedRecipe>(
+                "SELECT * FROM SavedRecipe WHERE SourceProvider = ?", WikibooksSourceProvider);
+
+            await connection.RunInTransactionAsync(conn =>
+            {
+                foreach (var row in rows)
+                {
+                    // Verified/curated photo if present, else NULL — clears prior garbage.
+                    var target = imageByName.TryGetValue(row.RecipeName, out var url) ? Trunc(url, 500) : null;
+                    if (row.ImageUrl != target)
+                    {
+                        row.ImageUrl = target;
+                        conn.Update(row);
+                    }
+                }
+            });
+
+            File.WriteAllText(markerPath, $"applied {DateTime.UtcNow:O}");
+        }
+        catch (Exception ex)
+        {
+            // Best-effort — don't crash app startup if it fails. Diagnostic breadcrumb
+            // so a silent failure is recoverable (read via run-as files/…_error.txt).
+            try
+            {
+                File.WriteAllText(
+                    Path.Combine(FileSystem.AppDataDirectory, "recipe_images_error.txt"),
+                    ex.ToString());
+            }
+            catch { }
+        }
+    }
+
+    /// <summary>
+    /// Copies a bundled recipe photo (MauiAsset under Resources/Raw/recipe_fix/) into app
+    /// storage and returns its absolute file path for Image.Source binding. These are the
+    /// Pixabay-sourced picks: bundling them locally sidesteps Pixabay's expiring hotlinks.
+    /// Returns null if the packaged asset is missing (recipe falls back to the emoji tile).
+    /// </summary>
+    private static async Task<string?> ExtractLocalRecipeImageAsync(string fileName)
+    {
+        try
+        {
+            var destDir = Path.Combine(FileSystem.AppDataDirectory, "recipe_fix");
+            Directory.CreateDirectory(destDir);
+            var destPath = Path.Combine(destDir, fileName);
+            if (!File.Exists(destPath))
+            {
+                using var asset = await FileSystem.OpenAppPackageFileAsync($"recipe_fix/{fileName}");
+                using var dest = File.Create(destPath);
+                await asset.CopyToAsync(dest);
+            }
+            return destPath;
+        }
+        catch
+        {
+            return null;   // packaged asset absent → caller stores null → emoji fallback
+        }
+    }
+
     public static async Task ApplyServingsBackfillAsync(SQLiteAsyncConnection connection)
     {
         var markerPath = Path.Combine(FileSystem.AppDataDirectory, ServingsBackfillMarker);
@@ -397,6 +552,7 @@ public static partial class SeedData
         public string? Difficulty { get; set; }
         public string? Source { get; set; }
         public string? Notes { get; set; }
+        public string? ImageUrl { get; set; }
         public bool IsVegetarian { get; set; }
         public bool IsVegan { get; set; }
         public bool IsPescatarian { get; set; }
