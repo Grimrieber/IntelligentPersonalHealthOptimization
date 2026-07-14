@@ -1,0 +1,1141 @@
+{
+ "delete": [
+  {
+   "dish": "african salad",
+   "id": 15,
+   "name": "African Salad II",
+   "kept": {
+    "id": 14,
+    "name": "African Salad I"
+   }
+  },
+  {
+   "dish": "american potato salad",
+   "id": 44,
+   "name": "American Potato Salad II",
+   "kept": {
+    "id": 43,
+    "name": "American Potato Salad I"
+   }
+  },
+  {
+   "dish": "anzac biscuits",
+   "id": 48,
+   "name": "Anzac Biscuits II",
+   "kept": {
+    "id": 47,
+    "name": "Anzac Biscuits I"
+   }
+  },
+  {
+   "dish": "apple crisp",
+   "id": 57,
+   "name": "Apple Crisp II",
+   "kept": {
+    "id": 56,
+    "name": "Apple Crisp I"
+   }
+  },
+  {
+   "dish": "apple pie",
+   "id": 65,
+   "name": "Apple Pie II",
+   "kept": {
+    "id": 64,
+    "name": "Apple Pie I"
+   }
+  },
+  {
+   "dish": "banana cream",
+   "id": 154,
+   "name": "Banana Cream II",
+   "kept": {
+    "id": 153,
+    "name": "Banana Cream I"
+   }
+  },
+  {
+   "dish": "banana cream pie",
+   "id": 156,
+   "name": "Banana Cream Pie II",
+   "kept": {
+    "id": 155,
+    "name": "Banana Cream Pie I"
+   }
+  },
+  {
+   "dish": "banana split",
+   "id": 166,
+   "name": "Banana Split II",
+   "kept": {
+    "id": 165,
+    "name": "Banana Split I"
+   }
+  },
+  {
+   "dish": "beef carpaccio",
+   "id": 211,
+   "name": "Beef Carpaccio II",
+   "kept": {
+    "id": 210,
+    "name": "Beef Carpaccio I"
+   }
+  },
+  {
+   "dish": "beef stew",
+   "id": 222,
+   "name": "Beef Stew II",
+   "kept": {
+    "id": 221,
+    "name": "Beef Stew I"
+   }
+  },
+  {
+   "dish": "biscuits",
+   "id": 252,
+   "name": "Biscuits III",
+   "kept": {
+    "id": 251,
+    "name": "Biscuits II"
+   }
+  },
+  {
+   "dish": "carrot cake",
+   "id": 404,
+   "name": "Carrot Cake II",
+   "kept": {
+    "id": 403,
+    "name": "Carrot Cake I"
+   }
+  },
+  {
+   "dish": "chicken bog",
+   "id": 472,
+   "name": "Chicken Bog I",
+   "kept": {
+    "id": 471,
+    "name": "Chicken Bog (Grand Strand)"
+   }
+  },
+  {
+   "dish": "chicken bog",
+   "id": 473,
+   "name": "Chicken Bog II",
+   "kept": {
+    "id": 471,
+    "name": "Chicken Bog (Grand Strand)"
+   }
+  },
+  {
+   "dish": "chicken bog",
+   "id": 474,
+   "name": "Chicken Bog III",
+   "kept": {
+    "id": 471,
+    "name": "Chicken Bog (Grand Strand)"
+   }
+  },
+  {
+   "dish": "chicken curry",
+   "id": 479,
+   "name": "Chicken Curry (Mediterranean-inspired)",
+   "kept": {
+    "id": 478,
+    "name": "Chicken Curry"
+   }
+  },
+  {
+   "dish": "chicken pot pie",
+   "id": 491,
+   "name": "Chicken Pot Pie II",
+   "kept": {
+    "id": 490,
+    "name": "Chicken Pot Pie I"
+   }
+  },
+  {
+   "dish": "chocolate chip cookies",
+   "id": 556,
+   "name": "Chocolate Chip Cookies II",
+   "kept": {
+    "id": 555,
+    "name": "Chocolate Chip Cookies I"
+   }
+  },
+  {
+   "dish": "chocolate chip cookies",
+   "id": 557,
+   "name": "Chocolate Chip Cookies III",
+   "kept": {
+    "id": 555,
+    "name": "Chocolate Chip Cookies I"
+   }
+  },
+  {
+   "dish": "chocolate chip cookies",
+   "id": 558,
+   "name": "Chocolate Chip Cookies IV",
+   "kept": {
+    "id": 555,
+    "name": "Chocolate Chip Cookies I"
+   }
+  },
+  {
+   "dish": "chocolate chip pancakes",
+   "id": 560,
+   "name": "Chocolate Chip Pancakes II",
+   "kept": {
+    "id": 559,
+    "name": "Chocolate Chip Pancakes I"
+   }
+  },
+  {
+   "dish": "christmas pudding",
+   "id": 590,
+   "name": "Christmas Pudding II",
+   "kept": {
+    "id": 589,
+    "name": "Christmas Pudding I"
+   }
+  },
+  {
+   "dish": "churros",
+   "id": 596,
+   "name": "Churros II",
+   "kept": {
+    "id": 595,
+    "name": "Churros I"
+   }
+  },
+  {
+   "dish": "coconut pudding",
+   "id": 623,
+   "name": "Coconut Pudding II",
+   "kept": {
+    "id": 622,
+    "name": "Coconut Pudding I"
+   }
+  },
+  {
+   "dish": "coleslaw",
+   "id": 639,
+   "name": "Coleslaw II",
+   "kept": {
+    "id": 638,
+    "name": "Coleslaw I"
+   }
+  },
+  {
+   "dish": "coq au vin",
+   "id": 644,
+   "name": "Coq au Vin II",
+   "kept": {
+    "id": 643,
+    "name": "Coq au Vin I"
+   }
+  },
+  {
+   "dish": "coq au vin",
+   "id": 645,
+   "name": "Coq au Vin III",
+   "kept": {
+    "id": 643,
+    "name": "Coq au Vin I"
+   }
+  },
+  {
+   "dish": "corn chowder",
+   "id": 652,
+   "name": "Corn Chowder II",
+   "kept": {
+    "id": 651,
+    "name": "Corn Chowder I"
+   }
+  },
+  {
+   "dish": "cornbread",
+   "id": 661,
+   "name": "Cornbread II",
+   "kept": {
+    "id": 660,
+    "name": "Cornbread I"
+   }
+  },
+  {
+   "dish": "crêpes",
+   "id": 724,
+   "name": "Crêpes II",
+   "kept": {
+    "id": 723,
+    "name": "Crêpes I"
+   }
+  },
+  {
+   "dish": "curry chicken",
+   "id": 739,
+   "name": "Curry Chicken II",
+   "kept": {
+    "id": 738,
+    "name": "Curry Chicken I"
+   }
+  },
+  {
+   "dish": "dosa",
+   "id": 797,
+   "name": "Dosa II",
+   "kept": {
+    "id": 796,
+    "name": "Dosa I"
+   }
+  },
+  {
+   "dish": "egg noodles",
+   "id": 841,
+   "name": "Egg Noodles II",
+   "kept": {
+    "id": 840,
+    "name": "Egg Noodles I"
+   }
+  },
+  {
+   "dish": "egg noodles",
+   "id": 842,
+   "name": "Egg Noodles III",
+   "kept": {
+    "id": 840,
+    "name": "Egg Noodles I"
+   }
+  },
+  {
+   "dish": "egg noodles",
+   "id": 843,
+   "name": "Egg Noodles IV",
+   "kept": {
+    "id": 840,
+    "name": "Egg Noodles I"
+   }
+  },
+  {
+   "dish": "eggplant parmesan",
+   "id": 854,
+   "name": "Eggplant Parmesan (Melanzane alla Parmigiana) II",
+   "kept": {
+    "id": 853,
+    "name": "Eggplant Parmesan (Melanzane alla Parmigiana) I"
+   }
+  },
+  {
+   "dish": "flapjacks",
+   "id": 935,
+   "name": "Flapjacks (Traditional Scottish Recipe)",
+   "kept": {
+    "id": 933,
+    "name": "Flapjacks"
+   }
+  },
+  {
+   "dish": "fried eggs",
+   "id": 961,
+   "name": "Fried Eggs (Olive Oil-basted)",
+   "kept": {
+    "id": 960,
+    "name": "Fried Eggs"
+   }
+  },
+  {
+   "dish": "frito pie",
+   "id": 975,
+   "name": "Frito Pie (No-bake)",
+   "kept": {
+    "id": 974,
+    "name": "Frito Pie (Baked)"
+   }
+  },
+  {
+   "dish": "fry bread",
+   "id": 988,
+   "name": "Fry Bread II",
+   "kept": {
+    "id": 987,
+    "name": "Fry Bread I"
+   }
+  },
+  {
+   "dish": "garlic croutons",
+   "id": 1016,
+   "name": "Garlic Croutons II",
+   "kept": {
+    "id": 1015,
+    "name": "Garlic Croutons I"
+   }
+  },
+  {
+   "dish": "garlic croutons",
+   "id": 1017,
+   "name": "Garlic Croutons III",
+   "kept": {
+    "id": 1015,
+    "name": "Garlic Croutons I"
+   }
+  },
+  {
+   "dish": "gingerbread pancakes",
+   "id": 1053,
+   "name": "Gingerbread Pancakes II",
+   "kept": {
+    "id": 1052,
+    "name": "Gingerbread Pancakes I"
+   }
+  },
+  {
+   "dish": "italian dressing",
+   "id": 1277,
+   "name": "Italian Dressing II",
+   "kept": {
+    "id": 1276,
+    "name": "Italian Dressing I"
+   }
+  },
+  {
+   "dish": "jam roly-poly",
+   "id": 1295,
+   "name": "Jam Roly-Poly (Steamed)",
+   "kept": {
+    "id": 1294,
+    "name": "Jam Roly-Poly"
+   }
+  },
+  {
+   "dish": "jambalaya",
+   "id": 1303,
+   "name": "Jambalaya II",
+   "kept": {
+    "id": 1302,
+    "name": "Jambalaya I"
+   }
+  },
+  {
+   "dish": "lahoh",
+   "id": 1397,
+   "name": "Lahoh (Spongy Flatbread) II",
+   "kept": {
+    "id": 1396,
+    "name": "Lahoh (Spongy Flatbread) I"
+   }
+  },
+  {
+   "dish": "lemon pickle",
+   "id": 1430,
+   "name": "Lemon Pickle II",
+   "kept": {
+    "id": 1429,
+    "name": "Lemon Pickle I"
+   }
+  },
+  {
+   "dish": "loukoumas",
+   "id": 1480,
+   "name": "Loukoumas (Greek Donuts with Honey) II",
+   "kept": {
+    "id": 1479,
+    "name": "Loukoumas (Greek Donuts with Honey) I"
+   }
+  },
+  {
+   "dish": "macaroni and cheese",
+   "id": 1492,
+   "name": "Macaroni and Cheese (Microwaved)",
+   "kept": {
+    "id": 1491,
+    "name": "Macaroni and Cheese (Baked)"
+   }
+  },
+  {
+   "dish": "macaroni and cheese",
+   "id": 1494,
+   "name": "Macaroni and Cheese I",
+   "kept": {
+    "id": 1491,
+    "name": "Macaroni and Cheese (Baked)"
+   }
+  },
+  {
+   "dish": "macaroni and cheese",
+   "id": 1495,
+   "name": "Macaroni and Cheese II",
+   "kept": {
+    "id": 1491,
+    "name": "Macaroni and Cheese (Baked)"
+   }
+  },
+  {
+   "dish": "maffé",
+   "id": 1503,
+   "name": "Maffé (West African Peanut Stew) II",
+   "kept": {
+    "id": 1502,
+    "name": "Maffé (West African Peanut Stew) I"
+   }
+  },
+  {
+   "dish": "maffé",
+   "id": 1504,
+   "name": "Maffé (West African Peanut Stew) III",
+   "kept": {
+    "id": 1502,
+    "name": "Maffé (West African Peanut Stew) I"
+   }
+  },
+  {
+   "dish": "manhattan clam chowder",
+   "id": 1527,
+   "name": "Manhattan Clam Chowder II",
+   "kept": {
+    "id": 1526,
+    "name": "Manhattan Clam Chowder I"
+   }
+  },
+  {
+   "dish": "marshmallow rice squares",
+   "id": 1545,
+   "name": "Marshmallow Rice Squares II",
+   "kept": {
+    "id": 1544,
+    "name": "Marshmallow Rice Squares I"
+   }
+  },
+  {
+   "dish": "meatloaf",
+   "id": 1575,
+   "name": "Meatloaf II",
+   "kept": {
+    "id": 1574,
+    "name": "Meatloaf I"
+   }
+  },
+  {
+   "dish": "meatloaf",
+   "id": 1576,
+   "name": "Meatloaf III",
+   "kept": {
+    "id": 1574,
+    "name": "Meatloaf I"
+   }
+  },
+  {
+   "dish": "meatloaf",
+   "id": 1577,
+   "name": "Meatloaf IV",
+   "kept": {
+    "id": 1574,
+    "name": "Meatloaf I"
+   }
+  },
+  {
+   "dish": "meatloaf",
+   "id": 1578,
+   "name": "Meatloaf V",
+   "kept": {
+    "id": 1574,
+    "name": "Meatloaf I"
+   }
+  },
+  {
+   "dish": "mexican rice",
+   "id": 1599,
+   "name": "Mexican Rice II",
+   "kept": {
+    "id": 1598,
+    "name": "Mexican Rice I"
+   }
+  },
+  {
+   "dish": "microwave chocolate cake",
+   "id": 1606,
+   "name": "Microwave Chocolate Cake II",
+   "kept": {
+    "id": 1605,
+    "name": "Microwave Chocolate Cake I"
+   }
+  },
+  {
+   "dish": "milk toast",
+   "id": 1623,
+   "name": "Milk Toast II",
+   "kept": {
+    "id": 1622,
+    "name": "Milk Toast I"
+   }
+  },
+  {
+   "dish": "monkey bread",
+   "id": 1655,
+   "name": "Monkey Bread II",
+   "kept": {
+    "id": 1654,
+    "name": "Monkey Bread I"
+   }
+  },
+  {
+   "dish": "naan",
+   "id": 1688,
+   "name": "Naan (Yeasted)",
+   "kept": {
+    "id": 1687,
+    "name": "Naan"
+   }
+  },
+  {
+   "dish": "oatmeal chocolate chip cookies",
+   "id": 1752,
+   "name": "Oatmeal Chocolate Chip Cookies II",
+   "kept": {
+    "id": 1751,
+    "name": "Oatmeal Chocolate Chip Cookies I"
+   }
+  },
+  {
+   "dish": "oatmeal chocolate chip cookies",
+   "id": 1753,
+   "name": "Oatmeal Chocolate Chip Cookies III",
+   "kept": {
+    "id": 1751,
+    "name": "Oatmeal Chocolate Chip Cookies I"
+   }
+  },
+  {
+   "dish": "oatmeal cookies",
+   "id": 1755,
+   "name": "Oatmeal Cookies II",
+   "kept": {
+    "id": 1754,
+    "name": "Oatmeal Cookies I"
+   }
+  },
+  {
+   "dish": "pasta and bean soup",
+   "id": 1836,
+   "name": "Pasta and Bean Soup (Pasta e Fagioli)",
+   "kept": {
+    "id": 1835,
+    "name": "Pasta and Bean Soup"
+   }
+  },
+  {
+   "dish": "pierogi",
+   "id": 1905,
+   "name": "Pierogi II",
+   "kept": {
+    "id": 1904,
+    "name": "Pierogi I"
+   }
+  },
+  {
+   "dish": "pimento cheese spread",
+   "id": 1910,
+   "name": "Pimento Cheese Spread II",
+   "kept": {
+    "id": 1909,
+    "name": "Pimento Cheese Spread I"
+   }
+  },
+  {
+   "dish": "potato salad",
+   "id": 1982,
+   "name": "Potato Salad (Southern Ontario Style)",
+   "kept": {
+    "id": 1981,
+    "name": "Potato Salad"
+   }
+  },
+  {
+   "dish": "pumpkin bread",
+   "id": 2014,
+   "name": "Pumpkin Bread II",
+   "kept": {
+    "id": 2013,
+    "name": "Pumpkin Bread I"
+   }
+  },
+  {
+   "dish": "pumpkin bread",
+   "id": 2015,
+   "name": "Pumpkin Bread III",
+   "kept": {
+    "id": 2013,
+    "name": "Pumpkin Bread I"
+   }
+  },
+  {
+   "dish": "pumpkin pie",
+   "id": 2018,
+   "name": "Pumpkin Pie II",
+   "kept": {
+    "id": 2017,
+    "name": "Pumpkin Pie I"
+   }
+  },
+  {
+   "dish": "ratatouille",
+   "id": 2066,
+   "name": "Ratatouille II",
+   "kept": {
+    "id": 2065,
+    "name": "Ratatouille I"
+   }
+  },
+  {
+   "dish": "rhubarb crumble",
+   "id": 2078,
+   "name": "Rhubarb Crumble II",
+   "kept": {
+    "id": 2077,
+    "name": "Rhubarb Crumble I"
+   }
+  },
+  {
+   "dish": "rhubarb crumble",
+   "id": 2079,
+   "name": "Rhubarb Crumble III",
+   "kept": {
+    "id": 2077,
+    "name": "Rhubarb Crumble I"
+   }
+  },
+  {
+   "dish": "rice modak",
+   "id": 2093,
+   "name": "Rice Modak (Coconut Pastries) II",
+   "kept": {
+    "id": 2092,
+    "name": "Rice Modak (Coconut Pastries) I"
+   }
+  },
+  {
+   "dish": "risotto",
+   "id": 2109,
+   "name": "Risotto II",
+   "kept": {
+    "id": 2106,
+    "name": "Risotto (Basic)"
+   }
+  },
+  {
+   "dish": "rocky road confectionery",
+   "id": 2135,
+   "name": "Rocky Road Confectionery II",
+   "kept": {
+    "id": 2134,
+    "name": "Rocky Road Confectionery I"
+   }
+  },
+  {
+   "dish": "saj bread",
+   "id": 2179,
+   "name": "Saj Bread II",
+   "kept": {
+    "id": 2178,
+    "name": "Saj Bread I"
+   }
+  },
+  {
+   "dish": "saj bread",
+   "id": 2180,
+   "name": "Saj Bread III",
+   "kept": {
+    "id": 2178,
+    "name": "Saj Bread I"
+   }
+  },
+  {
+   "dish": "shakshuka",
+   "id": 2252,
+   "name": "Shakshuka II",
+   "kept": {
+    "id": 2251,
+    "name": "Shakshuka I"
+   }
+  },
+  {
+   "dish": "snickerdoodles",
+   "id": 2325,
+   "name": "Snickerdoodles II",
+   "kept": {
+    "id": 2324,
+    "name": "Snickerdoodles I"
+   }
+  },
+  {
+   "dish": "snickerdoodles",
+   "id": 2326,
+   "name": "Snickerdoodles III",
+   "kept": {
+    "id": 2324,
+    "name": "Snickerdoodles I"
+   }
+  },
+  {
+   "dish": "snickerdoodles",
+   "id": 2327,
+   "name": "Snickerdoodles IV",
+   "kept": {
+    "id": 2324,
+    "name": "Snickerdoodles I"
+   }
+  },
+  {
+   "dish": "sponge cake",
+   "id": 2416,
+   "name": "Sponge Cake II",
+   "kept": {
+    "id": 2415,
+    "name": "Sponge Cake I"
+   }
+  },
+  {
+   "dish": "swedish meatballs",
+   "id": 2502,
+   "name": "Swedish Meatballs II",
+   "kept": {
+    "id": 2501,
+    "name": "Swedish Meatballs I"
+   }
+  },
+  {
+   "dish": "sweet rice",
+   "id": 2528,
+   "name": "Sweet Rice II",
+   "kept": {
+    "id": 2527,
+    "name": "Sweet Rice I"
+   }
+  },
+  {
+   "dish": "tabbouleh",
+   "id": 2544,
+   "name": "Tabbouleh II",
+   "kept": {
+    "id": 2543,
+    "name": "Tabbouleh I"
+   }
+  },
+  {
+   "dish": "tabbouleh",
+   "id": 2545,
+   "name": "Tabbouleh III",
+   "kept": {
+    "id": 2543,
+    "name": "Tabbouleh I"
+   }
+  },
+  {
+   "dish": "tabbouleh",
+   "id": 2546,
+   "name": "Tabbouleh IV",
+   "kept": {
+    "id": 2543,
+    "name": "Tabbouleh I"
+   }
+  },
+  {
+   "dish": "tabbouleh",
+   "id": 2547,
+   "name": "Tabbouleh VI",
+   "kept": {
+    "id": 2543,
+    "name": "Tabbouleh I"
+   }
+  },
+  {
+   "dish": "tadka dhal",
+   "id": 2554,
+   "name": "Tadka Dhal (Spiced Lentil Curry) II",
+   "kept": {
+    "id": 2553,
+    "name": "Tadka Dhal (Spiced Lentil Curry) I"
+   }
+  },
+  {
+   "dish": "tempe mendoan",
+   "id": 2585,
+   "name": "Tempe Mendoan II",
+   "kept": {
+    "id": 2584,
+    "name": "Tempe Mendoan I"
+   }
+  },
+  {
+   "dish": "thai grilled chicken",
+   "id": 2602,
+   "name": "Thai Grilled Chicken II",
+   "kept": {
+    "id": 2601,
+    "name": "Thai Grilled Chicken I"
+   }
+  },
+  {
+   "dish": "tofu scramble",
+   "id": 2640,
+   "name": "Tofu Scramble II",
+   "kept": {
+    "id": 2639,
+    "name": "Tofu Scramble I"
+   }
+  },
+  {
+   "dish": "tres leches cake",
+   "id": 2680,
+   "name": "Tres Leches Cake II",
+   "kept": {
+    "id": 2679,
+    "name": "Tres Leches Cake I"
+   }
+  },
+  {
+   "dish": "tuna salad",
+   "id": 2699,
+   "name": "Tuna Salad (1940)",
+   "kept": {
+    "id": 2698,
+    "name": "Tuna Salad"
+   }
+  },
+  {
+   "dish": "twice-baked potatoes",
+   "id": 2715,
+   "name": "Twice-Baked Potatoes II",
+   "kept": {
+    "id": 2714,
+    "name": "Twice-Baked Potatoes I"
+   }
+  },
+  {
+   "dish": "ugali",
+   "id": 2718,
+   "name": "Ugali (Rwandan Cornmeal Porridge)",
+   "kept": {
+    "id": 2717,
+    "name": "Ugali (Maize Porridge)"
+   }
+  },
+  {
+   "dish": "vanilla fudge",
+   "id": 2733,
+   "name": "Vanilla Fudge II",
+   "kept": {
+    "id": 2732,
+    "name": "Vanilla Fudge I"
+   }
+  },
+  {
+   "dish": "welsh fruit bread",
+   "id": 2776,
+   "name": "Welsh Fruit Bread (Bara Brith) II",
+   "kept": {
+    "id": 2775,
+    "name": "Welsh Fruit Bread (Bara Brith) I"
+   }
+  },
+  {
+   "dish": "yeasted rolls",
+   "id": 2806,
+   "name": "Yeasted Rolls II",
+   "kept": {
+    "id": 2805,
+    "name": "Yeasted Rolls I"
+   }
+  },
+  {
+   "dish": "yemenite charoset",
+   "id": 2810,
+   "name": "Yemenite Charoset II",
+   "kept": {
+    "id": 2809,
+    "name": "Yemenite Charoset I"
+   }
+  },
+  {
+   "dish": "zalabiyeh",
+   "id": 2825,
+   "name": "Zalabiyeh (Sweet Fritters) II",
+   "kept": {
+    "id": 2824,
+    "name": "Zalabiyeh (Sweet Fritters) I"
+   }
+  }
+ ],
+ "keep_dietary": [
+  [
+   "chocolate chip cookies",
+   553,
+   "Chocolate Chip Cookies (Gluten-Free)"
+  ],
+  [
+   "chocolate chip cookies",
+   554,
+   "Chocolate Chip Cookies (Vegan)"
+  ],
+  [
+   "macaroni and cheese",
+   1493,
+   "Macaroni and Cheese (Vegan)"
+  ],
+  [
+   "flapjacks",
+   934,
+   "Flapjacks (Lower-sugar)"
+  ],
+  [
+   "breakfast waffles",
+   313,
+   "Breakfast Waffles (Gluten-Free)"
+  ],
+  [
+   "green bean casserole",
+   1080,
+   "Green Bean Casserole (Vegan)"
+  ],
+  [
+   "oven pancakes",
+   1786,
+   "Oven Pancakes (Vegan)"
+  ],
+  [
+   "pancakes",
+   1815,
+   "Pancakes (Vegan)"
+  ],
+  [
+   "peanut butter cookies",
+   1863,
+   "Peanut Butter Cookies (Egg-Free)"
+  ],
+  [
+   "stuffed peppers",
+   2478,
+   "Stuffed Peppers (Vegetarian)"
+  ],
+  [
+   "thai peanut fried rice",
+   2604,
+   "Thai Peanut Fried Rice (Vegan)"
+  ],
+  [
+   "vanilla ice cream",
+   2735,
+   "Vanilla Ice Cream (Egg-Free)"
+  ],
+  [
+   "whole wheat pancakes",
+   2789,
+   "Whole Wheat Pancakes (Vegan)"
+  ],
+  [
+   "yorkshire pudding",
+   2822,
+   "Yorkshire Pudding (Vegan)"
+  ]
+ ],
+ "keep_regional": [
+  [
+   "charoset",
+   430,
+   "Charoset (Ashkenazi)"
+  ],
+  [
+   "charoset",
+   431,
+   "Charoset (Iraqi)"
+  ],
+  [
+   "charoset",
+   432,
+   "Charoset (Maghrebi)"
+  ],
+  [
+   "coconut rice",
+   625,
+   "Coconut Rice (Indian)"
+  ],
+  [
+   "coconut rice",
+   626,
+   "Coconut Rice (Indonesian)"
+  ],
+  [
+   "coconut rice",
+   627,
+   "Coconut Rice (Nasi Lemak)"
+  ],
+  [
+   "lemon meringue pie",
+   1425,
+   "Lemon Meringue Pie (American)"
+  ],
+  [
+   "lemon meringue pie",
+   1426,
+   "Lemon Meringue Pie (British)"
+  ],
+  [
+   "lemon meringue pie",
+   1427,
+   "Lemon Meringue Pie (Vegan)"
+  ],
+  [
+   "sambar",
+   2195,
+   "Sambar I"
+  ],
+  [
+   "sambar",
+   2196,
+   "Sambar II (Kerala/Tamil style)"
+  ],
+  [
+   "sambar",
+   2197,
+   "Sambar III"
+  ],
+  [
+   "crullers",
+   715,
+   "Crullers (Round)"
+  ],
+  [
+   "crullers",
+   716,
+   "Crullers (Twisted)"
+  ],
+  [
+   "mushroom soup",
+   1678,
+   "Mushroom Soup"
+  ],
+  [
+   "mushroom soup",
+   1679,
+   "Mushroom Soup (Gabi Supa)"
+  ],
+  [
+   "salt cod and potato casserole",
+   2190,
+   "Salt Cod and Potato Casserole (Bacalhau à Gomes de Sá)"
+  ],
+  [
+   "salt cod and potato casserole",
+   2191,
+   "Salt Cod and Potato Casserole (Bacalhau à Zé do Pipo)"
+  ],
+  [
+   "sticky toffee pudding",
+   2446,
+   "Sticky Toffee Pudding (with dates)"
+  ],
+  [
+   "sticky toffee pudding",
+   2447,
+   "Sticky Toffee Pudding (without dates)"
+  ]
+ ]
+}

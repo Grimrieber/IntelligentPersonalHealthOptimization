@@ -687,6 +687,33 @@ public partial class NutritionService : INutritionService
         return await GenerateMealPlanAsync(userId, nutritionProfileId);
     }
 
+    public async Task<Dictionary<int, RecipeCardMeta>> GetRecipeCardMetaAsync(IEnumerable<int> savedRecipeIds)
+    {
+        var ids = savedRecipeIds.Where(i => i > 0).Distinct().ToList();
+        if (ids.Count == 0)
+            return new Dictionary<int, RecipeCardMeta>();
+
+        var db = await _databaseService.GetConnectionAsync();
+        var placeholders = string.Join(",", ids.Select(_ => "?"));
+        var rows = await db.QueryAsync<RecipeMetaRow>(
+            $"SELECT Id, ImageUrl, HealthTier, IsHealthyTreat FROM SavedRecipe WHERE Id IN ({placeholders})",
+            ids.Cast<object>().ToArray());
+        return rows.ToDictionary(r => r.Id, r => new RecipeCardMeta
+        {
+            ImageUrl = string.IsNullOrEmpty(r.ImageUrl) ? null : r.ImageUrl,
+            HealthTier = r.HealthTier,
+            IsHealthyTreat = r.IsHealthyTreat,
+        });
+    }
+
+    private class RecipeMetaRow
+    {
+        public int Id { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? HealthTier { get; set; }
+        public bool IsHealthyTreat { get; set; }
+    }
+
     public List<string> GetAvailableMealNames(MealType mealType, DietType dietType)
     {
         var categories = GetCompatibleCategories(dietType);

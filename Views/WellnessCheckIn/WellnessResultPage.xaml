@@ -19,14 +19,19 @@
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="16" Padding="0,8">
 
-                <!-- Result Heading -->
+                <!-- Result Heading: colour reflects risk level (green→dark red) -->
                 <Frame Padding="20" CornerRadius="12" HasShadow="False"
-                       BackgroundColor="{StaticResource Primary}">
-                    <Label Text="{Binding ResultHeading}"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           HorizontalTextAlignment="Center" />
+                       BackgroundColor="{Binding ResultColor}">
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="{Binding ResultIcon}"
+                               FontSize="32"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding ResultHeading}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
                 </Frame>
 
                 <!-- Result Message -->
@@ -92,7 +97,12 @@
                                     FontSize="14"
                                     CornerRadius="8" />
 
-                            <Label Text="Text 'NEDA' to 741741 for Crisis Text Line" FontSize="14" />
+                            <Button Text="Text 'NEDA' to 741741 (Crisis Text Line)"
+                                    Command="{Binding TextCrisisLineCommand}"
+                                    BackgroundColor="#D32F2F"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    CornerRadius="8" />
 
                             <Button Text="Call 988 Suicide &amp; Crisis Lifeline"
                                     Command="{Binding CallCrisisLineCommand}"

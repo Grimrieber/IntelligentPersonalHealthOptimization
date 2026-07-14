@@ -36,7 +36,7 @@
                         <Grid ColumnDefinitions="*,80" RowDefinitions="Auto" Padding="0,4">
                             <Label Text="Have you ever made yourself throw up because you felt too full?"
                                    FontSize="14" LineHeight="1.3" VerticalOptions="Center" />
-                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}"
+                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}" Title="Select"
                                     SelectedIndex="{Binding ScoffSickIndex}" VerticalOptions="Center" />
                         </Grid>
 
@@ -45,7 +45,7 @@
                         <Grid ColumnDefinitions="*,80" RowDefinitions="Auto" Padding="0,4">
                             <Label Text="Do you sometimes feel like you can't stop eating, even when you want to?"
                                    FontSize="14" LineHeight="1.3" VerticalOptions="Center" />
-                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}"
+                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}" Title="Select"
                                     SelectedIndex="{Binding ScoffControlIndex}" VerticalOptions="Center" />
                         </Grid>
 
@@ -54,7 +54,7 @@
                         <Grid ColumnDefinitions="*,80" RowDefinitions="Auto" Padding="0,4">
                             <Label Text="Have you lost more than 14 pounds (6.5 kg) in the last 3 months without trying?"
                                    FontSize="14" LineHeight="1.3" VerticalOptions="Center" />
-                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}"
+                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}" Title="Select"
                                     SelectedIndex="{Binding ScoffWeightLossIndex}" VerticalOptions="Center" />
                         </Grid>
 
@@ -63,7 +63,7 @@
                         <Grid ColumnDefinitions="*,80" RowDefinitions="Auto" Padding="0,4">
                             <Label Text="Do you feel you are overweight even when others tell you you're not?"
                                    FontSize="14" LineHeight="1.3" VerticalOptions="Center" />
-                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}"
+                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}" Title="Select"
                                     SelectedIndex="{Binding ScoffBodyImageIndex}" VerticalOptions="Center" />
                         </Grid>
 
@@ -72,7 +72,7 @@
                         <Grid ColumnDefinitions="*,80" RowDefinitions="Auto" Padding="0,4">
                             <Label Text="Do thoughts about food take up a large part of your day?"
                                    FontSize="14" LineHeight="1.3" VerticalOptions="Center" />
-                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}"
+                            <Picker Grid.Column="1" ItemsSource="{Binding YesNoOptions}" Title="Select"
                                     SelectedIndex="{Binding ScoffFoodDominatesIndex}" VerticalOptions="Center" />
                         </Grid>
 

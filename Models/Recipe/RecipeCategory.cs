@@ -1,3 +1,6 @@
+using Microsoft.Maui.Graphics;
+using IntelligentPersonalHealthOptimization.Data;
+
 namespace IntelligentPersonalHealthOptimization.Models.Recipe;
 
 /// <summary>
@@ -11,4 +14,8 @@ public class RecipeCategory
 
     // Populated by queries
     public int RecipeCount { get; set; }
+
+    // Presentation: emoji + accent colour for the cookbook tiles (see RecipeCategoryStyle).
+    public string Emoji => RecipeCategoryStyle.EmojiFor(CategoryName);
+    public Color Accent => RecipeCategoryStyle.AccentFor(CategoryName);
 }

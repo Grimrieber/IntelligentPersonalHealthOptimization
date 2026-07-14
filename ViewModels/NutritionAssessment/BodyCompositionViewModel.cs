@@ -9,6 +9,7 @@ public partial class BodyCompositionViewModel : BaseViewModel
 {
     private readonly INutritionAssessmentCoordinator _coordinator;
     private const double CmPerInch = 2.54;
+    private const double MinCm = 10, MaxCm = 250;   // plausible human circumference range
 
     public BodyCompositionViewModel(INutritionAssessmentCoordinator coordinator)
     {
@@ -84,8 +85,49 @@ public partial class BodyCompositionViewModel : BaseViewModel
     [RelayCommand]
     private async Task NextAsync()
     {
+        // Measurements are optional, but reject implausible/garbage entries so a
+        // typo like "999" doesn't silently pollute the assessment.
+        if (!TryValidate(out var error))
+        {
+            await Shell.Current.DisplayAlert("Check your measurements", error, "OK");
+            return;
+        }
+
         SyncToCoordinator();
         await _coordinator.GoNextAsync();
+    }
+
+    private bool TryValidate(out string error)
+    {
+        var fields = new (string Name, string Text)[]
+        {
+            ("Neck", NeckText), ("Chest", ChestText), ("Waist", WaistText),
+            ("Hips", HipsText), ("Thigh", ThighText), ("Calf", CalfText), ("Bicep", BicepText),
+        };
+
+        foreach (var (name, text) in fields)
+        {
+            if (string.IsNullOrWhiteSpace(text)) continue;   // optional — blank is fine
+
+            if (!double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var v) || v <= 0)
+            {
+                error = $"{name}: please enter a number (or leave it blank).";
+                return false;
+            }
+
+            var cm = UnitIsCm ? v : v * CmPerInch;
+            if (cm < MinCm || cm > MaxCm)
+            {
+                var lo = UnitIsCm ? MinCm : MinCm / CmPerInch;
+                var hi = UnitIsCm ? MaxCm : MaxCm / CmPerInch;
+                error = $"{name}: {v:0.#} {UnitLabel} is outside the expected range " +
+                        $"({lo:0} – {hi:0} {UnitLabel}). Please double-check it.";
+                return false;
+            }
+        }
+
+        error = string.Empty;
+        return true;
     }
 
     [RelayCommand]

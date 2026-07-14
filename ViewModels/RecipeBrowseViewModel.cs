@@ -45,6 +45,16 @@ public partial class RecipeBrowseViewModel : BaseViewModel
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    /// <summary>"Healthy only" filter chip on the recipe list. When on, the list
+    /// shows only Healthy-tier recipes (and lean treats). Global — persists across
+    /// category/search navigation. See <see cref="Data.RecipeHealth"/>.</summary>
+    [ObservableProperty]
+    private bool _showHealthyOnly;
+
+    // Unfiltered recipe list for the current category/search; ShowHealthyOnly
+    // filters this into the visible Recipes collection.
+    private List<RecipeItem> _currentRecipes = new();
+
     /// <summary>Top level of the cookbook: the group grid.</summary>
     [ObservableProperty]
     private bool _isShowingGroups = true;
@@ -141,7 +151,8 @@ public partial class RecipeBrowseViewModel : BaseViewModel
             SelectedCategory = category;
             var items = await _recipeService.GetRecipesByCategoryAsync(category.CategoryID);
             MarkSavedState(items);
-            Recipes = new ObservableCollection<RecipeItem>(items);
+            _currentRecipes = items;
+            ApplyRecipeFilter();
             IsShowingGroups = false;
             IsShowingCategories = false;
             IsShowingRecipeList = true;
@@ -160,6 +171,47 @@ public partial class RecipeBrowseViewModel : BaseViewModel
         }
     }
 
+    // Re-apply the health filter to the visible list when the toggle flips.
+    partial void OnShowHealthyOnlyChanged(bool value) => ApplyRecipeFilter();
+
+    /// <summary>Project the current unfiltered list into the visible Recipes
+    /// collection, honoring the "Healthy only" chip (Healthy tier + lean treats).</summary>
+    private void ApplyRecipeFilter()
+    {
+        IEnumerable<RecipeItem> src = _currentRecipes;
+        if (ShowHealthyOnly)
+            src = src.Where(r => r.IsHealthy || r.IsHealthyTreat);
+        Recipes = new ObservableCollection<RecipeItem>(src);
+    }
+
+    private CancellationTokenSource? _searchDebounce;
+
+    // Search as you type (debounced) — the redesign dropped the explicit Search
+    // button, so typing must surface results on its own. Clearing the box (or
+    // tapping Browse, which empties it) just cancels; the view is handled elsewhere.
+    partial void OnSearchTextChanged(string value)
+    {
+        _searchDebounce?.Cancel();
+        if (string.IsNullOrWhiteSpace(value)) return;
+
+        _searchDebounce = new CancellationTokenSource();
+        var token = _searchDebounce.Token;
+        Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(400, token);
+                if (!token.IsCancellationRequested)
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        if (!token.IsCancellationRequested && !string.IsNullOrWhiteSpace(SearchText))
+                            SearchCommand.Execute(null);
+                    });
+            }
+            catch (TaskCanceledException) { }
+        });
+    }
+
     [RelayCommand]
     private async Task SearchAsync()
     {
@@ -170,7 +222,8 @@ public partial class RecipeBrowseViewModel : BaseViewModel
         {
             var results = await _recipeService.SearchRecipesAsync(SearchText);
             MarkSavedState(results);
-            Recipes = new ObservableCollection<RecipeItem>(results);
+            _currentRecipes = results;
+            ApplyRecipeFilter();
             IsShowingGroups = false;
             IsShowingCategories = false;
             IsShowingRecipeList = true;
@@ -272,6 +325,29 @@ public partial class RecipeBrowseViewModel : BaseViewModel
             SavedToggleText = "Browse All";
             Title = "Favorites";
         }
+    }
+
+    /// <summary>Segmented-control "Browse" tab: always return to the cookbook home
+    /// (top-level groups), whether we're in Favorites or drilled into a category/search.</summary>
+    [RelayCommand]
+    private void ShowBrowse()
+    {
+        ShowGroups();
+    }
+
+    /// <summary>Segmented-control "Favorites" tab: show saved recipes. No-op if already there.</summary>
+    [RelayCommand]
+    private async Task ShowFavoritesAsync()
+    {
+        if (IsShowingSaved) return;
+        await LoadSavedRecipesAsync();
+        IsShowingGroups = false;
+        IsShowingSaved = true;
+        IsShowingRecipeList = false;
+        IsShowingCategories = false;
+        CanGoBack = false;
+        SavedToggleText = "Browse All";
+        Title = "Favorites";
     }
 
     /// <summary>Show the top-level group grid (the cookbook's home view).</summary>

@@ -188,7 +188,7 @@
                                             BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
                                             Padding="12,6" Margin="4">
                                         <HorizontalStackLayout Spacing="6">
-                                            <Label Text="{Binding .}" FontSize="13" VerticalOptions="Center"
+                                            <Label Text="{Binding ., Converter={StaticResource EnumToString}}" FontSize="13" VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
                                             <Label Text="x" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"
                                                    TextColor="{StaticResource Gray500}">

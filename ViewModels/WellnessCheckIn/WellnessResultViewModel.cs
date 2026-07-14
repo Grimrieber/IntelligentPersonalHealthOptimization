@@ -49,6 +49,7 @@ public partial class WellnessResultViewModel : BaseViewModel
             switch (riskLevel)
             {
                 case 1: // Low
+                    ResultIcon = "✅";
                     ResultHeading = "You're all set!";
                     ResultMessage = "Based on your responses, your relationship with food and nutrition looks healthy. " +
                         "We've personalized your Nutrition Coach experience to match your goals.\n\n" +
@@ -62,6 +63,7 @@ public partial class WellnessResultViewModel : BaseViewModel
                     break;
 
                 case 2: // Moderate
+                    ResultIcon = "💛";
                     ResultHeading = "Your personalized approach is ready";
                     ResultMessage = "Thanks for sharing — your honesty helps us support you better.\n\n" +
                         "We've set up your Nutrition Coach with a flexible, habit-focused approach. " +
@@ -77,6 +79,7 @@ public partial class WellnessResultViewModel : BaseViewModel
                     break;
 
                 case 3: // High
+                    ResultIcon = "🧡";
                     ResultHeading = "We want to make sure you get the best support";
                     ResultMessage = "Thank you for being honest with us — that takes courage.\n\n" +
                         "Based on your responses, we think you'd benefit most from working with a " +
@@ -94,6 +97,7 @@ public partial class WellnessResultViewModel : BaseViewModel
                     break;
 
                 default: // 4 = Critical
+                    ResultIcon = "❤️";
                     ResultHeading = "We care about your wellbeing";
                     ResultMessage = "Your responses tell us that you might be going through something " +
                         "that deserves more support than an app can provide.\n\n" +
@@ -158,6 +162,12 @@ public partial class WellnessResultViewModel : BaseViewModel
     private static async Task CallCrisisLineAsync()
     {
         await Launcher.OpenAsync("tel:988");
+    }
+
+    [RelayCommand]
+    private static async Task TextCrisisLineAsync()
+    {
+        await Launcher.OpenAsync("sms:741741");
     }
 
     [RelayCommand]

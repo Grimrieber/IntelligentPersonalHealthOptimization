@@ -35,6 +35,18 @@
                     </VerticalStackLayout>
                 </Frame>
 
+                <!-- Goal context: how much room is left today -->
+                <Frame Style="{StaticResource CardFrame}" Padding="12,10"
+                       IsVisible="{Binding HasGoalContext}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Label Text="🎯" FontSize="18" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding RemainingBeforeText}"
+                               FontSize="14" FontAttributes="Bold" Margin="8,0,0,0"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    </Grid>
+                </Frame>
+
                 <!-- Search Results -->
                 <VerticalStackLayout IsVisible="{Binding HasSearched}" Spacing="8">
                     <Label Text="Search Results" Style="{StaticResource SectionHeader}" />
@@ -178,6 +190,16 @@
                                        TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
                         </Grid>
+
+                        <!-- How this lands against today's goal (green under, red over) -->
+                        <Label Text="{Binding AfterThisText}"
+                               FontSize="13" FontAttributes="Bold" HorizontalOptions="Center"
+                               IsVisible="{Binding IsAfterOver, Converter={StaticResource InverseBool}}"
+                               TextColor="#4CAF50" />
+                        <Label Text="{Binding AfterThisText}"
+                               FontSize="13" FontAttributes="Bold" HorizontalOptions="Center"
+                               IsVisible="{Binding IsAfterOver}"
+                               TextColor="#F44336" />
                     </VerticalStackLayout>
                 </Frame>
 

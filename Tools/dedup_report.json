@@ -1,0 +1,5776 @@
+{
+ "image_clusters": [
+  [
+   [
+    0,
+    "'Out of Salad Dressing' Salad Dressing"
+   ],
+   [
+    2654,
+    "Tomato Salad"
+   ],
+   [
+    2743,
+    "Vegetable Salad"
+   ]
+  ],
+  [
+   [
+    2,
+    "20-Ingredient Brownies"
+   ],
+   [
+    572,
+    "Chocolate Pear Bake"
+   ],
+   [
+    1043,
+    "Ginger Banana Cake with Chocolate"
+   ]
+  ],
+  [
+   [
+    3,
+    "20-Minute Beef Stroganoff"
+   ],
+   [
+    111,
+    "Azteca (Aztec-inspired Bean Soup)"
+   ],
+   [
+    206,
+    "Beef and Gizzard Sauce"
+   ],
+   [
+    207,
+    "Beef and Guinness Casserole"
+   ],
+   [
+    244,
+    "Bigos (Polish Cabbage Meat Stew)"
+   ],
+   [
+    364,
+    "Cachupa (Cape Verdean Corn Stew)"
+   ],
+   [
+    422,
+    "Chanterelle Goulash"
+   ],
+   [
+    464,
+    "Chicken and Black-eyed Pea Stew"
+   ],
+   [
+    790,
+    "Domoda (Gambian Peanut Stew)"
+   ],
+   [
+    809,
+    "Dublin Lamb Stew"
+   ],
+   [
+    1004,
+    "Gambian Mbamba Soup"
+   ],
+   [
+    1119,
+    "Gudeg (Green Jackfruit Stew)"
+   ],
+   [
+    1309,
+    "Julia Child's Boeuf Bourguignon"
+   ],
+   [
+    1439,
+    "Lentil and Sausage Stew"
+   ],
+   [
+    1459,
+    "Liberian Meat Sauce"
+   ],
+   [
+    1579,
+    "Mediterranean Beef Stew"
+   ],
+   [
+    1583,
+    "Menudo (Mexican Tripe and Hominy Soup)"
+   ],
+   [
+    1675,
+    "Mushroom Barley Bean Soup"
+   ],
+   [
+    1699,
+    "New Mexico Chili Verde"
+   ],
+   [
+    1836,
+    "Pasta and Bean Soup (Pasta e Fagioli)"
+   ],
+   [
+    1892,
+    "Philosopher's Stew"
+   ],
+   [
+    1923,
+    "Pizza Soup"
+   ],
+   [
+    1926,
+    "Placenta Stew"
+   ],
+   [
+    2056,
+    "Rajma (Sindhi Kidney Bean Curry)"
+   ],
+   [
+    2073,
+    "Rendang (Indonesian Beef and Coconut Stew)"
+   ],
+   [
+    2202,
+    "Sancocho (Dominican Meat and Vegetable Soup)"
+   ],
+   [
+    2212,
+    "Sausage and Tortellini Soup"
+   ],
+   [
+    2317,
+    "Smore (Eurasian Beef Stew)"
+   ],
+   [
+    2340,
+    "Soup du Pecheur (Fisherman Soup)"
+   ],
+   [
+    2450,
+    "Stoofvlees (Flemish Beef Stew)"
+   ],
+   [
+    2494,
+    "Superkanja (Gambian Okra Stew)"
+   ],
+   [
+    2579,
+    "Tchakpolo (Togolese Meat and Vegetable Stew)"
+   ],
+   [
+    2596,
+    "Texas Easy Chili"
+   ],
+   [
+    2719,
+    "Ugba Stew"
+   ],
+   [
+    2827,
+    "Zambian Beef Stew"
+   ]
+  ],
+  [
+   [
+    9,
+    "Adalu (Bean and Corn Porridge)"
+   ],
+   [
+    1706,
+    "Nigerian Bean Porridge"
+   ]
+  ],
+  [
+   [
+    11,
+    "Adult Macaroni and Cheese"
+   ],
+   [
+    1356,
+    "Kid-Friendly Pasta"
+   ],
+   [
+    1494,
+    "Macaroni and Cheese I"
+   ],
+   [
+    1553,
+    "Mascarpone Mac 'n Cheese"
+   ],
+   [
+    1838,
+    "Pasta in Gorgonzola Cheese Sauce (Pasta Alla Gorgonzola)"
+   ],
+   [
+    2451,
+    "Stovetop Mac n' Cheese"
+   ]
+  ],
+  [
+   [
+    13,
+    "African Cabbage Stew"
+   ],
+   [
+    31,
+    "Alicha Wot (Mild Ethiopian Stew)"
+   ],
+   [
+    200,
+    "Bean Jahni Soup"
+   ],
+   [
+    372,
+    "Callaloo (Caribbean Stewed Greens)"
+   ],
+   [
+    871,
+    "Ekwang (Cameroonian Taro Leaf Stew)"
+   ],
+   [
+    993,
+    "Fumbua (Wild Spinach Stew)"
+   ],
+   [
+    1235,
+    "Ifisashi (Zambian Peanut and Spinach Stew)"
+   ],
+   [
+    1270,
+    "Isombe (Rwandan Cassava Leaves with Eggplant)"
+   ],
+   [
+    1320,
+    "Kanya (Liberian Okra Soup)"
+   ],
+   [
+    1462,
+    "Liberian Potato Greens"
+   ],
+   [
+    1653,
+    "Molokhia (Egyptian Jute Mallow Soup)"
+   ],
+   [
+    1669,
+    "Muboora (Zimbabwean Pumpkin Leaves Stew)"
+   ],
+   [
+    1694,
+    "Ndole (Cameroonian Bitter Leaf and Peanut Soup)"
+   ],
+   [
+    2177,
+    "Sai Bhaji (Sindhi Vegetable Curry)"
+   ],
+   [
+    2181,
+    "Saka-Saka (Cassava Leaf Stew)"
+   ]
+  ],
+  [
+   [
+    20,
+    "Akabenz (Rwandan Fried Chicken)"
+   ],
+   [
+    351,
+    "Buttermilk Fried Chicken with Pan Gravy"
+   ],
+   [
+    717,
+    "Crunchy Baked Chicken"
+   ]
+  ],
+  [
+   [
+    21,
+    "Akarange (Rwandan Tomato Sauce)"
+   ],
+   [
+    1613,
+    "Microwave Risotto"
+   ]
+  ],
+  [
+   [
+    24,
+    "Albanian Mixed Vegetables"
+   ],
+   [
+    2829,
+    "Zambian Tomato and Onion Salad"
+   ]
+  ],
+  [
+   [
+    26,
+    "Albanian Vegetable Pie"
+   ],
+   [
+    27,
+    "Ale, Mustard and Winter Vegetable Pie"
+   ],
+   [
+    850,
+    "Egg, Cheese and Phyllo Casserole (Banitsa)"
+   ],
+   [
+    1264,
+    "Irish Pastie"
+   ],
+   [
+    1925,
+    "Piñon (Spanish Stovetop Pot Pie)"
+   ],
+   [
+    2259,
+    "Shepherd's Pie II"
+   ],
+   [
+    2722,
+    "Ukrainian Cornmeal Stuffing (Nachynka)"
+   ]
+  ],
+  [
+   [
+    28,
+    "Alfajores (Latin American Sandwich Cookies)"
+   ],
+   [
+    2731,
+    "Vanilla Crisps"
+   ]
+  ],
+  [
+   [
+    30,
+    "Algerian Chakhchoukha (Vegetable and Flatbread Stew)"
+   ],
+   [
+    2300,
+    "Skillet Lasagna"
+   ]
+  ],
+  [
+   [
+    33,
+    "Almond Fudge Brownies"
+   ],
+   [
+    1743,
+    "Nutty Brownie Bars"
+   ],
+   [
+    1832,
+    "Passover Hazelnut Loaf Cake"
+   ]
+  ],
+  [
+   [
+    34,
+    "Almond Gambols"
+   ],
+   [
+    400,
+    "Carquinyoli (Catalan Almond Cookies)"
+   ],
+   [
+    1517,
+    "Maltese Almond Cookies (Biskuttini tal-Lewz)"
+   ]
+  ],
+  [
+   [
+    35,
+    "Almond Meringue"
+   ],
+   [
+    1627,
+    "Mincemeat Tart"
+   ]
+  ],
+  [
+   [
+    39,
+    "Alsatian Chicken Fricassée"
+   ],
+   [
+    1733,
+    "North Carolina Style BBQ Chicken"
+   ],
+   [
+    1788,
+    "Oven-Fried Chicken Breasts"
+   ]
+  ],
+  [
+   [
+    41,
+    "Alsatian Fresh Noodles (Nouilles fraîches à l'Alsacienne)"
+   ],
+   [
+    1316,
+    "Kale and Garlic Pasta"
+   ],
+   [
+    2037,
+    "Quick and Easy Beef Stroganoff"
+   ],
+   [
+    2350,
+    "Southwest Pasta"
+   ]
+  ],
+  [
+   [
+    43,
+    "American Potato Salad I"
+   ],
+   [
+    592,
+    "Chukauni (Nepalese Potato Salad)"
+   ],
+   [
+    1720,
+    "Nigerian Yam and Potato Porridge"
+   ],
+   [
+    1974,
+    "Potato Kugel"
+   ],
+   [
+    1980,
+    "Potato Pudding"
+   ],
+   [
+    1990,
+    "Potatoes on the Half-Shell"
+   ],
+   [
+    2190,
+    "Salt Cod and Potato Casserole (Bacalhau à Gomes de Sá)"
+   ],
+   [
+    2452,
+    "Stovies"
+   ],
+   [
+    2710,
+    "Tuscan Roast Potatoes"
+   ]
+  ],
+  [
+   [
+    45,
+    "Ancient Roman Pancakes (Ova Sfongia Ex Lacte)"
+   ],
+   [
+    164,
+    "Banana Spirulina Pancakes"
+   ],
+   [
+    1156,
+    "Henry Thiele's Pancake"
+   ],
+   [
+    1908,
+    "Pikelet (Australian Mini Pancakes)"
+   ],
+   [
+    2789,
+    "Whole Wheat Pancakes (Vegan)"
+   ],
+   [
+    2837,
+    "Zitumbuwa (Malawian Banana Pancakes)"
+   ]
+  ],
+  [
+   [
+    47,
+    "Anzac Biscuits I"
+   ],
+   [
+    48,
+    "Anzac Biscuits II"
+   ],
+   [
+    616,
+    "Coconut Biscuits"
+   ]
+  ],
+  [
+   [
+    52,
+    "Apple Brown Betty"
+   ],
+   [
+    608,
+    "Classic American Apple Pie"
+   ],
+   [
+    663,
+    "Corned Beef Pie"
+   ],
+   [
+    1069,
+    "Grandma's Pie Crust"
+   ],
+   [
+    1214,
+    "Hot Water Crust Pastry"
+   ],
+   [
+    1624,
+    "Mince Pie Tartlets with Pork"
+   ],
+   [
+    1696,
+    "Never Fail Pie Crust"
+   ],
+   [
+    1851,
+    "Pastry Dough (recipe)"
+   ],
+   [
+    1880,
+    "Pennsylvania Pot Pie"
+   ],
+   [
+    2267,
+    "Shortcrust Pastry"
+   ],
+   [
+    2491,
+    "Sunglow Motel-Cafe Pickle Pie"
+   ]
+  ],
+  [
+   [
+    53,
+    "Apple Bundt Cake"
+   ],
+   [
+    1070,
+    "Grandmother Grout's Cake"
+   ],
+   [
+    2041,
+    "Quince Pudding"
+   ],
+   [
+    2793,
+    "Windsor Pudding"
+   ]
+  ],
+  [
+   [
+    55,
+    "Apple Cobbler"
+   ],
+   [
+    453,
+    "Cherry Cobbler in a Crock Pot"
+   ],
+   [
+    829,
+    "Easy Peach Cobbler"
+   ]
+  ],
+  [
+   [
+    57,
+    "Apple Crisp II"
+   ],
+   [
+    1870,
+    "Pear-Cranberry Crisp"
+   ]
+  ],
+  [
+   [
+    61,
+    "Apple Glazed Pork Chops"
+   ],
+   [
+    68,
+    "Apple Stuffed Pork Chops"
+   ],
+   [
+    536,
+    "Chipotle Maple Glazed Pork Tenderloin"
+   ],
+   [
+    1170,
+    "Hickory Smoked Pork Chops"
+   ],
+   [
+    1174,
+    "Holiday Pork Loin"
+   ],
+   [
+    1195,
+    "Honey Apple Glazed Pork"
+   ],
+   [
+    1200,
+    "Honey Lime Pork Loin"
+   ],
+   [
+    1281,
+    "Italian Rice Pilaf"
+   ],
+   [
+    1944,
+    "Pork Aachi"
+   ],
+   [
+    1954,
+    "Pork Stomach Filled with Meat and Vegetables (Saumagen)"
+   ],
+   [
+    2119,
+    "Roast Pork Loin with Cranberry Stuffing"
+   ],
+   [
+    2739,
+    "Veal with Lima Beans"
+   ],
+   [
+    2795,
+    "Wine Glazed Pork Chops"
+   ]
+  ],
+  [
+   [
+    64,
+    "Apple Pie I"
+   ],
+   [
+    2734,
+    "Vanilla Ice Cream (Custard-Based)"
+   ]
+  ],
+  [
+   [
+    67,
+    "Apple Streusel Muffins"
+   ],
+   [
+    593,
+    "Chunky Cran Apple Bran Muffins"
+   ],
+   [
+    2320,
+    "Snappy Ginger Muffins"
+   ]
+  ],
+  [
+   [
+    74,
+    "Applesauce Cake"
+   ],
+   [
+    631,
+    "Coffee Cake"
+   ]
+  ],
+  [
+   [
+    76,
+    "Apricot Chicken Salad"
+   ],
+   [
+    416,
+    "Chadian Salad"
+   ],
+   [
+    507,
+    "Chicken with Orange, Spinach and Cherry Tomatoes"
+   ]
+  ],
+  [
+   [
+    79,
+    "Arisa (Malaysian Blended Chicken)"
+   ],
+   [
+    494,
+    "Chicken Riggies"
+   ],
+   [
+    793,
+    "Doro Tibs (Ethiopian Sauteed Chicken)"
+   ],
+   [
+    1450,
+    "Liberian Chicken Gravy"
+   ]
+  ],
+  [
+   [
+    88,
+    "Asian Grilled Salmon"
+   ],
+   [
+    1107,
+    "Grilled Salmon with Lemon Butter Sauce"
+   ],
+   [
+    1291,
+    "Jalapeno Glazed Seared Salmon"
+   ],
+   [
+    1535,
+    "Maple Syrup Planked Salmon"
+   ],
+   [
+    1652,
+    "Molasses-Glazed Pork Chops"
+   ],
+   [
+    2150,
+    "Rosemary Grilled Salmon Steaks"
+   ],
+   [
+    2234,
+    "Seared Duck Breast with Pinot Noir Reduction"
+   ],
+   [
+    2591,
+    "Teriyaki Grilled Salmon Steaks"
+   ],
+   [
+    2610,
+    "Thin Fish Fillets"
+   ]
+  ],
+  [
+   [
+    98,
+    "Atkins-Friendly Chocolate Mousse"
+   ],
+   [
+    1258,
+    "Instant Chocolate Mousse"
+   ]
+  ],
+  [
+   [
+    103,
+    "Austrian Apricot Dumplings (Marillenknödel)"
+   ],
+   [
+    1177,
+    "Holzknechtnocken (Austrian Boiled Dumplings)"
+   ]
+  ],
+  [
+   [
+    104,
+    "Austrian Meatloaf (Faschierter Braten)"
+   ],
+   [
+    220,
+    "Beef Skewers with Baguette Slices"
+   ],
+   [
+    1568,
+    "Meat and Potatoes in Broth (Niku Jaga)"
+   ]
+  ],
+  [
+   [
+    106,
+    "Avocado Relish"
+   ],
+   [
+    878,
+    "Ensalada de Pallares (Peruvian Lima Bean Salad)"
+   ]
+  ],
+  [
+   [
+    110,
+    "Ayib (Ethiopian Fresh Cheese)"
+   ],
+   [
+    2713,
+    "Tvorog (Russian Farmer Cheese)"
+   ]
+  ],
+  [
+   [
+    114,
+    "Bachelor Fish Stew"
+   ],
+   [
+    303,
+    "Brazilian Shrimp and Cassava Sauce (Bobó de Camarao)"
+   ],
+   [
+    1124,
+    "Gyuveche (Bulgarian Casserole) II"
+   ],
+   [
+    1453,
+    "Liberian Eggplant Stew"
+   ],
+   [
+    1460,
+    "Liberian Palm Oil Stew"
+   ],
+   [
+    2027,
+    "Purée Mongole"
+   ],
+   [
+    2828,
+    "Zambian Fish Stew"
+   ]
+  ],
+  [
+   [
+    115,
+    "Backyard Barbecue Ribs"
+   ],
+   [
+    1529,
+    "Maple Barbecue Baby Back Ribs"
+   ],
+   [
+    1536,
+    "Maple-Glazed BBQ Ribs"
+   ],
+   [
+    1597,
+    "Mexican Ribs"
+   ],
+   [
+    2353,
+    "Soy Mustard Lamb Chops"
+   ]
+  ],
+  [
+   [
+    116,
+    "Backyard BBQ Chicken"
+   ],
+   [
+    295,
+    "Braai (Zambian Barbecue)"
+   ],
+   [
+    377,
+    "Campfire Barbecue Chicken Wings"
+   ],
+   [
+    635,
+    "Cola BBQ Chicken"
+   ],
+   [
+    1165,
+    "Hickory BBQ Chicken"
+   ],
+   [
+    1538,
+    "Margarita Grilled Chicken"
+   ],
+   [
+    2514,
+    "Sweet Maple Barbecue Chicken"
+   ]
+  ],
+  [
+   [
+    125,
+    "Baked Brunch Omelet"
+   ],
+   [
+    1951,
+    "Pork Pot Pie"
+   ],
+   [
+    2214,
+    "Sausagemeat Pie"
+   ],
+   [
+    2364,
+    "Spaghetti Pie"
+   ],
+   [
+    2497,
+    "Surinamese Chicken Pot Pie (Pastei)"
+   ]
+  ],
+  [
+   [
+    126,
+    "Baked Cabbage and Bacon"
+   ],
+   [
+    2125,
+    "Roasted Chicken Nachos With Green Chili-Cheese Sauce"
+   ]
+  ],
+  [
+   [
+    146,
+    "Balsamic Vinaigrette Salad Dressing"
+   ],
+   [
+    1955,
+    "Pork Tenderloin with Asparagus and Prosciutto"
+   ]
+  ],
+  [
+   [
+    147,
+    "Banana and Pear Cake (Vegan)"
+   ],
+   [
+    395,
+    "Caramel Coffee Cake"
+   ]
+  ],
+  [
+   [
+    150,
+    "Banana Caramel Dessert"
+   ],
+   [
+    156,
+    "Banana Cream Pie II"
+   ]
+  ],
+  [
+   [
+    157,
+    "Banana Cream-Crunch Pie"
+   ],
+   [
+    620,
+    "Coconut Cream Filled Cake with Meringue (Bienmesabe)"
+   ],
+   [
+    1423,
+    "Lemon Impossible Pie"
+   ],
+   [
+    2248,
+    "Seven Minute Icing"
+   ]
+  ],
+  [
+   [
+    160,
+    "Banana Nutmeg Pancakes"
+   ],
+   [
+    182,
+    "Basic Flapjacks"
+   ],
+   [
+    1183,
+    "Homemade Pancake Mix"
+   ],
+   [
+    1776,
+    "Orange Cardamom Pancakes"
+   ],
+   [
+    2499,
+    "Svelekake (Norwegian Yogurt Pancakes)"
+   ]
+  ],
+  [
+   [
+    163,
+    "Banana Roll with Cream Cheese Filling"
+   ],
+   [
+    1171,
+    "Hilda Rolls"
+   ]
+  ],
+  [
+   [
+    176,
+    "Barbecue Prime Rib"
+   ],
+   [
+    807,
+    "Dry Rub Grilled Ribeye"
+   ],
+   [
+    1104,
+    "Grilled Prime Rib"
+   ]
+  ],
+  [
+   [
+    185,
+    "Basic Polenta"
+   ],
+   [
+    363,
+    "Cachapa (Venezuelan Corn Pancakes)"
+   ],
+   [
+    1549,
+    "Masa (Hausa Rice Pancake)"
+   ],
+   [
+    2688,
+    "Tubani (Nigerian Corn and Soybean Fritter)"
+   ]
+  ],
+  [
+   [
+    186,
+    "Basic Scones"
+   ],
+   [
+    917,
+    "Fireweed Scones"
+   ]
+  ],
+  [
+   [
+    187,
+    "Basic Scrambled Eggs"
+   ],
+   [
+    671,
+    "Cottage Cheese Eggs"
+   ]
+  ],
+  [
+   [
+    188,
+    "Basic Vinaigrette"
+   ],
+   [
+    2137,
+    "Rojak (Salad with Sweet Chile Sauce)"
+   ]
+  ],
+  [
+   [
+    191,
+    "Bassi-Salté (Senegalese Couscous with Meat and Vegetables)"
+   ],
+   [
+    1721,
+    "Nigerian-Style Couscous"
+   ]
+  ],
+  [
+   [
+    193,
+    "Bazeen bil Lahm (Libyan Meat Bazeen)"
+   ],
+   [
+    1505,
+    "Mafrum bil Lahm (Libyan Baked Meat and Potatoes)"
+   ]
+  ],
+  [
+   [
+    194,
+    "BBQ Pork Fried Rice"
+   ],
+   [
+    1947,
+    "Pork Braised with Garlic and Onions of Indonesia (Babi Kecap)"
+   ]
+  ],
+  [
+   [
+    202,
+    "Bean Spelt Oat Spread"
+   ],
+   [
+    561,
+    "Chocolate Chip Peanut Butter Toast"
+   ]
+  ],
+  [
+   [
+    203,
+    "Beanburger"
+   ],
+   [
+    316,
+    "Broccoli Burgers"
+   ],
+   [
+    342,
+    "Bulgur Burgers"
+   ],
+   [
+    529,
+    "Chipotle BBQ Salmon Burgers"
+   ],
+   [
+    1057,
+    "Gluten Veggie Meat"
+   ]
+  ],
+  [
+   [
+    208,
+    "Beef and Vegetable Kabobs"
+   ],
+   [
+    2165,
+    "Rwandan Goat Brochette"
+   ]
+  ],
+  [
+   [
+    209,
+    "Beef Burgers with Chipotle Mayo"
+   ],
+   [
+    699,
+    "Crispy Breaded Burgers"
+   ],
+   [
+    914,
+    "Firecracker Burgers"
+   ],
+   [
+    1172,
+    "Hobo Burgers"
+   ],
+   [
+    2311,
+    "Smokehouse Burgers"
+   ]
+  ],
+  [
+   [
+    221,
+    "Beef Stew I"
+   ],
+   [
+    1986,
+    "Potato Stew"
+   ]
+  ],
+  [
+   [
+    226,
+    "Beef Tongue with Chiles, Corn and Tomato (Lengua de Res)"
+   ],
+   [
+    2548,
+    "Table Point Boiled Beef and Vegetables (Tafelspitz)"
+   ]
+  ],
+  [
+   [
+    230,
+    "Beer Cheese Risotto"
+   ],
+   [
+    2106,
+    "Risotto (Basic)"
+   ]
+  ],
+  [
+   [
+    231,
+    "Beer Marinated Shrimp"
+   ],
+   [
+    915,
+    "Firecracker Grilled Shrimp"
+   ],
+   [
+    2230,
+    "Seafood Kebabs with Zhoug Sauce"
+   ]
+  ],
+  [
+   [
+    237,
+    "Benachin (Gambian Rice with Meat and Vegetables)"
+   ],
+   [
+    2090,
+    "Rice Cooked in Tomato Meat Sauce (Ross il-Forn)"
+   ]
+  ],
+  [
+   [
+    239,
+    "Betty's Salad"
+   ],
+   [
+    2182,
+    "Salade Frisee"
+   ]
+  ],
+  [
+   [
+    245,
+    "Biltong (Zambian Dried and Salted Meat)"
+   ],
+   [
+    891,
+    "Ewa Aganyin (Togolese Mashed Beans and Special Sauce)"
+   ],
+   [
+    1064,
+    "Gored Gored (Ethiopian Raw Beef)"
+   ],
+   [
+    1360,
+    "Kilishi (Nigerian Beef Jerky)"
+   ],
+   [
+    1708,
+    "Nigerian Corned Beef Sauce"
+   ],
+   [
+    2246,
+    "Sese Plaintains (Cameroonian Plantain Stew)"
+   ],
+   [
+    2834,
+    "Zilzil Tibs (Spicy Ethiopian Beef Strips)"
+   ]
+  ],
+  [
+   [
+    248,
+    "Biryani"
+   ],
+   [
+    1328,
+    "Katchi Biryani"
+   ]
+  ],
+  [
+   [
+    254,
+    "Bison Meatballs Baked in Hoisin Sauce (Marvin)"
+   ],
+   [
+    1030,
+    "General Tso's Chicken"
+   ]
+  ],
+  [
+   [
+    259,
+    "Black Bean Soup and Salsa Verde"
+   ],
+   [
+    1679,
+    "Mushroom Soup (Gabi Supa)"
+   ],
+   [
+    2721,
+    "Ukrainian Cabbage Soup (Kapusniak)"
+   ]
+  ],
+  [
+   [
+    260,
+    "Black Bean Soup with Tomato-Tomatillo Salsa"
+   ],
+   [
+    1443,
+    "Lentil, Barley, and Tomato Soup"
+   ],
+   [
+    1601,
+    "Mexican Tomato Soup"
+   ],
+   [
+    2057,
+    "Rasam (Tamarind and Tomato Soup)"
+   ]
+  ],
+  [
+   [
+    276,
+    "Boerewors (South African Sausage)"
+   ],
+   [
+    1377,
+    "Krummelpap (South African Maize Porridge)"
+   ]
+  ],
+  [
+   [
+    279,
+    "Boiled Collard Greens"
+   ],
+   [
+    297,
+    "Braised Collard Greens"
+   ],
+   [
+    2349,
+    "Southern Style Greens"
+   ]
+  ],
+  [
+   [
+    285,
+    "Bonga Fish Domoda (Gambian Fish in Peanut Sauce)"
+   ],
+   [
+    586,
+    "Chraime (Sephardic Fish and Vegetable Casserole)"
+   ],
+   [
+    597,
+    "Chuu Chee Fish"
+   ],
+   [
+    858,
+    "Egyptian Fish Tagine (Samak Tajine)"
+   ],
+   [
+    1280,
+    "Italian Poached Salmon"
+   ],
+   [
+    1563,
+    "Mbahal (Gambian Fish and Okra)"
+   ],
+   [
+    1614,
+    "Microwave Salmon in a Parchment Envelope"
+   ],
+   [
+    2504,
+    "Sweet and Sour Fish Casserole"
+   ]
+  ],
+  [
+   [
+    289,
+    "Bouballe (Sweetened Matzo Meal Omelette)"
+   ],
+   [
+    918,
+    "Firfir (Ethiopian Spicy Scrambled Eggs with Injera)"
+   ],
+   [
+    953,
+    "Friar's Omelette"
+   ],
+   [
+    980,
+    "Froga (Maltese Omelet)"
+   ],
+   [
+    1408,
+    "Latino Scramble"
+   ],
+   [
+    1767,
+    "Omelette of Breadcrumbs"
+   ],
+   [
+    2228,
+    "Scribbled Eggs"
+   ],
+   [
+    2352,
+    "Southwestern Scramble"
+   ],
+   [
+    2517,
+    "Sweet Omelette"
+   ]
+  ],
+  [
+   [
+    304,
+    "Bread Filled with Potato Curry (Pani Puri)"
+   ],
+   [
+    1060,
+    "Gobi Bhagi (Spiced Cauliflower Stew)"
+   ],
+   [
+    1514,
+    "Malai Mixed Vegetable Curry"
+   ],
+   [
+    1907,
+    "Pigeon Pea and Fenugreek Curry (Methi Tadka Dal)"
+   ],
+   [
+    1988,
+    "Potato-Chickpea Curry"
+   ]
+  ],
+  [
+   [
+    308,
+    "Breaded Potato Wedges"
+   ],
+   [
+    2145,
+    "Rosemary Garlic Baked Potatoes"
+   ],
+   [
+    2152,
+    "Rosti (Swiss Potato Patties)"
+   ]
+  ],
+  [
+   [
+    315,
+    "British Christmas Pudding"
+   ],
+   [
+    2159,
+    "Rum Balls"
+   ]
+  ],
+  [
+   [
+    319,
+    "Broiled Sirloin Steak"
+   ],
+   [
+    427,
+    "Char-Broiled Sirloin Steak with Cabernet Butter Sauce"
+   ],
+   [
+    1159,
+    "Herb Grilled Strip Steaks"
+   ],
+   [
+    1593,
+    "Mesquite Beef Tenderloin"
+   ],
+   [
+    1884,
+    "Peppercorn Strip Steaks with Cognac Cream Sauce"
+   ],
+   [
+    2149,
+    "Rosemary Garlic Strip Steak"
+   ],
+   [
+    2590,
+    "Tequila Lime Strip Steak"
+   ]
+  ],
+  [
+   [
+    320,
+    "Brown Butter Biscuits"
+   ],
+   [
+    328,
+    "Brown Sugar Nutmeg Cookies"
+   ],
+   [
+    2326,
+    "Snickerdoodles III"
+   ],
+   [
+    2327,
+    "Snickerdoodles IV"
+   ],
+   [
+    2557,
+    "Tahini Cookies"
+   ]
+  ],
+  [
+   [
+    321,
+    "Brown Butter Toffee Chocolate Chip Cookies"
+   ],
+   [
+    995,
+    "Fusion Spice Cookie (Gluten-Free)"
+   ],
+   [
+    1607,
+    "Microwave Chocolate Chip Cookie"
+   ],
+   [
+    1744,
+    "Nutty Buddy Chocolate Cookie Bars"
+   ],
+   [
+    1863,
+    "Peanut Butter Cookies (Egg-Free)"
+   ],
+   [
+    2685,
+    "Triple Chocolate Chip Cookies"
+   ]
+  ],
+  [
+   [
+    323,
+    "Brown Rice Casserole"
+   ],
+   [
+    659,
+    "Cornbread and Chicken Casserole"
+   ],
+   [
+    1634,
+    "Mirliton Casserole"
+   ],
+   [
+    1847,
+    "Pasta, Meat and Cheese Casserole (Mostaccioli)"
+   ],
+   [
+    2191,
+    "Salt Cod and Potato Casserole (Bacalhau à Zé do Pipo)"
+   ],
+   [
+    2297,
+    "Six Layer Casserole"
+   ],
+   [
+    2678,
+    "Traditional Tuna Casserole"
+   ],
+   [
+    2800,
+    "Yam Casserole"
+   ],
+   [
+    2839,
+    "Zucchini Pasta Bake"
+   ]
+  ],
+  [
+   [
+    324,
+    "Brown Rice with Ground Turkey"
+   ],
+   [
+    675,
+    "Couscous bil Khodra (Libyan Vegetable Couscous)"
+   ]
+  ],
+  [
+   [
+    340,
+    "Bulgarian Meatball Soup (Supa Topcheta)"
+   ],
+   [
+    1284,
+    "Italian Soup with Poultry Quenelles"
+   ],
+   [
+    2064,
+    "Rassolnik (Russian Barley and Kidney Soup)"
+   ],
+   [
+    2338,
+    "Soup alla Canavese"
+   ]
+  ],
+  [
+   [
+    350,
+    "Buttermilk Curry Soup (Kadi Pakora)"
+   ],
+   [
+    2033,
+    "Queens Soup"
+   ],
+   [
+    2265,
+    "Shorba bil Lahm (Libyan Meat Soup)"
+   ],
+   [
+    2381,
+    "Spiced Pumpkin Soup"
+   ],
+   [
+    2389,
+    "Spicy Chickpea Soup"
+   ],
+   [
+    2751,
+    "Venetian Soup"
+   ]
+  ],
+  [
+   [
+    356,
+    "Buñuelos (Sweet Fried Pastry)"
+   ],
+   [
+    1716,
+    "Nigerian Puff Puff"
+   ],
+   [
+    2006,
+    "Puff Pastry I"
+   ]
+  ],
+  [
+   [
+    369,
+    "Calabash Noodle Soup (Hulu Mian)"
+   ],
+   [
+    1953,
+    "Pork Spare Rib Soup (Bah Kut Teh)"
+   ],
+   [
+    2040,
+    "Quick Tomato Noodle Soup"
+   ]
+  ],
+  [
+   [
+    385,
+    "Canjeero (Somali Pancake)"
+   ],
+   [
+    1396,
+    "Lahoh (Spongy Flatbread) I"
+   ]
+  ],
+  [
+   [
+    386,
+    "Cannabutter"
+   ],
+   [
+    2738,
+    "Veal Stock"
+   ]
+  ],
+  [
+   [
+    393,
+    "Cappelletti Pasta Soup (Cappelletti in Brodo)"
+   ],
+   [
+    713,
+    "Crotopo Soup"
+   ],
+   [
+    802,
+    "Dovga (Azerbaijani Yogurt Soup)"
+   ],
+   [
+    977,
+    "Frittaten Soup"
+   ],
+   [
+    1005,
+    "Gambian Superkanja Soup"
+   ],
+   [
+    1041,
+    "Giblet Soup"
+   ],
+   [
+    1164,
+    "Herring Soup"
+   ],
+   [
+    1449,
+    "Liberian Cassava Leaf Soup"
+   ],
+   [
+    1526,
+    "Manhattan Clam Chowder I"
+   ],
+   [
+    1681,
+    "Muskrat Soup"
+   ],
+   [
+    1714,
+    "Nigerian Okra Soup I"
+   ],
+   [
+    1782,
+    "Orunla (Nigerian Okra Soup)"
+   ],
+   [
+    1784,
+    "Osumade Soup"
+   ],
+   [
+    2004,
+    "Puerto Rican Chicken Soup (Asopao)"
+   ],
+   [
+    2402,
+    "Spicy Miso Udon"
+   ]
+  ],
+  [
+   [
+    399,
+    "Carpetbag Steak"
+   ],
+   [
+    1065,
+    "Gorgonzola Stuffed Chateaubriand"
+   ]
+  ],
+  [
+   [
+    405,
+    "Carrot Kugel"
+   ],
+   [
+    1830,
+    "Passover Carrot Almond Cake"
+   ]
+  ],
+  [
+   [
+    406,
+    "Carrot Paprika Spread"
+   ],
+   [
+    2385,
+    "Spicy Carrot Aioli"
+   ],
+   [
+    2741,
+    "Vegan Pate"
+   ]
+  ],
+  [
+   [
+    415,
+    "Chadian Gilled Fish"
+   ],
+   [
+    2091,
+    "Rice in Fish Broth (Sayyadieh)"
+   ],
+   [
+    2219,
+    "Sayadeya (Egyptian Fish with Rice)"
+   ]
+  ],
+  [
+   [
+    417,
+    "Chakarai Pongal (Sweet Rice and Black Gram Pudding)"
+   ],
+   [
+    2332,
+    "Soji (Indian Wheat Pudding)"
+   ]
+  ],
+  [
+   [
+    424,
+    "Chapati Za Maji (Tanzanian Pancakes)"
+   ],
+   [
+    1415,
+    "Lefse (Norwegian Potato Flatbread)"
+   ],
+   [
+    1489,
+    "M'semen (Layered Algerian Flatbread)"
+   ],
+   [
+    1515,
+    "Malawach (Flaky Flatbread)"
+   ],
+   [
+    2180,
+    "Saj Bread III"
+   ]
+  ],
+  [
+   [
+    433,
+    "Cheescake Cups"
+   ],
+   [
+    1163,
+    "Herrencreme (German Custard Dessert)"
+   ],
+   [
+    2566,
+    "Tangy Lemon Mousse"
+   ]
+  ],
+  [
+   [
+    438,
+    "Cheese Filling for Peynirli Börek"
+   ],
+   [
+    681,
+    "Crab Quesadillas with Mango Salsa"
+   ],
+   [
+    1612,
+    "Microwave Quesadilla"
+   ]
+  ],
+  [
+   [
+    442,
+    "Cheese Spread on French Bread"
+   ],
+   [
+    2647,
+    "Tomato Basil Soup with Garlic Toasts"
+   ]
+  ],
+  [
+   [
+    443,
+    "Cheese Stuffed Tomatoes"
+   ],
+   [
+    2295,
+    "Sirene po Shopski (Bulgarian Cheese and Tomatoes)"
+   ],
+   [
+    2656,
+    "Tomatoes with Cheese Stuffing"
+   ]
+  ],
+  [
+   [
+    446,
+    "Cheese-Stuffed Crust Pizza"
+   ],
+   [
+    1633,
+    "Mini Three-Cheese English Muffin Pizzas"
+   ]
+  ],
+  [
+   [
+    455,
+    "Cherry-Berry Jumble Fruit Pie"
+   ],
+   [
+    2026,
+    "Purple Plum Pie"
+   ]
+  ],
+  [
+   [
+    465,
+    "Chicken and Broccoli Casserole"
+   ],
+   [
+    1946,
+    "Pork and Lima Skillet"
+   ],
+   [
+    2277,
+    "Simmering Tofu Stir-fry"
+   ]
+  ],
+  [
+   [
+    468,
+    "Chicken and Ricotta Paninis"
+   ],
+   [
+    1594,
+    "Mesquite Chicken Sandwich"
+   ]
+  ],
+  [
+   [
+    469,
+    "Chicken Bacon Broccoli Alfredo Spaghetti"
+   ],
+   [
+    1817,
+    "Pancetta Fusilli with Herb Shallot Cream"
+   ],
+   [
+    2367,
+    "Spaghetti with Clams in White Wine Sauce"
+   ]
+  ],
+  [
+   [
+    478,
+    "Chicken Curry"
+   ],
+   [
+    738,
+    "Curry Chicken I"
+   ]
+  ],
+  [
+   [
+    502,
+    "Chicken Tetrazzini"
+   ],
+   [
+    1841,
+    "Pasta with Corn and Tuna"
+   ],
+   [
+    2184,
+    "Salată de Boeuf (Romanian Beef Salad)"
+   ]
+  ],
+  [
+   [
+    506,
+    "Chicken Wings Asian Style"
+   ],
+   [
+    534,
+    "Chipotle Lime Hot Wings"
+   ],
+   [
+    1166,
+    "Hickory BBQ Chicken Wings"
+   ],
+   [
+    1196,
+    "Honey BBQ Hot Wings"
+   ],
+   [
+    2315,
+    "Smoky Chipotle Glazed Hot Wings"
+   ],
+   [
+    2589,
+    "Tequila Lime Hot Wings"
+   ]
+  ],
+  [
+   [
+    508,
+    "Chicken with Paprika and Cream"
+   ],
+   [
+    2116,
+    "Roast Chicken on Salt"
+   ],
+   [
+    2377,
+    "Spice Rubbed Grilled Chicken Breast"
+   ]
+  ],
+  [
+   [
+    510,
+    "Chicken-fried Steak"
+   ],
+   [
+    2598,
+    "Texas Style Chicken Fried Steak"
+   ]
+  ],
+  [
+   [
+    516,
+    "Chikwanda (Zambian Sweet Potato Stew)"
+   ],
+   [
+    1055,
+    "Glazed Sweet Potatoes"
+   ],
+   [
+    1779,
+    "Orange-Glazed Sweet Potatoes"
+   ],
+   [
+    1876,
+    "Pecan Sweet Potatoes"
+   ],
+   [
+    2464,
+    "Strong Candied Sweet Potatoes"
+   ]
+  ],
+  [
+   [
+    527,
+    "Chipotle BBQ Chicken Nuggets"
+   ],
+   [
+    700,
+    "Crispy Buffalo Shrimp"
+   ],
+   [
+    1480,
+    "Loukoumas (Greek Donuts with Honey) II"
+   ]
+  ],
+  [
+   [
+    528,
+    "Chipotle BBQ Ribs"
+   ],
+   [
+    1046,
+    "Ginger Peach Glazed BBQ Ribs"
+   ],
+   [
+    1168,
+    "Hickory Maple Glazed Wings"
+   ],
+   [
+    2400,
+    "Spicy Grilled Duck Breasts"
+   ]
+  ],
+  [
+   [
+    531,
+    "Chipotle Fish n' Chips"
+   ],
+   [
+    2564,
+    "Tangy Fried Shrimp"
+   ]
+  ],
+  [
+   [
+    537,
+    "Chipotle Sliders"
+   ],
+   [
+    2594,
+    "Tex-Mex Sliders"
+   ]
+  ],
+  [
+   [
+    540,
+    "Chishimba (Zambian Cassava Cake)"
+   ],
+   [
+    1542,
+    "Marly Sponge"
+   ]
+  ],
+  [
+   [
+    543,
+    "Choco-Nutty Pie"
+   ],
+   [
+    1831,
+    "Passover Hazelnut Chocolate Loaf"
+   ]
+  ],
+  [
+   [
+    545,
+    "Chocolate and Custard Layered Dessert (Nanaimo Bar)"
+   ],
+   [
+    863,
+    "Egyptian Milk Pudding (Mahalabiya)"
+   ],
+   [
+    890,
+    "Eve's Pudding (Hartshorne)"
+   ]
+  ],
+  [
+   [
+    550,
+    "Chocolate Cake with Coconut Topping (Vegan)"
+   ],
+   [
+    568,
+    "Chocolate Marmalade Layer Cake"
+   ],
+   [
+    1255,
+    "Indulgent Chocolate Torte"
+   ],
+   [
+    1596,
+    "Mexican Chocolate Cake with Mocha Buttercream"
+   ],
+   [
+    2356,
+    "Space Cake"
+   ],
+   [
+    2766,
+    "Wacky Cake"
+   ]
+  ],
+  [
+   [
+    553,
+    "Chocolate Chip Cookies (Gluten-Free)"
+   ],
+   [
+    558,
+    "Chocolate Chip Cookies IV"
+   ]
+  ],
+  [
+   [
+    554,
+    "Chocolate Chip Cookies (Vegan)"
+   ],
+   [
+    556,
+    "Chocolate Chip Cookies II"
+   ]
+  ],
+  [
+   [
+    562,
+    "Chocolate Chip Pumpkin Cookies"
+   ],
+   [
+    1753,
+    "Oatmeal Chocolate Chip Cookies III"
+   ]
+  ],
+  [
+   [
+    563,
+    "Chocolate Chocolate Chip Muffins"
+   ],
+   [
+    1756,
+    "Oatmeal Muffins"
+   ]
+  ],
+  [
+   [
+    580,
+    "Chocolate-Jalapeno Truffles"
+   ],
+   [
+    2160,
+    "Rum Truffles"
+   ]
+  ],
+  [
+   [
+    591,
+    "Chuck Wagon Beans"
+   ],
+   [
+    1530,
+    "Maple Beans"
+   ]
+  ],
+  [
+   [
+    594,
+    "Chunky Guacamole"
+   ],
+   [
+    908,
+    "Field of Dreams Guacamole"
+   ]
+  ],
+  [
+   [
+    603,
+    "Cinnamon Glazed Apples"
+   ],
+   [
+    1376,
+    "Kroppkakor (Swedish Potato and Pork Dumplings)"
+   ],
+   [
+    1638,
+    "Misro (Indonesian Palm Sugar Cassava Fritters)"
+   ]
+  ],
+  [
+   [
+    605,
+    "Cinnamon-braised Chicken (Kotopoulo Kapama)"
+   ],
+   [
+    1486,
+    "Luwombo (Ugandan Steamed Meat and Vegetables)"
+   ],
+   [
+    1715,
+    "Nigerian Pepper Sauce (Obe Ata)"
+   ],
+   [
+    2318,
+    "Smothered Okra"
+   ]
+  ],
+  [
+   [
+    610,
+    "Classic Pot Roast"
+   ],
+   [
+    1095,
+    "Grilled Filet Mignon with a Cognac Reduction"
+   ],
+   [
+    2113,
+    "Roast Beef Round with Au Jus"
+   ],
+   [
+    2463,
+    "Strip Steaks with Pepper Cream Reduction"
+   ],
+   [
+    2794,
+    "Wine Braised Shortribs"
+   ],
+   [
+    2845,
+    "Zwiebelrostbraten with Red Wine Onion Gravy"
+   ]
+  ],
+  [
+   [
+    619,
+    "Coconut Cream and Pound Cake with Moscatel (Bienmesabe)"
+   ],
+   [
+    682,
+    "Cranberry Orange Squares"
+   ],
+   [
+    1917,
+    "Pineapple Upside-Down Cake in a Skillet"
+   ],
+   [
+    2376,
+    "Spelt Yellow Cake"
+   ],
+   [
+    2679,
+    "Tres Leches Cake I"
+   ]
+  ],
+  [
+   [
+    626,
+    "Coconut Rice (Indonesian)"
+   ],
+   [
+    2099,
+    "Rice with Coconut (Arroz con Coco)"
+   ],
+   [
+    2335,
+    "Soso (Coconut Rice)"
+   ]
+  ],
+  [
+   [
+    628,
+    "Coconut Rum-Battered Shrimp"
+   ],
+   [
+    665,
+    "Cornmeal Fried Morels"
+   ],
+   [
+    763,
+    "Deep Fried Chickpea Dough with Lemon (Panissa)"
+   ]
+  ],
+  [
+   [
+    647,
+    "Corn and Kelp Chowder"
+   ],
+   [
+    648,
+    "Corn and Shrimp Chowder"
+   ],
+   [
+    1840,
+    "Pasta Soup for Kids"
+   ]
+  ],
+  [
+   [
+    661,
+    "Cornbread II"
+   ],
+   [
+    2347,
+    "Southern Cornbread"
+   ]
+  ],
+  [
+   [
+    688,
+    "Cream of Duck and Mushroom Soup"
+   ],
+   [
+    1285,
+    "Italian White Bean Soup"
+   ],
+   [
+    1330,
+    "Kawlata (Maltese Vegetable and Pork Soup)"
+   ],
+   [
+    1367,
+    "Knoephla Soup"
+   ],
+   [
+    1629,
+    "Minestrone alla Capucina"
+   ],
+   [
+    1695,
+    "Neapolitan Soup"
+   ],
+   [
+    1962,
+    "Potage Parmentier"
+   ],
+   [
+    1963,
+    "Potato and Cabbage Soup"
+   ],
+   [
+    2334,
+    "Soppa ta' l-Armla (Maltese Widow's Soup)"
+   ],
+   [
+    2339,
+    "Soup alla Lombarda"
+   ],
+   [
+    2346,
+    "Southern Clam Chowder"
+   ],
+   [
+    2831,
+    "Zelenchukova Supa (Bulgarian Vegetable Soup)"
+   ],
+   [
+    2843,
+    "Zuppa alla Modenese"
+   ]
+  ],
+  [
+   [
+    689,
+    "Cream of Mushroom Soup"
+   ],
+   [
+    1678,
+    "Mushroom Soup"
+   ]
+  ],
+  [
+   [
+    692,
+    "Creamy Cornstarch Scrambled Eggs"
+   ],
+   [
+    1617,
+    "Microwaved Scrambled Egg"
+   ]
+  ],
+  [
+   [
+    694,
+    "Creamy Mascarpone Dessert"
+   ],
+   [
+    1551,
+    "Mascarpone Chocolate Sauce"
+   ]
+  ],
+  [
+   [
+    703,
+    "Crispy Chicken Burgers"
+   ],
+   [
+    1275,
+    "Italian Crispy Chicken"
+   ]
+  ],
+  [
+   [
+    708,
+    "Crispy Santa Fe Chicken"
+   ],
+   [
+    1991,
+    "Potatoes with Green Sauce"
+   ]
+  ],
+  [
+   [
+    736,
+    "Curried Rice"
+   ],
+   [
+    739,
+    "Curry Chicken II"
+   ]
+  ],
+  [
+   [
+    737,
+    "Curry and Honey Chicken"
+   ],
+   [
+    1299,
+    "Jamaican Curry Chicken with Bullga"
+   ],
+   [
+    1557,
+    "Masyaura Curry"
+   ]
+  ],
+  [
+   [
+    741,
+    "Curtido (Spicy Cabbage Slaw)"
+   ],
+   [
+    2847,
+    "Śląsko Modro Kapusta (Red Cabbage with Onion and Bacon)"
+   ]
+  ],
+  [
+   [
+    747,
+    "Dahi Baingana (Fried Eggplant in Yogurt)"
+   ],
+   [
+    1349,
+    "Khara Pongal (Rice and Lentil Porridge)"
+   ],
+   [
+    1351,
+    "Kheer (Rice Pudding)"
+   ]
+  ],
+  [
+   [
+    753,
+    "Damper (Australian Campfire Bread)"
+   ],
+   [
+    2240,
+    "Semmelknoedel (Bavarian Bread Dumplings)"
+   ],
+   [
+    2803,
+    "Yeasted Cornbread"
+   ]
+  ],
+  [
+   [
+    760,
+    "Deep Fried Black Lentil and Rice Flour Dough Balls (Murukku)"
+   ],
+   [
+    1237,
+    "Ifumbe (Rwandan Cassava Fritters)"
+   ],
+   [
+    1315,
+    "Kala (Liberian Fritters)"
+   ],
+   [
+    1893,
+    "Phulourie (Split Pea Fritters)"
+   ]
+  ],
+  [
+   [
+    761,
+    "Deep Fried Chickpea Dough Balls (Chyueeam)"
+   ],
+   [
+    957,
+    "Fried Cheese Balls with Sausage"
+   ]
+  ],
+  [
+   [
+    762,
+    "Deep Fried Chickpea Dough Curry Snacks (Pakoda)"
+   ],
+   [
+    764,
+    "Deep Fried Chiles Filled with Chickpea Flour (Mirchi Bhajji)"
+   ],
+   [
+    1508,
+    "Maharashtrian Deep Fried Chickpea Dough Curry Snacks (Pakoda)"
+   ]
+  ],
+  [
+   [
+    770,
+    "Deep Fried Wheat and Chickpea Flour Dough Balls (Muthiya)"
+   ],
+   [
+    971,
+    "Fried Wheat Bread Balls (Bhatoora)"
+   ],
+   [
+    1457,
+    "Liberian Fufu"
+   ],
+   [
+    2235,
+    "Seasoned Bread and Butter Balls"
+   ],
+   [
+    2467,
+    "Struffoli (Neapolitan Honey Fried Dough)"
+   ],
+   [
+    2804,
+    "Yeasted Kifli"
+   ]
+  ],
+  [
+   [
+    781,
+    "Diri Na Njar (Chadian Spiced Rice with Vegetables)"
+   ],
+   [
+    2029,
+    "Qabuli (Central Asian Rice Pilaf)"
+   ]
+  ],
+  [
+   [
+    786,
+    "Dokunu (Fermented Corn Dumplings)"
+   ],
+   [
+    1725,
+    "Nkwobi (Nigerian Spicy Cow Foot)"
+   ],
+   [
+    2814,
+    "Yetakelt Wot (Ethiopian Spiced Vegetable Stew)"
+   ]
+  ],
+  [
+   [
+    788,
+    "Dolma (Stuffed Grape Leaves)"
+   ],
+   [
+    2473,
+    "Stuffed Grape Leaves"
+   ]
+  ],
+  [
+   [
+    795,
+    "Dorowot Fitfit (Ethiopian Chicken Stew Salad)"
+   ],
+   [
+    927,
+    "Fit-fit (Ethiopian Bread Salad)"
+   ],
+   [
+    1061,
+    "Gomen (Ethiopian Collard Greens)"
+   ],
+   [
+    1256,
+    "Inguday Tibs (Ethiopian Mushroom Stir-Fry)"
+   ],
+   [
+    1452,
+    "Liberian Country Beans Torborgee"
+   ],
+   [
+    1960,
+    "Posho and Beans"
+   ],
+   [
+    2262,
+    "Shiro (Ethiopian Spiced Chickpea or Lentil Stew)"
+   ],
+   [
+    2620,
+    "Tibs (Ethiopian Sauteed Meat and Vegetables)"
+   ],
+   [
+    2813,
+    "Yetakelt Alicha (Ethiopian Vegetable Stew)"
+   ]
+  ],
+  [
+   [
+    796,
+    "Dosa I"
+   ],
+   [
+    1550,
+    "Masala Dosa"
+   ]
+  ],
+  [
+   [
+    803,
+    "Dr. Kitchener's Pudding"
+   ],
+   [
+    2075,
+    "Rhubarb and Custard Bread Pudding"
+   ],
+   [
+    2379,
+    "Spiced Crème Caramel"
+   ],
+   [
+    2532,
+    "Swiss Pudding"
+   ],
+   [
+    2583,
+    "Tembleque (Puerto Rican Coconut Pudding)"
+   ]
+  ],
+  [
+   [
+    808,
+    "Dry-Aged Prime Rib"
+   ],
+   [
+    1882,
+    "Pepper Crusted Flank Steak"
+   ]
+  ],
+  [
+   [
+    814,
+    "Dumboy and Pepper Soup"
+   ],
+   [
+    1461,
+    "Liberian Pepper Soup"
+   ],
+   [
+    2541,
+    "Sylheti Tangy Curry"
+   ]
+  ],
+  [
+   [
+    826,
+    "Easy Nachos"
+   ],
+   [
+    1269,
+    "Island Salsa Salad"
+   ],
+   [
+    1499,
+    "Macho Nachos"
+   ],
+   [
+    2286,
+    "Simple Nachos"
+   ]
+  ],
+  [
+   [
+    845,
+    "Egg Rice"
+   ],
+   [
+    2580,
+    "Tchari (Jollof Rice)"
+   ]
+  ],
+  [
+   [
+    848,
+    "Egg White Carrot Brownies"
+   ],
+   [
+    1403,
+    "Lancashire Parkin"
+   ],
+   [
+    1506,
+    "Magic Brownies"
+   ],
+   [
+    2723,
+    "Ultimate Kahlua Brownies"
+   ]
+  ],
+  [
+   [
+    849,
+    "Egg with Cabbage and Turkish Sausage"
+   ],
+   [
+    2768,
+    "Wakeup Sausage Casserole"
+   ]
+  ],
+  [
+   [
+    861,
+    "Egyptian Lentil Stew"
+   ],
+   [
+    1352,
+    "Khichdi (South Asian Rice and Lentils)"
+   ],
+   [
+    1444,
+    "Lentil, Potato, and Tomato Curry"
+   ],
+   [
+    1524,
+    "Mango and Yellow Split Pea Curry"
+   ],
+   [
+    2292,
+    "Sindhi Spiced Moong Dal"
+   ],
+   [
+    2553,
+    "Tadka Dhal (Spiced Lentil Curry) I"
+   ]
+  ],
+  [
+   [
+    862,
+    "Egyptian Meatballs (Kofta)"
+   ],
+   [
+    973,
+    "Frikadeller (Danish Meatballs)"
+   ],
+   [
+    1619,
+    "Middle Eastern Meatballs"
+   ],
+   [
+    2823,
+    "Yuvarlak (Greek Meatballs)"
+   ]
+  ],
+  [
+   [
+    867,
+    "Egyptian Stuffed Eggplant (Mahshi Betinjan)"
+   ],
+   [
+    880,
+    "Entula (Ugandan Eggplant Stew)"
+   ],
+   [
+    1093,
+    "Grilled Eggplant with Garlic Butter"
+   ],
+   [
+    2480,
+    "Stuffed Portabella Mushrooms"
+   ]
+  ],
+  [
+   [
+    869,
+    "Egyptian Sweet Rice Pudding (Roz Bil Laban)"
+   ],
+   [
+    978,
+    "Frog's Eye Salad"
+   ],
+   [
+    1282,
+    "Italian Rice Pudding"
+   ],
+   [
+    1313,
+    "Kaiserschmarrn (Austrian Shredded Pancake)"
+   ],
+   [
+    1334,
+    "Kele Ka Halwa (Fried Bananas in Milk)"
+   ],
+   [
+    1354,
+    "Khus Khus Halwa"
+   ],
+   [
+    1748,
+    "Oat Rice"
+   ],
+   [
+    2249,
+    "Seviyan Ji Khirni (Sindhi Vermicelli Pudding)"
+   ],
+   [
+    2726,
+    "Upma (Indian Semolina Porridge)"
+   ]
+  ],
+  [
+   [
+    875,
+    "English Field Bean Pate"
+   ],
+   [
+    999,
+    "Galician Garbanzo Soup"
+   ],
+   [
+    1007,
+    "Garbanzo Bean Stew"
+   ]
+  ],
+  [
+   [
+    884,
+    "Eshabwe (Ugandan Milk Cream)"
+   ],
+   [
+    1385,
+    "Kunun Tamba (Finger Millet Porridge)"
+   ],
+   [
+    2558,
+    "Tahini Goddess Dressing"
+   ]
+  ],
+  [
+   [
+    888,
+    "Euneo-juk (Korean Sweetfish Porridge)"
+   ],
+   [
+    1031,
+    "Genfo (Ethiopian Porridge)"
+   ]
+  ],
+  [
+   [
+    907,
+    "Fiddlehead-Portobello Linguine"
+   ],
+   [
+    1040,
+    "Giant Spaghetti-Stuffed Meatball"
+   ],
+   [
+    1286,
+    "Italian-American Spaghetti alla Puttanesca"
+   ],
+   [
+    1465,
+    "Linguine Primavera Mediterranean"
+   ],
+   [
+    1571,
+    "Meatballs with Honey Lime Sauce"
+   ],
+   [
+    1844,
+    "Pasta with Red Pepper and Goat Cheese"
+   ],
+   [
+    1875,
+    "Pecan Spinach Pasta"
+   ]
+  ],
+  [
+   [
+    919,
+    "Firire (Senegalese Fried Fish with Sauce)"
+   ],
+   [
+    1454,
+    "Liberian Fried Fish"
+   ],
+   [
+    2587,
+    "Tempura Baked Halibut with Cilantro Aioli"
+   ]
+  ],
+  [
+   [
+    938,
+    "Florida Style Crab Cakes"
+   ],
+   [
+    1346,
+    "Khanom Tian (Thai Coconut Rice Dumplings)"
+   ],
+   [
+    2771,
+    "Watalappam (Sri Lankan Coconut Custard)"
+   ]
+  ],
+  [
+   [
+    942,
+    "Fool's Gold Loaf"
+   ],
+   [
+    2164,
+    "Rustic Beer Bread"
+   ],
+   [
+    2780,
+    "Wheat-Free Baking Mix"
+   ]
+  ],
+  [
+   [
+    943,
+    "Four in One Pizza"
+   ],
+   [
+    1924,
+    "Pizza Vanegas"
+   ]
+  ],
+  [
+   [
+    951,
+    "Fresh Pasta with Mozzarella, Tomato and Basil"
+   ],
+   [
+    1407,
+    "Lasagne with Red and White Sauce"
+   ],
+   [
+    1972,
+    "Potato Gnocchi with Basil and Sun-dried Tomatoes"
+   ]
+  ],
+  [
+   [
+    955,
+    "Fried Bacon and Egg Sandwich (Homemade Egg McMuffin)"
+   ],
+   [
+    2430,
+    "Steak Sandwiches"
+   ]
+  ],
+  [
+   [
+    986,
+    "Fruity Cheese Dogs"
+   ],
+   [
+    1801,
+    "Palatschinken with Sweetened Fruit"
+   ]
+  ],
+  [
+   [
+    991,
+    "Fuk-Thong Pad Khai (Thai Stir-Fried Pumpkin)"
+   ],
+   [
+    2604,
+    "Thai Peanut Fried Rice (Vegan)"
+   ]
+  ],
+  [
+   [
+    1003,
+    "Gambian Chicken with Lemon and Mustard (Yassa)"
+   ],
+   [
+    1943,
+    "Poppyseed Chicken"
+   ]
+  ],
+  [
+   [
+    1024,
+    "Garlic Shrimp Scampi Pasta"
+   ],
+   [
+    1335,
+    "Keralan Prawns"
+   ],
+   [
+    1481,
+    "Low Country Shrimp and Grits"
+   ],
+   [
+    2273,
+    "Shrimp Hooman (Goan Shrimp Curry)"
+   ],
+   [
+    2314,
+    "Smoking Shrimp Creole"
+   ],
+   [
+    2399,
+    "Spicy Garlic Oil"
+   ]
+  ],
+  [
+   [
+    1032,
+    "German Meatballs"
+   ],
+   [
+    1570,
+    "Meatballs (Vegetarian)"
+   ]
+  ],
+  [
+   [
+    1039,
+    "Ghraiba bil Loz (Libyan Almond Ghraiba)"
+   ],
+   [
+    1940,
+    "Polvorones (Spanish Shortbread)"
+   ]
+  ],
+  [
+   [
+    1042,
+    "Gin Fried Rice"
+   ],
+   [
+    1458,
+    "Liberian Jollof Rice"
+   ],
+   [
+    2826,
+    "Zambian Beans and Rice"
+   ]
+  ],
+  [
+   [
+    1045,
+    "Ginger Pancakes"
+   ],
+   [
+    1053,
+    "Gingerbread Pancakes II"
+   ],
+   [
+    1786,
+    "Oven Pancakes (Vegan)"
+   ]
+  ],
+  [
+   [
+    1059,
+    "Goat Milk Caramel Sauce"
+   ],
+   [
+    1242,
+    "Imitation Caramel Sauce (vegan)"
+   ],
+   [
+    1651,
+    "Molasses Taffy"
+   ]
+  ],
+  [
+   [
+    1066,
+    "Goulash"
+   ],
+   [
+    1067,
+    "Goulash Soup"
+   ]
+  ],
+  [
+   [
+    1068,
+    "Grand Union Bacon"
+   ],
+   [
+    2513,
+    "Sweet Italian Sausage Skillet"
+   ]
+  ],
+  [
+   [
+    1075,
+    "Gravy Cakes (Hartshorne)"
+   ],
+   [
+    2492,
+    "Sunshine Cake"
+   ],
+   [
+    2680,
+    "Tres Leches Cake II"
+   ]
+  ],
+  [
+   [
+    1078,
+    "Greek-Style Grilled Chicken"
+   ],
+   [
+    1105,
+    "Grilled Radicchio with Bacon Dressing"
+   ],
+   [
+    1580,
+    "Mediterranean Green Chicken"
+   ],
+   [
+    2387,
+    "Spicy Chicken Cutlets"
+   ],
+   [
+    2509,
+    "Sweet and Spicy Smoked Chicken"
+   ]
+  ],
+  [
+   [
+    1079,
+    "Green Bean Casserole"
+   ],
+   [
+    1081,
+    "Green Bean Casserole with Pimento"
+   ]
+  ],
+  [
+   [
+    1083,
+    "Green Chili Beef Stew"
+   ],
+   [
+    1398,
+    "Lamb and Okra Stew (Khoresht Bamiye)"
+   ],
+   [
+    1641,
+    "Miyan Ridi (Nigerian Sesame Soup)"
+   ]
+  ],
+  [
+   [
+    1090,
+    "Grilled Chicken and Arugula Salad"
+   ],
+   [
+    2183,
+    "Salata Hara (Libyan Spicy Salad)"
+   ],
+   [
+    2393,
+    "Spicy Crab and Arugula Salad"
+   ],
+   [
+    2694,
+    "Tuna Glop"
+   ]
+  ],
+  [
+   [
+    1098,
+    "Grilled Mesquite Meatloaf"
+   ],
+   [
+    1810,
+    "Pan-Seared Filet Mignon"
+   ]
+  ],
+  [
+   [
+    1132,
+    "Hake in Herby Breadcrumbs"
+   ],
+   [
+    2799,
+    "Xató (Catalan Endives and Fish)"
+   ]
+  ],
+  [
+   [
+    1133,
+    "Halibut Cheek Stir-Fry"
+   ],
+   [
+    1446,
+    "Leong's Cashew Chicken"
+   ],
+   [
+    1867,
+    "Peanut Chicken Stir-Fry"
+   ]
+  ],
+  [
+   [
+    1134,
+    "Hallaca (Venezuelan Stuffed Corn Dough)"
+   ],
+   [
+    2660,
+    "Torta de Acelga (Chard Pie)"
+   ]
+  ],
+  [
+   [
+    1141,
+    "Hamburger Skillet Dinner"
+   ],
+   [
+    1406,
+    "Lasagne with Bean Sauce"
+   ]
+  ],
+  [
+   [
+    1149,
+    "Hasude (Albanian Cornstarch Pudding)"
+   ],
+   [
+    1820,
+    "Panna Cotta with Red Fruit Sauce"
+   ]
+  ],
+  [
+   [
+    1151,
+    "Hawawshi (Egyptian Meat Pies)"
+   ],
+   [
+    1712,
+    "Nigerian Meat Pie"
+   ]
+  ],
+  [
+   [
+    1152,
+    "Hazelnut and Black Raspberry Panna Cotta"
+   ],
+   [
+    1178,
+    "Holzknechtnocken with Strawberry Curd au Gratin"
+   ]
+  ],
+  [
+   [
+    1153,
+    "Hazelnut Meringue"
+   ],
+   [
+    1584,
+    "Meringata (Cream-filled Meringue Gateaux)"
+   ],
+   [
+    1588,
+    "Meringues with Roasted Raspberries and Hazelnut Creme Anglaise"
+   ],
+   [
+    2330,
+    "Soft Boiled Meringues"
+   ],
+   [
+    2531,
+    "Swiss Meringue Buttercream"
+   ]
+  ],
+  [
+   [
+    1157,
+    "Herb Bubble Bread"
+   ],
+   [
+    1482,
+    "Luciabullar (Scandinavian Saffron Buns)"
+   ],
+   [
+    2001,
+    "Proja (Serbian Cornbread)"
+   ],
+   [
+    2392,
+    "Spicy Corn Bread"
+   ]
+  ],
+  [
+   [
+    1160,
+    "Herbed Corn"
+   ],
+   [
+    1683,
+    "Mussels with Potatoes"
+   ]
+  ],
+  [
+   [
+    1167,
+    "Hickory BBQ Pork Loin"
+   ],
+   [
+    1273,
+    "Italian Braised Shortribs"
+   ],
+   [
+    1581,
+    "Memphis-Style BBQ Ribs"
+   ],
+   [
+    1734,
+    "North Carolina-Style BBQ Ribs"
+   ],
+   [
+    1787,
+    "Oven Ribs"
+   ],
+   [
+    1828,
+    "Pashofa (Chickasaw Pork and Corn)"
+   ],
+   [
+    1952,
+    "Pork Roast with Cayenne Apple Glaze"
+   ],
+   [
+    2120,
+    "Roast Pork Loin with Gravy"
+   ],
+   [
+    2303,
+    "Slow Cooker Baby Back Ribs"
+   ],
+   [
+    2404,
+    "Spicy Roast Brisket"
+   ],
+   [
+    2796,
+    "Wine-Roasted Pork Roast"
+   ]
+  ],
+  [
+   [
+    1169,
+    "Hickory Smoked Chicken Breasts"
+   ],
+   [
+    1532,
+    "Maple Glazed Chicken Breasts"
+   ],
+   [
+    1658,
+    "Monterey Jack Chicken Breasts"
+   ],
+   [
+    1808,
+    "Pan-Seared Chicken Breast"
+   ],
+   [
+    2143,
+    "Rosemary Balsamic Chicken Wings"
+   ],
+   [
+    2474,
+    "Stuffed Grilled Chicken Breasts"
+   ]
+  ],
+  [
+   [
+    1175,
+    "Holiday Stuffing"
+   ],
+   [
+    1885,
+    "Pepperoni Pasta Salad"
+   ]
+  ],
+  [
+   [
+    1176,
+    "Holland Tea Cakes"
+   ],
+   [
+    1213,
+    "Hot Milk Cake"
+   ],
+   [
+    2036,
+    "Quick and Delicious Pineapple Upside-Down Cake"
+   ],
+   [
+    2758,
+    "Victoria Sandwich"
+   ]
+  ],
+  [
+   [
+    1185,
+    "Homemade Peanut Butter"
+   ],
+   [
+    1866,
+    "Peanut Butter Sandwich"
+   ]
+  ],
+  [
+   [
+    1193,
+    "Hominy Bread"
+   ],
+   [
+    1386,
+    "Kurma (Trinidadian Fried Dough in Syrup)"
+   ],
+   [
+    2261,
+    "Shirmal (Persian Saffron Flatbread)"
+   ],
+   [
+    2333,
+    "Sopaipillas (Latin American Fried Dough)"
+   ]
+  ],
+  [
+   [
+    1199,
+    "Honey Lime Chicken Wings"
+   ],
+   [
+    1479,
+    "Loukoumas (Greek Donuts with Honey) I"
+   ],
+   [
+    2565,
+    "Tangy Lemon Battered Fried Chicken"
+   ]
+  ],
+  [
+   [
+    1201,
+    "Honey Mug Cake"
+   ],
+   [
+    1792,
+    "Ozark Pudding"
+   ]
+  ],
+  [
+   [
+    1202,
+    "Honey Mustard Salad Dressing"
+   ],
+   [
+    2529,
+    "Sweet Southern Chicken Salad"
+   ]
+  ],
+  [
+   [
+    1203,
+    "Honey Mustard Salmon"
+   ],
+   [
+    1306,
+    "Jerk Grilled Salmon"
+   ]
+  ],
+  [
+   [
+    1216,
+    "Huancayo Potatoes in Cream Sauce (Papas a la Huancaína)"
+   ],
+   [
+    1456,
+    "Liberian Fried Sweet Potato Puffs"
+   ],
+   [
+    2523,
+    "Sweet Potato Tropicana"
+   ]
+  ],
+  [
+   [
+    1225,
+    "Ibihaza n'Ubwoko (Rwandan Beans with Mushroom)"
+   ],
+   [
+    2708,
+    "Tuscan Bean Soup"
+   ]
+  ],
+  [
+   [
+    1227,
+    "Ibirayi n'Ibinyomoro (Rwandan Bean Soup with Smoked Beef)"
+   ],
+   [
+    1228,
+    "Ibirayi n'Ibishyimbo (Rwandan Bean Soup with Fish)"
+   ]
+  ],
+  [
+   [
+    1245,
+    "Indian Baked Yoghurt with Saffron and Cardamom"
+   ],
+   [
+    2058,
+    "Rasmalai (Indian Cheese and Milk Dessert)"
+   ]
+  ],
+  [
+   [
+    1253,
+    "Indian Rice"
+   ],
+   [
+    2084,
+    "Rice an' Peas"
+   ]
+  ],
+  [
+   [
+    1263,
+    "Irish Fruit Cake"
+   ],
+   [
+    1833,
+    "Passover Orange Walnut Cake"
+   ],
+   [
+    2493,
+    "Super Moist Corn Bread"
+   ]
+  ],
+  [
+   [
+    1274,
+    "Italian Chicken Rolls"
+   ],
+   [
+    1595,
+    "Mesquite Chicken Wraps"
+   ]
+  ],
+  [
+   [
+    1294,
+    "Jam Roly-Poly"
+   ],
+   [
+    1295,
+    "Jam Roly-Poly (Steamed)"
+   ]
+  ],
+  [
+   [
+    1297,
+    "Jamaican Banana Fritters"
+   ],
+   [
+    1564,
+    "Mbatata a Matenda (Malawian Cassava Fritters)"
+   ]
+  ],
+  [
+   [
+    1298,
+    "Jamaican Chicken Fingers with Honey-Mustard Sauce"
+   ],
+   [
+    1620,
+    "Midwestern Chicken Wings"
+   ]
+  ],
+  [
+   [
+    1317,
+    "Kanafeh (Egyptian Sweet Cheese Pastry)"
+   ],
+   [
+    2054,
+    "Raisin Crumb Pie"
+   ]
+  ],
+  [
+   [
+    1318,
+    "Kanda (Peanut Stew)"
+   ],
+   [
+    1503,
+    "Maffé (West African Peanut Stew) II"
+   ]
+  ],
+  [
+   [
+    1368,
+    "Koeksisters (Fried Braided Pastry in Syrup)"
+   ],
+   [
+    2124,
+    "Roasted Brown Rice Mochi"
+   ]
+  ],
+  [
+   [
+    1371,
+    "Kondowole (Malawian Toasted Sesame Seeds)"
+   ],
+   [
+    2280,
+    "Simple Boiled Chickpeas"
+   ]
+  ],
+  [
+   [
+    1382,
+    "Kulfi (South Asian Frozen Custard)"
+   ],
+   [
+    2458,
+    "Strawberry Italian Ice"
+   ]
+  ],
+  [
+   [
+    1383,
+    "Kunafa Bil Ashta (Egyptian Clotted Cream Pastry)"
+   ],
+   [
+    1731,
+    "No-Bake Matsa Cake"
+   ]
+  ],
+  [
+   [
+    1391,
+    "Käsekrainer (Austrian Sausage with Accompaniments)"
+   ],
+   [
+    1399,
+    "Lamb Sausages and Grilled Potatoes"
+   ],
+   [
+    1967,
+    "Potato and Sausage Casserole (Papa Turmada)"
+   ],
+   [
+    2471,
+    "Stuffed Duck Breast with Cabbage and Dumplings"
+   ]
+  ],
+  [
+   [
+    1410,
+    "Layered Pecan Pie"
+   ],
+   [
+    2641,
+    "Tofu Tamale Pie"
+   ]
+  ],
+  [
+   [
+    1445,
+    "Lentils and Rice (Mjeddrah)"
+   ],
+   [
+    2087,
+    "Rice and Lentils (Mejadra)"
+   ]
+  ],
+  [
+   [
+    1510,
+    "Maitorieska (Finnish Barley Flatbread)"
+   ],
+   [
+    1602,
+    "Mhadjeb (Algerian Stuffed Flatbread)"
+   ],
+   [
+    1735,
+    "North Indian Fermented Bread (Batooru)"
+   ],
+   [
+    1760,
+    "Obuwunga (Ugandan Traditional Bread)"
+   ],
+   [
+    2243,
+    "Serbian Flatbread (Lepinja)"
+   ]
+  ],
+  [
+   [
+    1516,
+    "Malpua (South Asian Sweet Pancake)"
+   ],
+   [
+    2296,
+    "Sirniki (Russian Cheese Fritters)"
+   ]
+  ],
+  [
+   [
+    1533,
+    "Maple Planked Chicken Breasts"
+   ],
+   [
+    2233,
+    "Seared Chicken Breast with Brandy Cream Sauce"
+   ]
+  ],
+  [
+   [
+    1534,
+    "Maple Planked Salmon with Rum Glaze"
+   ],
+   [
+    1933,
+    "Poached Salmon with wild Huckleberries"
+   ]
+  ],
+  [
+   [
+    1544,
+    "Marshmallow Rice Squares I"
+   ],
+   [
+    1545,
+    "Marshmallow Rice Squares II"
+   ]
+  ],
+  [
+   [
+    1552,
+    "Mascarpone Glazed Strawberries"
+   ],
+   [
+    2454,
+    "Strawberry Cream Pie"
+   ],
+   [
+    2462,
+    "Strawberry Shortcut Cake"
+   ]
+  ],
+  [
+   [
+    1554,
+    "Mashed Plantains and Pork Rinds (Mofongo)"
+   ],
+   [
+    2703,
+    "Turkey with Plantain Stuffing (Pavo Relleno de Mofongo)"
+   ]
+  ],
+  [
+   [
+    1556,
+    "Masyaura (Nepali Fermented Vegetable Balls)"
+   ],
+   [
+    2293,
+    "Sindhi Vegetable Kofta"
+   ],
+   [
+    2633,
+    "Tod Mun (Thai Fish Cakes)"
+   ]
+  ],
+  [
+   [
+    1567,
+    "Mbulawu (Malawian Fermented Millet Porridge)"
+   ],
+   [
+    1713,
+    "Nigerian Oatmeal"
+   ],
+   [
+    2173,
+    "Sadza (Zimbabwean Corn Porridge)"
+   ]
+  ],
+  [
+   [
+    1582,
+    "Menemen (Eggs with Onion, Green Pepper, and Tomato)"
+   ],
+   [
+    1957,
+    "Portobello Eggs"
+   ]
+  ],
+  [
+   [
+    1589,
+    "Meshayi (Nigerian Egg Sandwich)"
+   ],
+   [
+    1956,
+    "Portable Eggs Benedict"
+   ]
+  ],
+  [
+   [
+    1600,
+    "Mexican Rice Pilaf"
+   ],
+   [
+    2373,
+    "Spanish Rice"
+   ]
+  ],
+  [
+   [
+    1603,
+    "Microwave 1-2-3 Cake"
+   ],
+   [
+    1606,
+    "Microwave Chocolate Cake II"
+   ]
+  ],
+  [
+   [
+    1621,
+    "Milk Chocolate Pepper Vodka Tart"
+   ],
+   [
+    1730,
+    "No-Bake Chocolate Pie"
+   ]
+  ],
+  [
+   [
+    1628,
+    "Minestra"
+   ],
+   [
+    1630,
+    "Minestrone alla Casalinga"
+   ],
+   [
+    2615,
+    "Three Ginger Soup"
+   ]
+  ],
+  [
+   [
+    1632,
+    "Mini Herb Baguettes"
+   ],
+   [
+    1799,
+    "Pain au Levain Naturel"
+   ],
+   [
+    2776,
+    "Welsh Fruit Bread (Bara Brith) II"
+   ]
+  ],
+  [
+   [
+    1646,
+    "Mocha Icing"
+   ],
+   [
+    2284,
+    "Simple Chocolate Fudge"
+   ]
+  ],
+  [
+   [
+    1647,
+    "Modern Reuben Sandwich"
+   ],
+   [
+    1932,
+    "Ploughman's Sandwich"
+   ],
+   [
+    2312,
+    "Smokehouse Turkey Panini"
+   ],
+   [
+    2652,
+    "Tomato Paste and Ham Sandwiches (Pan Tomaca)"
+   ]
+  ],
+  [
+   [
+    1648,
+    "Mofletta (Maghrebi Pancake)"
+   ],
+   [
+    1736,
+    "North Staffordshire Oatcakes"
+   ],
+   [
+    1800,
+    "Palatschinken (Czech/Austrian Crepes)"
+   ]
+  ],
+  [
+   [
+    1668,
+    "MPT (Mozzarella Pasta with Tomato and Basil)"
+   ],
+   [
+    2105,
+    "Rigatoni Pasta with Ricotta in Tomato Cream Sauce"
+   ]
+  ],
+  [
+   [
+    1671,
+    "Mung Bean and Brown Rice Curry"
+   ],
+   [
+    2637,
+    "Tofu in Spiced Coconut Sauce"
+   ]
+  ],
+  [
+   [
+    1754,
+    "Oatmeal Cookies I"
+   ],
+   [
+    1757,
+    "Oatmeal Raisin Cookies"
+   ]
+  ],
+  [
+   [
+    1780,
+    "Oreo Pie"
+   ],
+   [
+    2136,
+    "Rocky Road Ice Cream"
+   ]
+  ],
+  [
+   [
+    1789,
+    "Oven-Roasted Potatoes"
+   ],
+   [
+    2115,
+    "Roast Chicken"
+   ]
+  ],
+  [
+   [
+    1803,
+    "Palm Fruit with Syrup"
+   ],
+   [
+    2724,
+    "Ume-shu (Japanese Plum Juice)"
+   ]
+  ],
+  [
+   [
+    1834,
+    "Pasta alla Gricia (Pasta with Guanciale)"
+   ],
+   [
+    1843,
+    "Pasta with Pancetta and Cauliflower"
+   ],
+   [
+    2285,
+    "Simple Italian Sausage Spaghetti Dinner"
+   ],
+   [
+    2358,
+    "Spaghetti a la Monegasque"
+   ],
+   [
+    2646,
+    "Tomato Basil Sausage Pasta"
+   ]
+  ],
+  [
+   [
+    1846,
+    "Pasta with Vegetables"
+   ],
+   [
+    2132,
+    "Roasted Vegetable Pasta"
+   ]
+  ],
+  [
+   [
+    1861,
+    "Peanut Butter Banana Smoothie"
+   ],
+   [
+    1868,
+    "Pear and Almond Smoothie (Vegan)"
+   ]
+  ],
+  [
+   [
+    1878,
+    "Penne alla Casa (Penne in Creamy Tomato Sauce)"
+   ],
+   [
+    2752,
+    "Venison Bolognese Sauce"
+   ]
+  ],
+  [
+   [
+    1930,
+    "Plantain Nuggets"
+   ],
+   [
+    2403,
+    "Spicy Plantain Chips"
+   ]
+  ],
+  [
+   [
+    1959,
+    "Posho (Ugandan Cornmeal Porridge)"
+   ],
+   [
+    2718,
+    "Ugali (Rwandan Cornmeal Porridge)"
+   ]
+  ],
+  [
+   [
+    1998,
+    "Prekmurska Gibanica (Slovenian Layered Strudel Cake)"
+   ],
+   [
+    2089,
+    "Rice Bubble Cake"
+   ]
+  ],
+  [
+   [
+    2038,
+    "Quick Baked Beef-Pasta Dish"
+   ],
+   [
+    2651,
+    "Tomato Pasta with Bacon, Onions, and Cheese"
+   ]
+  ],
+  [
+   [
+    2086,
+    "Rice and Cabbage Minestrone"
+   ],
+   [
+    2554,
+    "Tadka Dhal (Spiced Lentil Curry) II"
+   ],
+   [
+    2617,
+    "Three Sisters Stew"
+   ]
+  ],
+  [
+   [
+    2156,
+    "Roz bel Laban (Egyptian Rice Pudding)"
+   ],
+   [
+    2593,
+    "Teurgoule (Norman Cinnamon Rice Pudding)"
+   ]
+  ],
+  [
+   [
+    2169,
+    "Sabich (Vegetable and Pita Sandwich)"
+   ],
+   [
+    2433,
+    "Steak, Bacon, and Gruyere Paninis"
+   ]
+  ],
+  [
+   [
+    2175,
+    "Saffron Rice and Beans"
+   ],
+   [
+    2176,
+    "Saffron Sweet Rice"
+   ],
+   [
+    2832,
+    "Zereshk Palau (Iranian Rice with Barberries) I"
+   ]
+  ],
+  [
+   [
+    2201,
+    "San Francisco style Scallop Ceviche"
+   ],
+   [
+    2270,
+    "Shrimp and Sea Bass Ceviche"
+   ]
+  ],
+  [
+   [
+    2224,
+    "Scottish Wheat Bannock Bread"
+   ],
+   [
+    2569,
+    "Tapalapa (Gambian Bread)"
+   ]
+  ],
+  [
+   [
+    2250,
+    "Shakshuka bil Lahm (Libyan Meat Shakshuka)"
+   ],
+   [
+    2251,
+    "Shakshuka I"
+   ]
+  ],
+  [
+   [
+    2281,
+    "Simple Buttercream"
+   ],
+   [
+    2728,
+    "Valentine's Day Chocolate Cake"
+   ]
+  ],
+  [
+   [
+    2305,
+    "Slow-Cooked Chicken in Cream Sauce"
+   ],
+   [
+    2378,
+    "Spiced Chicken with Sour Cream"
+   ]
+  ],
+  [
+   [
+    2313,
+    "Smokey Millet Super Grain Bowl With Crispy Tofu"
+   ],
+   [
+    2384,
+    "Spicy Black Beans"
+   ],
+   [
+    2770,
+    "Warm Black Bean Salad with Kale and Tomatoes"
+   ]
+  ],
+  [
+   [
+    2319,
+    "Snails with Garlic Butter (Escargots à la Bourguignonne)"
+   ],
+   [
+    2783,
+    "White Bean Soup with Basil, Rosemary, and Garlic Croutons"
+   ]
+  ],
+  [
+   [
+    2321,
+    "Snezhanka (Bulgarian Cucumber and Yogurt Salad)"
+   ],
+   [
+    2572,
+    "Tarator (Bulgarian Cucumber Soup)"
+   ]
+  ],
+  [
+   [
+    2485,
+    "Succotash"
+   ],
+   [
+    2614,
+    "Three Bean Confetti Salad"
+   ],
+   [
+    2701,
+    "Turkey and Lima Beans"
+   ]
+  ],
+  [
+   [
+    2516,
+    "Sweet Mole with Vanilla Bean Ice Cream"
+   ],
+   [
+    2730,
+    "Vanilla Coconut Caramel"
+   ]
+  ],
+  [
+   [
+    2539,
+    "Sylheti Onion and Rice Fritters"
+   ],
+   [
+    2836,
+    "Zippuli (Italian Potato Cheese Fritters)"
+   ]
+  ],
+  [
+   [
+    2550,
+    "Taco Casserole"
+   ],
+   [
+    2749,
+    "Vegetarian Soft Tacos"
+   ]
+  ],
+  [
+   [
+    2567,
+    "Tanzanian Sweet Fried Spaghetti"
+   ],
+   [
+    2830,
+    "Zambian Vegetable Stir-Fry"
+   ]
+  ],
+  [
+   [
+    2629,
+    "Toad in the Hole"
+   ],
+   [
+    2822,
+    "Yorkshire Pudding (Vegan)"
+   ]
+  ],
+  [
+   [
+    2668,
+    "Tostones (Fried Plantains)"
+   ],
+   [
+    2669,
+    "Tostón (Fried Plantains)"
+   ]
+  ],
+  [
+   [
+    2690,
+    "Tuna Casserole"
+   ],
+   [
+    2696,
+    "Tuna Noodle Casserole"
+   ]
+  ],
+  [
+   [
+    2764,
+    "Waakye (Ghanian Rice and Beans)"
+   ],
+   [
+    2765,
+    "Waakyne (Ghanaian Rice and Beans)"
+   ]
+  ]
+ ],
+ "name_clusters": [
+  {
+   "dish": "chocolate chip cookies",
+   "members": [
+    [
+     553,
+     "Chocolate Chip Cookies (Gluten-Free)"
+    ],
+    [
+     554,
+     "Chocolate Chip Cookies (Vegan)"
+    ],
+    [
+     555,
+     "Chocolate Chip Cookies I"
+    ],
+    [
+     556,
+     "Chocolate Chip Cookies II"
+    ],
+    [
+     557,
+     "Chocolate Chip Cookies III"
+    ],
+    [
+     558,
+     "Chocolate Chip Cookies IV"
+    ]
+   ]
+  },
+  {
+   "dish": "macaroni and cheese",
+   "members": [
+    [
+     1491,
+     "Macaroni and Cheese (Baked)"
+    ],
+    [
+     1492,
+     "Macaroni and Cheese (Microwaved)"
+    ],
+    [
+     1493,
+     "Macaroni and Cheese (Vegan)"
+    ],
+    [
+     1494,
+     "Macaroni and Cheese I"
+    ],
+    [
+     1495,
+     "Macaroni and Cheese II"
+    ]
+   ]
+  },
+  {
+   "dish": "meatloaf",
+   "members": [
+    [
+     1574,
+     "Meatloaf I"
+    ],
+    [
+     1575,
+     "Meatloaf II"
+    ],
+    [
+     1576,
+     "Meatloaf III"
+    ],
+    [
+     1577,
+     "Meatloaf IV"
+    ],
+    [
+     1578,
+     "Meatloaf V"
+    ]
+   ]
+  },
+  {
+   "dish": "tabbouleh",
+   "members": [
+    [
+     2543,
+     "Tabbouleh I"
+    ],
+    [
+     2544,
+     "Tabbouleh II"
+    ],
+    [
+     2545,
+     "Tabbouleh III"
+    ],
+    [
+     2546,
+     "Tabbouleh IV"
+    ],
+    [
+     2547,
+     "Tabbouleh VI"
+    ]
+   ]
+  },
+  {
+   "dish": "chicken bog",
+   "members": [
+    [
+     471,
+     "Chicken Bog (Grand Strand)"
+    ],
+    [
+     472,
+     "Chicken Bog I"
+    ],
+    [
+     473,
+     "Chicken Bog II"
+    ],
+    [
+     474,
+     "Chicken Bog III"
+    ]
+   ]
+  },
+  {
+   "dish": "egg noodles",
+   "members": [
+    [
+     840,
+     "Egg Noodles I"
+    ],
+    [
+     841,
+     "Egg Noodles II"
+    ],
+    [
+     842,
+     "Egg Noodles III"
+    ],
+    [
+     843,
+     "Egg Noodles IV"
+    ]
+   ]
+  },
+  {
+   "dish": "snickerdoodles",
+   "members": [
+    [
+     2324,
+     "Snickerdoodles I"
+    ],
+    [
+     2325,
+     "Snickerdoodles II"
+    ],
+    [
+     2326,
+     "Snickerdoodles III"
+    ],
+    [
+     2327,
+     "Snickerdoodles IV"
+    ]
+   ]
+  },
+  {
+   "dish": "charoset",
+   "members": [
+    [
+     430,
+     "Charoset (Ashkenazi)"
+    ],
+    [
+     431,
+     "Charoset (Iraqi)"
+    ],
+    [
+     432,
+     "Charoset (Maghrebi)"
+    ]
+   ]
+  },
+  {
+   "dish": "coconut rice",
+   "members": [
+    [
+     625,
+     "Coconut Rice (Indian)"
+    ],
+    [
+     626,
+     "Coconut Rice (Indonesian)"
+    ],
+    [
+     627,
+     "Coconut Rice (Nasi Lemak)"
+    ]
+   ]
+  },
+  {
+   "dish": "coq au vin",
+   "members": [
+    [
+     643,
+     "Coq au Vin I"
+    ],
+    [
+     644,
+     "Coq au Vin II"
+    ],
+    [
+     645,
+     "Coq au Vin III"
+    ]
+   ]
+  },
+  {
+   "dish": "flapjacks",
+   "members": [
+    [
+     933,
+     "Flapjacks"
+    ],
+    [
+     934,
+     "Flapjacks (Lower-sugar)"
+    ],
+    [
+     935,
+     "Flapjacks (Traditional Scottish Recipe)"
+    ]
+   ]
+  },
+  {
+   "dish": "garlic croutons",
+   "members": [
+    [
+     1015,
+     "Garlic Croutons I"
+    ],
+    [
+     1016,
+     "Garlic Croutons II"
+    ],
+    [
+     1017,
+     "Garlic Croutons III"
+    ]
+   ]
+  },
+  {
+   "dish": "lemon meringue pie",
+   "members": [
+    [
+     1425,
+     "Lemon Meringue Pie (American)"
+    ],
+    [
+     1426,
+     "Lemon Meringue Pie (British)"
+    ],
+    [
+     1427,
+     "Lemon Meringue Pie (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "maffé",
+   "members": [
+    [
+     1502,
+     "Maffé (West African Peanut Stew) I"
+    ],
+    [
+     1503,
+     "Maffé (West African Peanut Stew) II"
+    ],
+    [
+     1504,
+     "Maffé (West African Peanut Stew) III"
+    ]
+   ]
+  },
+  {
+   "dish": "oatmeal chocolate chip cookies",
+   "members": [
+    [
+     1751,
+     "Oatmeal Chocolate Chip Cookies I"
+    ],
+    [
+     1752,
+     "Oatmeal Chocolate Chip Cookies II"
+    ],
+    [
+     1753,
+     "Oatmeal Chocolate Chip Cookies III"
+    ]
+   ]
+  },
+  {
+   "dish": "pumpkin bread",
+   "members": [
+    [
+     2013,
+     "Pumpkin Bread I"
+    ],
+    [
+     2014,
+     "Pumpkin Bread II"
+    ],
+    [
+     2015,
+     "Pumpkin Bread III"
+    ]
+   ]
+  },
+  {
+   "dish": "rhubarb crumble",
+   "members": [
+    [
+     2077,
+     "Rhubarb Crumble I"
+    ],
+    [
+     2078,
+     "Rhubarb Crumble II"
+    ],
+    [
+     2079,
+     "Rhubarb Crumble III"
+    ]
+   ]
+  },
+  {
+   "dish": "saj bread",
+   "members": [
+    [
+     2178,
+     "Saj Bread I"
+    ],
+    [
+     2179,
+     "Saj Bread II"
+    ],
+    [
+     2180,
+     "Saj Bread III"
+    ]
+   ]
+  },
+  {
+   "dish": "sambar",
+   "members": [
+    [
+     2195,
+     "Sambar I"
+    ],
+    [
+     2196,
+     "Sambar II (Kerala/Tamil style)"
+    ],
+    [
+     2197,
+     "Sambar III"
+    ]
+   ]
+  },
+  {
+   "dish": "african salad",
+   "members": [
+    [
+     14,
+     "African Salad I"
+    ],
+    [
+     15,
+     "African Salad II"
+    ]
+   ]
+  },
+  {
+   "dish": "american potato salad",
+   "members": [
+    [
+     43,
+     "American Potato Salad I"
+    ],
+    [
+     44,
+     "American Potato Salad II"
+    ]
+   ]
+  },
+  {
+   "dish": "anzac biscuits",
+   "members": [
+    [
+     47,
+     "Anzac Biscuits I"
+    ],
+    [
+     48,
+     "Anzac Biscuits II"
+    ]
+   ]
+  },
+  {
+   "dish": "apple crisp",
+   "members": [
+    [
+     56,
+     "Apple Crisp I"
+    ],
+    [
+     57,
+     "Apple Crisp II"
+    ]
+   ]
+  },
+  {
+   "dish": "apple pie",
+   "members": [
+    [
+     64,
+     "Apple Pie I"
+    ],
+    [
+     65,
+     "Apple Pie II"
+    ]
+   ]
+  },
+  {
+   "dish": "banana cream",
+   "members": [
+    [
+     153,
+     "Banana Cream I"
+    ],
+    [
+     154,
+     "Banana Cream II"
+    ]
+   ]
+  },
+  {
+   "dish": "banana cream pie",
+   "members": [
+    [
+     155,
+     "Banana Cream Pie I"
+    ],
+    [
+     156,
+     "Banana Cream Pie II"
+    ]
+   ]
+  },
+  {
+   "dish": "banana split",
+   "members": [
+    [
+     165,
+     "Banana Split I"
+    ],
+    [
+     166,
+     "Banana Split II"
+    ]
+   ]
+  },
+  {
+   "dish": "beef carpaccio",
+   "members": [
+    [
+     210,
+     "Beef Carpaccio I"
+    ],
+    [
+     211,
+     "Beef Carpaccio II"
+    ]
+   ]
+  },
+  {
+   "dish": "beef stew",
+   "members": [
+    [
+     221,
+     "Beef Stew I"
+    ],
+    [
+     222,
+     "Beef Stew II"
+    ]
+   ]
+  },
+  {
+   "dish": "biscuits",
+   "members": [
+    [
+     251,
+     "Biscuits II"
+    ],
+    [
+     252,
+     "Biscuits III"
+    ]
+   ]
+  },
+  {
+   "dish": "breakfast waffles",
+   "members": [
+    [
+     312,
+     "Breakfast Waffles"
+    ],
+    [
+     313,
+     "Breakfast Waffles (Gluten-Free)"
+    ]
+   ]
+  },
+  {
+   "dish": "carrot cake",
+   "members": [
+    [
+     403,
+     "Carrot Cake I"
+    ],
+    [
+     404,
+     "Carrot Cake II"
+    ]
+   ]
+  },
+  {
+   "dish": "chicken curry",
+   "members": [
+    [
+     478,
+     "Chicken Curry"
+    ],
+    [
+     479,
+     "Chicken Curry (Mediterranean-inspired)"
+    ]
+   ]
+  },
+  {
+   "dish": "chicken pot pie",
+   "members": [
+    [
+     490,
+     "Chicken Pot Pie I"
+    ],
+    [
+     491,
+     "Chicken Pot Pie II"
+    ]
+   ]
+  },
+  {
+   "dish": "chocolate chip pancakes",
+   "members": [
+    [
+     559,
+     "Chocolate Chip Pancakes I"
+    ],
+    [
+     560,
+     "Chocolate Chip Pancakes II"
+    ]
+   ]
+  },
+  {
+   "dish": "christmas pudding",
+   "members": [
+    [
+     589,
+     "Christmas Pudding I"
+    ],
+    [
+     590,
+     "Christmas Pudding II"
+    ]
+   ]
+  },
+  {
+   "dish": "churros",
+   "members": [
+    [
+     595,
+     "Churros I"
+    ],
+    [
+     596,
+     "Churros II"
+    ]
+   ]
+  },
+  {
+   "dish": "coconut pudding",
+   "members": [
+    [
+     622,
+     "Coconut Pudding I"
+    ],
+    [
+     623,
+     "Coconut Pudding II"
+    ]
+   ]
+  },
+  {
+   "dish": "coleslaw",
+   "members": [
+    [
+     638,
+     "Coleslaw I"
+    ],
+    [
+     639,
+     "Coleslaw II"
+    ]
+   ]
+  },
+  {
+   "dish": "corn chowder",
+   "members": [
+    [
+     651,
+     "Corn Chowder I"
+    ],
+    [
+     652,
+     "Corn Chowder II"
+    ]
+   ]
+  },
+  {
+   "dish": "cornbread",
+   "members": [
+    [
+     660,
+     "Cornbread I"
+    ],
+    [
+     661,
+     "Cornbread II"
+    ]
+   ]
+  },
+  {
+   "dish": "crullers",
+   "members": [
+    [
+     715,
+     "Crullers (Round)"
+    ],
+    [
+     716,
+     "Crullers (Twisted)"
+    ]
+   ]
+  },
+  {
+   "dish": "crêpes",
+   "members": [
+    [
+     723,
+     "Crêpes I"
+    ],
+    [
+     724,
+     "Crêpes II"
+    ]
+   ]
+  },
+  {
+   "dish": "curry chicken",
+   "members": [
+    [
+     738,
+     "Curry Chicken I"
+    ],
+    [
+     739,
+     "Curry Chicken II"
+    ]
+   ]
+  },
+  {
+   "dish": "dosa",
+   "members": [
+    [
+     796,
+     "Dosa I"
+    ],
+    [
+     797,
+     "Dosa II"
+    ]
+   ]
+  },
+  {
+   "dish": "eggplant parmesan",
+   "members": [
+    [
+     853,
+     "Eggplant Parmesan (Melanzane alla Parmigiana) I"
+    ],
+    [
+     854,
+     "Eggplant Parmesan (Melanzane alla Parmigiana) II"
+    ]
+   ]
+  },
+  {
+   "dish": "fried eggs",
+   "members": [
+    [
+     960,
+     "Fried Eggs"
+    ],
+    [
+     961,
+     "Fried Eggs (Olive Oil-basted)"
+    ]
+   ]
+  },
+  {
+   "dish": "frito pie",
+   "members": [
+    [
+     974,
+     "Frito Pie (Baked)"
+    ],
+    [
+     975,
+     "Frito Pie (No-bake)"
+    ]
+   ]
+  },
+  {
+   "dish": "fry bread",
+   "members": [
+    [
+     987,
+     "Fry Bread I"
+    ],
+    [
+     988,
+     "Fry Bread II"
+    ]
+   ]
+  },
+  {
+   "dish": "gingerbread pancakes",
+   "members": [
+    [
+     1052,
+     "Gingerbread Pancakes I"
+    ],
+    [
+     1053,
+     "Gingerbread Pancakes II"
+    ]
+   ]
+  },
+  {
+   "dish": "green bean casserole",
+   "members": [
+    [
+     1079,
+     "Green Bean Casserole"
+    ],
+    [
+     1080,
+     "Green Bean Casserole (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "italian dressing",
+   "members": [
+    [
+     1276,
+     "Italian Dressing I"
+    ],
+    [
+     1277,
+     "Italian Dressing II"
+    ]
+   ]
+  },
+  {
+   "dish": "jam roly-poly",
+   "members": [
+    [
+     1294,
+     "Jam Roly-Poly"
+    ],
+    [
+     1295,
+     "Jam Roly-Poly (Steamed)"
+    ]
+   ]
+  },
+  {
+   "dish": "jambalaya",
+   "members": [
+    [
+     1302,
+     "Jambalaya I"
+    ],
+    [
+     1303,
+     "Jambalaya II"
+    ]
+   ]
+  },
+  {
+   "dish": "lahoh",
+   "members": [
+    [
+     1396,
+     "Lahoh (Spongy Flatbread) I"
+    ],
+    [
+     1397,
+     "Lahoh (Spongy Flatbread) II"
+    ]
+   ]
+  },
+  {
+   "dish": "lemon pickle",
+   "members": [
+    [
+     1429,
+     "Lemon Pickle I"
+    ],
+    [
+     1430,
+     "Lemon Pickle II"
+    ]
+   ]
+  },
+  {
+   "dish": "loukoumas",
+   "members": [
+    [
+     1479,
+     "Loukoumas (Greek Donuts with Honey) I"
+    ],
+    [
+     1480,
+     "Loukoumas (Greek Donuts with Honey) II"
+    ]
+   ]
+  },
+  {
+   "dish": "manhattan clam chowder",
+   "members": [
+    [
+     1526,
+     "Manhattan Clam Chowder I"
+    ],
+    [
+     1527,
+     "Manhattan Clam Chowder II"
+    ]
+   ]
+  },
+  {
+   "dish": "marshmallow rice squares",
+   "members": [
+    [
+     1544,
+     "Marshmallow Rice Squares I"
+    ],
+    [
+     1545,
+     "Marshmallow Rice Squares II"
+    ]
+   ]
+  },
+  {
+   "dish": "mexican rice",
+   "members": [
+    [
+     1598,
+     "Mexican Rice I"
+    ],
+    [
+     1599,
+     "Mexican Rice II"
+    ]
+   ]
+  },
+  {
+   "dish": "microwave chocolate cake",
+   "members": [
+    [
+     1605,
+     "Microwave Chocolate Cake I"
+    ],
+    [
+     1606,
+     "Microwave Chocolate Cake II"
+    ]
+   ]
+  },
+  {
+   "dish": "milk toast",
+   "members": [
+    [
+     1622,
+     "Milk Toast I"
+    ],
+    [
+     1623,
+     "Milk Toast II"
+    ]
+   ]
+  },
+  {
+   "dish": "monkey bread",
+   "members": [
+    [
+     1654,
+     "Monkey Bread I"
+    ],
+    [
+     1655,
+     "Monkey Bread II"
+    ]
+   ]
+  },
+  {
+   "dish": "mushroom soup",
+   "members": [
+    [
+     1678,
+     "Mushroom Soup"
+    ],
+    [
+     1679,
+     "Mushroom Soup (Gabi Supa)"
+    ]
+   ]
+  },
+  {
+   "dish": "naan",
+   "members": [
+    [
+     1687,
+     "Naan"
+    ],
+    [
+     1688,
+     "Naan (Yeasted)"
+    ]
+   ]
+  },
+  {
+   "dish": "oatmeal cookies",
+   "members": [
+    [
+     1754,
+     "Oatmeal Cookies I"
+    ],
+    [
+     1755,
+     "Oatmeal Cookies II"
+    ]
+   ]
+  },
+  {
+   "dish": "oven pancakes",
+   "members": [
+    [
+     1785,
+     "Oven Pancakes"
+    ],
+    [
+     1786,
+     "Oven Pancakes (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "pancakes",
+   "members": [
+    [
+     1814,
+     "Pancakes (North American)"
+    ],
+    [
+     1815,
+     "Pancakes (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "pasta and bean soup",
+   "members": [
+    [
+     1835,
+     "Pasta and Bean Soup"
+    ],
+    [
+     1836,
+     "Pasta and Bean Soup (Pasta e Fagioli)"
+    ]
+   ]
+  },
+  {
+   "dish": "peanut butter cookies",
+   "members": [
+    [
+     1862,
+     "Peanut Butter Cookies"
+    ],
+    [
+     1863,
+     "Peanut Butter Cookies (Egg-Free)"
+    ]
+   ]
+  },
+  {
+   "dish": "pierogi",
+   "members": [
+    [
+     1904,
+     "Pierogi I"
+    ],
+    [
+     1905,
+     "Pierogi II"
+    ]
+   ]
+  },
+  {
+   "dish": "pimento cheese spread",
+   "members": [
+    [
+     1909,
+     "Pimento Cheese Spread I"
+    ],
+    [
+     1910,
+     "Pimento Cheese Spread II"
+    ]
+   ]
+  },
+  {
+   "dish": "potato salad",
+   "members": [
+    [
+     1981,
+     "Potato Salad"
+    ],
+    [
+     1982,
+     "Potato Salad (Southern Ontario Style)"
+    ]
+   ]
+  },
+  {
+   "dish": "pumpkin pie",
+   "members": [
+    [
+     2017,
+     "Pumpkin Pie I"
+    ],
+    [
+     2018,
+     "Pumpkin Pie II"
+    ]
+   ]
+  },
+  {
+   "dish": "ratatouille",
+   "members": [
+    [
+     2065,
+     "Ratatouille I"
+    ],
+    [
+     2066,
+     "Ratatouille II"
+    ]
+   ]
+  },
+  {
+   "dish": "rice modak",
+   "members": [
+    [
+     2092,
+     "Rice Modak (Coconut Pastries) I"
+    ],
+    [
+     2093,
+     "Rice Modak (Coconut Pastries) II"
+    ]
+   ]
+  },
+  {
+   "dish": "risotto",
+   "members": [
+    [
+     2106,
+     "Risotto (Basic)"
+    ],
+    [
+     2109,
+     "Risotto II"
+    ]
+   ]
+  },
+  {
+   "dish": "rocky road confectionery",
+   "members": [
+    [
+     2134,
+     "Rocky Road Confectionery I"
+    ],
+    [
+     2135,
+     "Rocky Road Confectionery II"
+    ]
+   ]
+  },
+  {
+   "dish": "salt cod and potato casserole",
+   "members": [
+    [
+     2190,
+     "Salt Cod and Potato Casserole (Bacalhau à Gomes de Sá)"
+    ],
+    [
+     2191,
+     "Salt Cod and Potato Casserole (Bacalhau à Zé do Pipo)"
+    ]
+   ]
+  },
+  {
+   "dish": "shakshuka",
+   "members": [
+    [
+     2251,
+     "Shakshuka I"
+    ],
+    [
+     2252,
+     "Shakshuka II"
+    ]
+   ]
+  },
+  {
+   "dish": "sponge cake",
+   "members": [
+    [
+     2415,
+     "Sponge Cake I"
+    ],
+    [
+     2416,
+     "Sponge Cake II"
+    ]
+   ]
+  },
+  {
+   "dish": "sticky toffee pudding",
+   "members": [
+    [
+     2446,
+     "Sticky Toffee Pudding (with dates)"
+    ],
+    [
+     2447,
+     "Sticky Toffee Pudding (without dates)"
+    ]
+   ]
+  },
+  {
+   "dish": "stuffed peppers",
+   "members": [
+    [
+     2477,
+     "Stuffed Peppers"
+    ],
+    [
+     2478,
+     "Stuffed Peppers (Vegetarian)"
+    ]
+   ]
+  },
+  {
+   "dish": "swedish meatballs",
+   "members": [
+    [
+     2501,
+     "Swedish Meatballs I"
+    ],
+    [
+     2502,
+     "Swedish Meatballs II"
+    ]
+   ]
+  },
+  {
+   "dish": "sweet rice",
+   "members": [
+    [
+     2527,
+     "Sweet Rice I"
+    ],
+    [
+     2528,
+     "Sweet Rice II"
+    ]
+   ]
+  },
+  {
+   "dish": "tadka dhal",
+   "members": [
+    [
+     2553,
+     "Tadka Dhal (Spiced Lentil Curry) I"
+    ],
+    [
+     2554,
+     "Tadka Dhal (Spiced Lentil Curry) II"
+    ]
+   ]
+  },
+  {
+   "dish": "tempe mendoan",
+   "members": [
+    [
+     2584,
+     "Tempe Mendoan I"
+    ],
+    [
+     2585,
+     "Tempe Mendoan II"
+    ]
+   ]
+  },
+  {
+   "dish": "thai grilled chicken",
+   "members": [
+    [
+     2601,
+     "Thai Grilled Chicken I"
+    ],
+    [
+     2602,
+     "Thai Grilled Chicken II"
+    ]
+   ]
+  },
+  {
+   "dish": "thai peanut fried rice",
+   "members": [
+    [
+     2603,
+     "Thai Peanut Fried Rice"
+    ],
+    [
+     2604,
+     "Thai Peanut Fried Rice (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "tofu scramble",
+   "members": [
+    [
+     2639,
+     "Tofu Scramble I"
+    ],
+    [
+     2640,
+     "Tofu Scramble II"
+    ]
+   ]
+  },
+  {
+   "dish": "tres leches cake",
+   "members": [
+    [
+     2679,
+     "Tres Leches Cake I"
+    ],
+    [
+     2680,
+     "Tres Leches Cake II"
+    ]
+   ]
+  },
+  {
+   "dish": "tuna salad",
+   "members": [
+    [
+     2698,
+     "Tuna Salad"
+    ],
+    [
+     2699,
+     "Tuna Salad (1940)"
+    ]
+   ]
+  },
+  {
+   "dish": "twice-baked potatoes",
+   "members": [
+    [
+     2714,
+     "Twice-Baked Potatoes I"
+    ],
+    [
+     2715,
+     "Twice-Baked Potatoes II"
+    ]
+   ]
+  },
+  {
+   "dish": "ugali",
+   "members": [
+    [
+     2717,
+     "Ugali (Maize Porridge)"
+    ],
+    [
+     2718,
+     "Ugali (Rwandan Cornmeal Porridge)"
+    ]
+   ]
+  },
+  {
+   "dish": "vanilla fudge",
+   "members": [
+    [
+     2732,
+     "Vanilla Fudge I"
+    ],
+    [
+     2733,
+     "Vanilla Fudge II"
+    ]
+   ]
+  },
+  {
+   "dish": "vanilla ice cream",
+   "members": [
+    [
+     2734,
+     "Vanilla Ice Cream (Custard-Based)"
+    ],
+    [
+     2735,
+     "Vanilla Ice Cream (Egg-Free)"
+    ]
+   ]
+  },
+  {
+   "dish": "welsh fruit bread",
+   "members": [
+    [
+     2775,
+     "Welsh Fruit Bread (Bara Brith) I"
+    ],
+    [
+     2776,
+     "Welsh Fruit Bread (Bara Brith) II"
+    ]
+   ]
+  },
+  {
+   "dish": "whole wheat pancakes",
+   "members": [
+    [
+     2788,
+     "Whole Wheat Pancakes"
+    ],
+    [
+     2789,
+     "Whole Wheat Pancakes (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "yeasted rolls",
+   "members": [
+    [
+     2805,
+     "Yeasted Rolls I"
+    ],
+    [
+     2806,
+     "Yeasted Rolls II"
+    ]
+   ]
+  },
+  {
+   "dish": "yemenite charoset",
+   "members": [
+    [
+     2809,
+     "Yemenite Charoset I"
+    ],
+    [
+     2810,
+     "Yemenite Charoset II"
+    ]
+   ]
+  },
+  {
+   "dish": "yorkshire pudding",
+   "members": [
+    [
+     2821,
+     "Yorkshire Pudding"
+    ],
+    [
+     2822,
+     "Yorkshire Pudding (Vegan)"
+    ]
+   ]
+  },
+  {
+   "dish": "zalabiyeh",
+   "members": [
+    [
+     2824,
+     "Zalabiyeh (Sweet Fritters) I"
+    ],
+    [
+     2825,
+     "Zalabiyeh (Sweet Fritters) II"
+    ]
+   ]
+  }
+ ]
+}

@@ -34,10 +34,20 @@ public partial class NutriGoalsViewModel : BaseViewModel
         foreach (var item in FocusAreaItems)
         {
             item.IsChecked = _coordinator.Data.SelectedFocusAreas.Contains(item.Value);
-            item.PropertyChanged += (_, e) =>
+            item.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == nameof(CheckableItem<NutritionFocusArea>.IsChecked))
-                    OnPropertyChanged(nameof(FocusAreaCountDisplay));
+                if (e.PropertyName != nameof(CheckableItem<NutritionFocusArea>.IsChecked))
+                    return;
+
+                // Enforce the "up to 5" limit: revert a check that would exceed it.
+                if (s is CheckableItem<NutritionFocusArea> changed && changed.IsChecked
+                    && FocusAreaItems.Count(i => i.IsChecked) > MaxFocusAreas)
+                {
+                    changed.IsChecked = false;   // re-fires this handler; count is now within limit
+                    return;
+                }
+
+                OnPropertyChanged(nameof(FocusAreaCountDisplay));
             };
         }
     }

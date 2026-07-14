@@ -9,6 +9,11 @@ namespace IntelligentPersonalHealthOptimization.Services.Implementation;
 public class DatabaseService : IDatabaseService
 {
     private SQLiteAsyncConnection? _connection;
+    // True only AFTER tables + seed + all one-shot migrations finish. Callers must gate on
+    // this, NOT on `_connection != null` — the connection is assigned before migrations run,
+    // so keying readiness off the field lets a concurrent caller query half-migrated data
+    // (e.g. the Recipes page reading a recipe before ApplyRecipeTimeCleanupAsync committed).
+    private volatile bool _initialized;
     private readonly ISecurityService _securityService;
     private readonly SemaphoreSlim _initLock = new(1, 1);
 
@@ -19,13 +24,13 @@ public class DatabaseService : IDatabaseService
 
     public async Task InitializeAsync()
     {
-        if (_connection != null)
+        if (_initialized)
             return;
 
         await _initLock.WaitAsync();
         try
         {
-            if (_connection != null)
+            if (_initialized)
                 return;
 
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, AppConstants.DatabaseName);
@@ -53,6 +58,10 @@ public class DatabaseService : IDatabaseService
                 _connection = new SQLiteAsyncConnection(options);
                 await CreateTablesAndSeedAsync();
             }
+
+            // Only now is the DB fully migrated — expose it to callers. If seeding threw
+            // (and wasn't recoverable above), this is skipped so the next call retries.
+            _initialized = true;
         }
         finally
         {
@@ -162,13 +171,33 @@ public class DatabaseService : IDatabaseService
 
         // One-shot: collapse duplicate TrainingProfile rows so the training level is consistent.
         await SeedData.ApplyTrainingProfileDedupAsync(_connection);
+
+        // One-shot: re-sync catalog to the pruned bundle — deletes the 107 same-dish
+        // duplicate recipes (Meatloaf II–V, etc.) removed from the bundle. Self-gated.
+        await SeedData.ApplyDuplicateDishPurgeAsync(_connection);
+
+        // One-shot: backfill recipe image URLs from the (re-exported) bundle for
+        // existing installs. New installs get them straight from the seeder.
+        await SeedData.ApplyRecipeImagesAsync(_connection);
+
+        // One-shot: re-sync prep/cook/rest times from the cleaned bundle — the scrape had
+        // jammed "Prep: X Cooking: Y Total: Z" into one cookTime string on ~151 recipes.
+        await SeedData.ApplyRecipeTimeCleanupAsync(_connection);
+
+        // One-shot: classify catalog recipes on a fitness health lens (HealthScore/
+        // HealthTier) and purge the clearest junk (cake/candy/sugar bombs). Computed
+        // on-device from the seeded nutrition — no bundle/server. Self-gated.
+        await SeedData.ApplyHealthClassificationAsync(_connection);
     }
 
     public async Task<SQLiteAsyncConnection> GetConnectionAsync()
     {
-        // Fast path: skip semaphore if already initialized
-        if (_connection != null)
-            return _connection;
+        // Fast path: skip semaphore only once init (tables + seed + migrations) is fully done.
+        // Gating on _initialized (not _connection) prevents handing out a connection whose
+        // one-shot migrations haven't committed yet — that caused a first-launch race where
+        // the Recipes list showed stale data until re-navigation.
+        if (_initialized)
+            return _connection!;
 
         await InitializeAsync();
         return _connection!;

@@ -198,11 +198,15 @@ public class LocalRecipeService : IRecipeService
             Source = r.Source,
             Notes = r.Notes,
             RecipeImage = null,
+            ImageUrl = r.ImageUrl,
             DateAdded = r.SavedAt,
             LastMadeOn = null,
             Rating = r.Rating,
             IsFavorite = r.IsFavorite,
             HasNutrition = r.CaloriesPerServing.HasValue,
+            HealthTier = r.HealthTier,
+            HealthScore = r.HealthScore,
+            IsHealthyTreat = r.IsHealthyTreat,
             // Only surface per-serving calories on cards when a real Servings
             // value exists AND the figure is a real positive number — a 0/null
             // means nutrition couldn't be computed, so don't show "0 cal/serving".

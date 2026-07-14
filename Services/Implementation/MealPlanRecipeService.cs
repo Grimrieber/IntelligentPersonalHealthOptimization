@@ -64,7 +64,13 @@ public class MealPlanRecipeService : IMealPlanRecipeService
         // Drinks (beverages/cocktails/juice/wine) and pure components (sauces, spice
         // mixes, dressings, syrups…) are not meals — keep them in the catalog but out
         // of meal plans. Smoothies/shakes are kept (see RecipeCategoryGroups).
-        return pool.Where(r => RecipeCategoryGroups.IsMealPlanEligible(r.CategoryName)).ToList();
+        // Also keep "Indulgent"-tier dishes (rich/fatty/salty) out of generated plans
+        // — this is a fitness app. Healthy + Moderate + healthy treats stay in. Null
+        // tier (not yet classified) is treated as eligible, never wrongly excluded.
+        return pool
+            .Where(r => RecipeCategoryGroups.IsMealPlanEligible(r.CategoryName))
+            .Where(r => r.HealthTier != RecipeHealth.Indulgent)
+            .ToList();
     }
 
     public List<SavedRecipe> FilterForMealType(List<SavedRecipe> pool, MealType mealType)

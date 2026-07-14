@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using Microsoft.Maui.Graphics;
+using IntelligentPersonalHealthOptimization.Data;
 
 namespace IntelligentPersonalHealthOptimization.Models.Recipe;
 
@@ -33,6 +35,32 @@ public class RecipeItem : INotifyPropertyChanged
     /// recipe has a real Servings value (so the figure is genuinely per-serving,
     /// not a whole-recipe total). Null otherwise — see [[project]] backfill note.</summary>
     public int? CaloriesPerServing { get; set; }
+
+    /// <summary>Dish photo URL (Wikimedia Commons), when available (~20% of recipes).</summary>
+    public string? ImageUrl { get; set; }
+    public bool HasImage => !string.IsNullOrEmpty(ImageUrl);
+
+    /// <summary>Health-consciousness tier — "Healthy" / "Moderate" / "Indulgent"
+    /// (see <see cref="Data.RecipeHealth"/>). Null if not yet classified.</summary>
+    public string? HealthTier { get; set; }
+    public int? HealthScore { get; set; }
+    public bool IsHealthyTreat { get; set; }
+
+    public bool IsHealthy => HealthTier == Data.RecipeHealth.Healthy;
+    public bool ShowHealthBadge => Data.HealthBadgeStyle.ShouldShow(HealthTier);
+
+    /// <summary>Badge label — "Healthy" / "Moderate" / "Indulgent", or "Treat" (a lean sweet).</summary>
+    public string HealthBadgeText => Data.HealthBadgeStyle.TextFor(HealthTier, IsHealthyTreat);
+
+    /// <summary>Badge tint, from the same palette every health surface shares.</summary>
+    public Color HealthBadgeColor => Data.HealthBadgeStyle.ColorFor(HealthTier);
+
+    // Emoji/colour fallback for the ~80% with no photo — resolved from the recipe
+    // name first (e.g. "Chicken Adobo" → 🍗), then the category.
+    public string Emoji => RecipeCategoryStyle.EmojiFor(
+        !string.IsNullOrEmpty(RecipeName) ? RecipeName : CategoryName);
+    public Color Accent => RecipeCategoryStyle.AccentFor(
+        !string.IsNullOrEmpty(RecipeName) ? RecipeName : CategoryName);
 
     private bool _isSaved;
     /// <summary>True when this recipe is in the user's local "My Saved" library.

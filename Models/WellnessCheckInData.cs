@@ -6,7 +6,9 @@ namespace IntelligentPersonalHealthOptimization.Models;
 /// </summary>
 public class WellnessCheckInData
 {
-    // SCOFF
+    // SCOFF. ScoffAnswered distinguishes an explicit "No" from an untouched
+    // default so we don't silently score unanswered screening items as negative.
+    public bool ScoffAnswered { get; set; }
     public bool ScoffSick { get; set; }
     public bool ScoffControl { get; set; }
     public bool ScoffWeightLoss { get; set; }

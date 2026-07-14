@@ -9,20 +9,29 @@ using IntelligentPersonalHealthOptimization.Services.Interfaces;
 namespace IntelligentPersonalHealthOptimization.ViewModels;
 
 [QueryProperty(nameof(MealTypeParam), "mealType")]
+[QueryProperty(nameof(FoodIdParam), "foodId")]
 public partial class AddFoodEntryViewModel : BaseViewModel
 {
     private readonly IFoodService _foodService;
     private readonly IUserService _userService;
+    private readonly INutritionService _nutritionService;
 
-    public AddFoodEntryViewModel(IFoodService foodService, IUserService userService)
+    public AddFoodEntryViewModel(IFoodService foodService, IUserService userService,
+        INutritionService nutritionService)
     {
         _foodService = foodService;
         _userService = userService;
+        _nutritionService = nutritionService;
         Title = "Add Food";
     }
 
     [ObservableProperty]
     private string _mealTypeParam = string.Empty;
+
+    // Set by the barcode scanner (RecipeDetail?foodId=…) — pre-selects the scanned
+    // food so the user lands ready to log instead of on an empty search page.
+    [ObservableProperty]
+    private string _foodIdParam = string.Empty;
 
     [ObservableProperty]
     private string _searchQuery = string.Empty;
@@ -63,6 +72,22 @@ public partial class AddFoodEntryViewModel : BaseViewModel
     [ObservableProperty]
     private string _estimatedFat = "0g";
 
+    // Goal context — how this food lands against today's remaining calories.
+    [ObservableProperty]
+    private bool _hasGoalContext;
+
+    [ObservableProperty]
+    private string _remainingBeforeText = string.Empty;
+
+    [ObservableProperty]
+    private string _afterThisText = string.Empty;
+
+    [ObservableProperty]
+    private bool _isAfterOver;
+
+    private double _targetCalories;
+    private double _consumedCalories;
+
     public List<MealType> MealTypes { get; } = Enum.GetValues<MealType>().ToList();
 
     private CancellationTokenSource? _searchCts;
@@ -90,6 +115,41 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         if (Enum.TryParse<MealType>(value, out var mealType))
         {
             SelectedMealType = mealType;
+        }
+    }
+
+    partial void OnFoodIdParamChanged(string value)
+    {
+        if (int.TryParse(value, out var id) && id > 0)
+            _ = PreselectFoodAsync(id);
+    }
+
+    private async Task PreselectFoodAsync(int foodId)
+    {
+        try
+        {
+            var f = await _foodService.GetFoodByIdAsync(foodId);
+            if (f == null) return;
+
+            var result = new FoodSearchResult
+            {
+                FoodId = f.Id,
+                Name = f.Name,
+                Brand = f.Brand ?? string.Empty,
+                CaloriesPer100g = f.CaloriesPer100g,
+                ProteinPer100g = f.ProteinPer100g,
+                CarbsPer100g = f.CarbsPer100g,
+                FatPer100g = f.FatPer100g,
+                DefaultServingSize = f.DefaultServingSize,
+                DefaultServingLabel = f.DefaultServingLabel,
+                CaloriesDisplay = $"{f.CaloriesPer100g:F0} kcal/100g",
+                DisplayName = string.IsNullOrEmpty(f.Brand) ? f.Name : $"{f.Name} ({f.Brand})"
+            };
+            MainThread.BeginInvokeOnMainThread(() => SelectFood(result));
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("Preselect scanned food", ex);
         }
     }
 
@@ -168,6 +228,58 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         EstimatedProtein = $"{pro:F1}g";
         EstimatedCarbs = $"{carb:F1}g";
         EstimatedFat = $"{fat:F1}g";
+
+        UpdateRemaining();
+    }
+
+    [RelayCommand]
+    private async Task LoadContextAsync()
+    {
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            if (user == null) return;
+
+            var profile = await _nutritionService.GetNutritionProfileAsync(user.Id);
+            if (profile == null || profile.TargetCalories <= 0)
+            {
+                HasGoalContext = false;
+                return;
+            }
+
+            var totals = await _foodService.GetDailyTotalsAsync(user.Id, DateTime.Today);
+            _targetCalories = profile.TargetCalories;
+            _consumedCalories = totals.calories;
+            HasGoalContext = true;
+            UpdateRemaining();
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("AddFood goal context", ex);
+        }
+    }
+
+    private void UpdateRemaining()
+    {
+        if (!HasGoalContext) return;
+
+        var before = _targetCalories - _consumedCalories;
+        RemainingBeforeText = before >= 0
+            ? $"{before:F0} kcal left today"
+            : $"{Math.Abs(before):F0} kcal over today";
+
+        if (SelectedFood == null)
+        {
+            AfterThisText = string.Empty;
+            return;
+        }
+
+        var est = SelectedFood.CaloriesPer100g * (ServingSize / 100.0);
+        var after = before - est;
+        IsAfterOver = after < 0;
+        AfterThisText = after >= 0
+            ? $"→ {after:F0} kcal left after this"
+            : $"→ {Math.Abs(after):F0} kcal over after this";
     }
 
     [RelayCommand]
@@ -218,6 +330,7 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         EstimatedProtein = "0g";
         EstimatedCarbs = "0g";
         EstimatedFat = "0g";
+        UpdateRemaining();
     }
 }
 

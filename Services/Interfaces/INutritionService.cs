@@ -34,6 +34,19 @@ public interface INutritionService
     Task SwapMealAsync(int mealPlanDayId, MealType mealType, string mealTemplateName, int nutritionProfileId);
     Task<MealPlan> GenerateRecipeMealPlanAsync(int userId, int nutritionProfileId);
     Task<List<MealPlanItem>> GetTodaysMealPlanItemsAsync(int userId);
+
+    /// <summary>Batch-fetch card metadata (dish photo + health tier) for the given
+    /// catalog recipe ids, so meal-plan cards can show the same thumbnail and health
+    /// badge the Recipes tab does. Keyed by SavedRecipe.Id; missing recipes absent.</summary>
+    Task<Dictionary<int, RecipeCardMeta>> GetRecipeCardMetaAsync(IEnumerable<int> savedRecipeIds);
+}
+
+/// <summary>Per-recipe display bits a meal card mirrors from the catalog row.</summary>
+public sealed class RecipeCardMeta
+{
+    public string? ImageUrl { get; set; }
+    public string? HealthTier { get; set; }
+    public bool IsHealthyTreat { get; set; }
 }
 
 /// <summary>Computed nutrition targets for a user: energy + macro grams.</summary>

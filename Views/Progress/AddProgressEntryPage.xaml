@@ -9,7 +9,8 @@
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 
-            <Label Text="Log Progress" FontSize="28" FontAttributes="Bold" />
+            <Label Text="Log Progress" FontSize="28" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
 
             <!-- Weight -->
             <Frame Style="{StaticResource CardFrame}">

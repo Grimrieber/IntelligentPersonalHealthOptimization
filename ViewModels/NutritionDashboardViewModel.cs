@@ -41,6 +41,17 @@ public partial class NutritionDashboardViewModel : BaseViewModel
     [ObservableProperty]
     private string _calorieLabel = "0 / 2000 kcal";
 
+    // Ring centre: calories remaining (or over) — more actionable than "consumed".
+    [ObservableProperty]
+    private string _caloriesRemainingValue = "0";
+
+    [ObservableProperty]
+    private string _caloriesRemainingCaption = "kcal left";
+
+    // Sum of today's planned meals — "your plan adds up to X".
+    [ObservableProperty]
+    private string _plannedTotalText = string.Empty;
+
     [ObservableProperty]
     private double _proteinConsumed;
 
@@ -335,6 +346,10 @@ public partial class NutritionDashboardViewModel : BaseViewModel
             var plannedItems = await _nutritionService.GetTodaysMealPlanItemsAsync(user.Id);
             TodaysPlannedMeals.Clear();
 
+            // Dish thumbnails + health tier for today's meal cards, keyed by recipe id.
+            var recipeMeta = await _nutritionService.GetRecipeCardMetaAsync(
+                plannedItems.Where(i => i.SavedRecipeId > 0).Select(i => i.SavedRecipeId));
+
             var foodItems = plannedItems.Where(i => i.MealName != "Protein Shake").ToList();
             var shakeItems = plannedItems.Where(i => i.MealName == "Protein Shake").ToList();
 
@@ -366,6 +381,7 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 var totalF = items.Sum(i => i.FatG);
                 var mealName = items.FirstOrDefault(i => !string.IsNullOrEmpty(i.MealName))?.MealName ?? FormatMealType(group.Key);
                 var savedRecipeId = items.FirstOrDefault(i => i.SavedRecipeId > 0)?.SavedRecipeId ?? 0;
+                var mealMeta = savedRecipeId > 0 && recipeMeta.TryGetValue(savedRecipeId, out var m) ? m : null;
                 var servings = items.FirstOrDefault()?.Servings ?? 1;
 
                 // Servings note. Meal prep → batch on the cook day / reheat amount on
@@ -396,6 +412,9 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 {
                     MealPlanItemId = items.First().Id,
                     SavedRecipeId = savedRecipeId,
+                    ImageUrl = mealMeta?.ImageUrl,
+                    HealthTier = mealMeta?.HealthTier,
+                    IsHealthyTreat = mealMeta?.IsHealthyTreat ?? false,
                     MealPlanDayId = items.First().MealPlanDayId,
                     IsSwappable = items.First().MealPlanDayId > 0,
                     MealTypeName = FormatMealType(group.Key),
@@ -479,6 +498,10 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 TodaysPlannedMeals.Add(m);
 
             HasPlannedMeals = TodaysPlannedMeals.Count > 0;
+
+            // Daily plan total — "your plan adds up to X kcal" at a glance.
+            var plannedCalories = TodaysPlannedMeals.Sum(m => m.CaloriesValue);
+            PlannedTotalText = HasPlannedMeals ? $"Planned total: {plannedCalories:F0} kcal" : string.Empty;
         }
         catch (Exception ex)
         {
@@ -494,6 +517,10 @@ public partial class NutritionDashboardViewModel : BaseViewModel
     {
         CalorieProgress = CaloriesTarget > 0 ? Math.Min(CaloriesConsumed / CaloriesTarget, 1.0) : 0;
         CalorieLabel = $"{CaloriesConsumed:F0} / {CaloriesTarget:F0} kcal";
+
+        var remaining = CaloriesTarget - CaloriesConsumed;
+        CaloriesRemainingValue = $"{Math.Abs(remaining):F0}";
+        CaloriesRemainingCaption = remaining >= 0 ? "kcal left" : "kcal over";
 
         ProteinProgress = ProteinTarget > 0 ? Math.Min(ProteinConsumed / ProteinTarget, 1.0) : 0;
         ProteinLabel = $"{ProteinConsumed:F0}g / {ProteinTarget:F0}g";
@@ -849,4 +876,18 @@ public partial class PlannedMealItem : ObservableObject
         ? Color.FromArgb("#F0FFF4")
         : Color.FromArgb("#00000000");
     public int SortOrder => IsLogged ? 1 : 0;
+
+    // Thumbnail — mirrors the Recipes-tab card: dish photo (when known) over an
+    // emoji/accent tile resolved from the meal name.
+    public string? ImageUrl { get; set; }
+    public bool HasImage => !string.IsNullOrEmpty(ImageUrl);
+    public string Emoji => Data.RecipeCategoryStyle.EmojiFor(RecipeName);
+    public Color Accent => Data.RecipeCategoryStyle.AccentFor(RecipeName);
+
+    // Health-tier badge — same chip the recipe cards show (shared HealthBadgeStyle).
+    public string? HealthTier { get; set; }
+    public bool IsHealthyTreat { get; set; }
+    public bool ShowHealthBadge => Data.HealthBadgeStyle.ShouldShow(HealthTier);
+    public string HealthBadgeText => Data.HealthBadgeStyle.TextFor(HealthTier, IsHealthyTreat);
+    public Color HealthBadgeColor => Data.HealthBadgeStyle.ColorFor(HealthTier);
 }

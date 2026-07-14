@@ -59,6 +59,13 @@ public partial class MealPlanViewModel : BaseViewModel
     [ObservableProperty]
     private string _dayMacroSummary = string.Empty;
 
+    // How this day's total compares to the plan's daily target.
+    [ObservableProperty]
+    private string _dayVsTargetText = string.Empty;
+
+    [ObservableProperty]
+    private bool _isDayOver;
+
     [ObservableProperty]
     private ObservableCollection<MealPlanMealGroup> _mealPlanMealGroups = new();
 
@@ -128,6 +135,22 @@ public partial class MealPlanViewModel : BaseViewModel
             DayTotalCalories = $"{day.TotalCalories} kcal";
             DayMacroSummary = string.Empty; // will be set after loading items
 
+            // Compare the day's total to the plan target so "is this day on plan?"
+            // is answerable at a glance (within 50 kcal reads as on-target).
+            var target = _activePlan?.TargetCalories ?? 0;
+            if (target > 0)
+            {
+                var delta = day.TotalCalories - target;
+                IsDayOver = delta > 0;
+                DayVsTargetText = Math.Abs(delta) <= 50
+                    ? "On target"
+                    : delta > 0 ? $"{delta} over target" : $"{Math.Abs(delta)} under target";
+            }
+            else
+            {
+                DayVsTargetText = string.Empty;
+            }
+
             // Meal-prep label: the same meals repeat for the whole prep block, so
             // flag whether this is the cook day or a leftovers day.
             var mealPrepNote = string.Empty;
@@ -144,6 +167,10 @@ public partial class MealPlanViewModel : BaseViewModel
 
             var items = await _nutritionService.GetMealItemsAsync(day.Id);
             HasMealsForDay = items.Count > 0;
+
+            // Dish thumbnails + health tier for the meal cards, keyed by recipe id.
+            var recipeMeta = await _nutritionService.GetRecipeCardMetaAsync(
+                items.Where(i => i.SavedRecipeId > 0).Select(i => i.SavedRecipeId));
 
             var groups = new ObservableCollection<MealPlanMealGroup>();
 
@@ -190,6 +217,7 @@ public partial class MealPlanViewModel : BaseViewModel
                 var mealFat = mealItems.Sum(i => i.FatG);
                 var mealName = mealItems.FirstOrDefault(i => !string.IsNullOrEmpty(i.MealName))?.MealName ?? string.Empty;
                 var savedRecipeId = mealItems.FirstOrDefault(i => i.SavedRecipeId > 0)?.SavedRecipeId ?? 0;
+                var mealMeta = savedRecipeId > 0 && recipeMeta.TryGetValue(savedRecipeId, out var m) ? m : null;
 
                 // Servings note. For meal prep the per-day portion (s) is scaled up
                 // to a batch on the cook day ("Cook 2.7x ... ~0.9/day") and shown as
@@ -222,6 +250,9 @@ public partial class MealPlanViewModel : BaseViewModel
                     MealType = mealType,
                     MealPlanDayId = day.Id,
                     SavedRecipeId = savedRecipeId,
+                    ImageUrl = mealMeta?.ImageUrl,
+                    HealthTier = mealMeta?.HealthTier,
+                    IsHealthyTreat = mealMeta?.IsHealthyTreat ?? false,
                     MealTypeName = FormatMealType(mealType),
                     MealName = mealName,
                     HasMealName = !string.IsNullOrEmpty(mealName),
@@ -566,6 +597,20 @@ public class MealPlanMealGroup
     public string MacroSummary { get; set; } = string.Empty;
     public bool IsSwappable { get; set; } = true;
     public ObservableCollection<MealPlanFoodItem> Items { get; set; } = new();
+
+    // Thumbnail — mirrors the Recipes-tab card: dish photo (when known) over an
+    // emoji/accent tile resolved from the meal name.
+    public string? ImageUrl { get; set; }
+    public bool HasImage => !string.IsNullOrEmpty(ImageUrl);
+    public string Emoji => Data.RecipeCategoryStyle.EmojiFor(MealName);
+    public Microsoft.Maui.Graphics.Color Accent => Data.RecipeCategoryStyle.AccentFor(MealName);
+
+    // Health-tier badge — same chip the recipe cards show (shared HealthBadgeStyle).
+    public string? HealthTier { get; set; }
+    public bool IsHealthyTreat { get; set; }
+    public bool ShowHealthBadge => Data.HealthBadgeStyle.ShouldShow(HealthTier);
+    public string HealthBadgeText => Data.HealthBadgeStyle.TextFor(HealthTier, IsHealthyTreat);
+    public Microsoft.Maui.Graphics.Color HealthBadgeColor => Data.HealthBadgeStyle.ColorFor(HealthTier);
 }
 
 public class MealPlanFoodItem

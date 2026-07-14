@@ -63,6 +63,16 @@ public partial class FoodLogViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isFatOver;
 
+    // 0–1 fill for the macro progress bars.
+    [ObservableProperty]
+    private double _proteinBar;
+
+    [ObservableProperty]
+    private double _carbsBar;
+
+    [ObservableProperty]
+    private double _fatBar;
+
     // Meal groups
     [ObservableProperty]
     private ObservableCollection<FoodLogMealGroup> _mealGroups = new();
@@ -214,6 +224,9 @@ public partial class FoodLogViewModel : BaseViewModel
             ProteinProgress = string.Empty;
             CarbsProgress = string.Empty;
             FatProgress = string.Empty;
+            ProteinBar = 0;
+            CarbsBar = 0;
+            FatBar = 0;
             return;
         }
 
@@ -230,12 +243,15 @@ public partial class FoodLogViewModel : BaseViewModel
 
         IsProteinOver = totals.proteinG > _profile.TargetProteinG;
         ProteinProgress = $"{totals.proteinG:F0} / {_profile.TargetProteinG}g";
+        ProteinBar = _profile.TargetProteinG > 0 ? Math.Min(totals.proteinG / _profile.TargetProteinG, 1.0) : 0;
 
         IsCarbsOver = totals.carbsG > _profile.TargetCarbsG;
         CarbsProgress = $"{totals.carbsG:F0} / {_profile.TargetCarbsG}g";
+        CarbsBar = _profile.TargetCarbsG > 0 ? Math.Min(totals.carbsG / _profile.TargetCarbsG, 1.0) : 0;
 
         IsFatOver = totals.fatG > _profile.TargetFatG;
         FatProgress = $"{totals.fatG:F0} / {_profile.TargetFatG}g";
+        FatBar = _profile.TargetFatG > 0 ? Math.Min(totals.fatG / _profile.TargetFatG, 1.0) : 0;
     }
 
     [RelayCommand]

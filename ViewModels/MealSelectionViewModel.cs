@@ -102,6 +102,15 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
                     candidates = dietFiltered;
             }
 
+            // Add a protein target to the header — this app's users are goal-driven,
+            // so "which similar-calorie meal" usually comes down to protein. Prorate
+            // the daily protein goal to this slot's share of daily calories.
+            if (profile != null && profile.TargetCalories > 0 && _targetCaloriesForSlot > 0)
+            {
+                var slotProtein = profile.TargetProteinG * (_targetCaloriesForSlot / (double)profile.TargetCalories);
+                TargetCaloriesLabel = $"Target: ~{_targetCaloriesForSlot} kcal · ~{slotProtein:F0}g protein";
+            }
+
             _allMeals = candidates.Select(r =>
             {
                 var recipeCal = r.CaloriesPerServing ?? 1;
@@ -124,6 +133,7 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
                     servingsNote = "1 serving";
                 }
 
+                var delta = Math.Abs(totalCal - _targetCaloriesForSlot);
                 return new MealOptionItem
                 {
                     SavedRecipeId = r.Id,
@@ -139,11 +149,17 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
                                    $"F: {(r.FatGrams ?? 0) * servings:F0}g",
                     ProteinG = (r.ProteinGrams ?? 0) * servings,
                     CarbsG = (r.CarbsGrams ?? 0) * servings,
-                    FatG = (r.FatGrams ?? 0) * servings
+                    FatG = (r.FatGrams ?? 0) * servings,
+                    CalorieDelta = delta,
+                    MatchText = delta == 0 ? "exact match" : $"±{delta} kcal"
                 };
             })
-            .OrderBy(m => Math.Abs(m.TotalCalories - _targetCaloriesForSlot))
+            .OrderBy(m => m.CalorieDelta)
             .ToList();
+
+            // The list is sorted best-first — flag the closest so the smart ordering is visible.
+            if (_allMeals.Count > 0)
+                _allMeals[0].IsBestMatch = true;
 
             ApplyFilter();
         }
@@ -250,6 +266,9 @@ public class MealOptionItem
     public double ProteinG { get; set; }
     public double CarbsG { get; set; }
     public double FatG { get; set; }
+    public int CalorieDelta { get; set; }
+    public string MatchText { get; set; } = string.Empty;
+    public bool IsBestMatch { get; set; }
 }
 
 public record MealSelectedMessage(string MealName, MealType MealType, int MealPlanDayId, int NutritionProfileId);

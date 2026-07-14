@@ -42,9 +42,17 @@ public static partial class SeedData
             return;
 
         var recipes = new List<SavedRecipe>(bundle.Recipes.Count);
+        var kept = new List<WikibooksRecipeDto>(bundle.Recipes.Count);
         foreach (var r in bundle.Recipes)
         {
             var nut = r.Nutrition;
+            var health = RecipeHealth.Classify(
+                r.Name, r.Category, nut?.CaloriesPerServing, nut?.SugarGrams,
+                nut?.SatFatGrams, nut?.SodiumMg, nut?.FiberGrams, nut?.ProteinGrams);
+            // Never seed the clearest junk (cake, candy, sugar-bomb desserts).
+            if (health.HardRemove)
+                continue;
+            kept.Add(r);
             recipes.Add(new SavedRecipe
             {
                 UserId = 0,                                  // shared catalog, not per-user
@@ -82,6 +90,9 @@ public static partial class SeedData
                 IsHalal = r.IsHalal,
                 IsKosher = r.IsKosher,
                 IsMediterranean = r.IsMediterranean,
+                HealthScore = health.Score,
+                HealthTier = health.Tier,
+                IsHealthyTreat = health.IsTreat,
                 SourceProvider = WikibooksSourceProvider,
                 SavedAt = DateTime.UtcNow,
             });
@@ -91,12 +102,13 @@ public static partial class SeedData
         await connection.InsertAllAsync(recipes);
 
         // Now build ingredient + direction child rows keyed to the inserted Ids.
-        var ingredients = new List<SavedRecipeIngredient>(bundle.Recipes.Sum(r => r.Ingredients?.Count ?? 0));
-        var directions  = new List<SavedRecipeDirection> (bundle.Recipes.Sum(r => r.Directions?.Count  ?? 0));
+        // Iterate `kept` (post-junk-filter) so indices stay aligned with `recipes`.
+        var ingredients = new List<SavedRecipeIngredient>(kept.Sum(r => r.Ingredients?.Count ?? 0));
+        var directions  = new List<SavedRecipeDirection> (kept.Sum(r => r.Directions?.Count  ?? 0));
 
-        for (int i = 0; i < bundle.Recipes.Count; i++)
+        for (int i = 0; i < kept.Count; i++)
         {
-            var src = bundle.Recipes[i];
+            var src = kept[i];
             var savedId = recipes[i].Id;
 
             if (src.Ingredients != null)
@@ -200,7 +212,8 @@ public static partial class SeedData
     //      FileImageSource ("asset:<id>.jpg"), same proven path as the Pixabay locals. Pexels
     //      (real CDN, no throttle) stays a stable hotlink. Now list thumbnails never throttle,
     //      never rot, work offline. schemaVersion 59.
-    private const string RecipeImagesMarker = "recipe_images_2026_07_11_v27.done";
+    private const string RecipeImagesMarker = "recipe_images_2026_07_12_v31.done";
+    private const string RecipeTimeCleanupMarker = "recipe_time_cleanup_2026_07_12_v2.done";
 
     /// <summary>
     /// One-shot: sync <see cref="SavedRecipe.ImageUrl"/> to the bundle EXACTLY — sets the
@@ -257,6 +270,13 @@ public static partial class SeedData
                 }
             });
 
+            // MAUI's Android image loader (Glide) disk-caches decoded bitmaps keyed by the source
+            // file path. When a corrected photo reuses an existing local filename (e.g. a recipe
+            // that was already "asset:<id>.jpg" gets a new image in a later marker), Glide keeps
+            // serving the stale bitmap because the path/key is unchanged. Clear its disk cache once
+            // per image-marker bump so the refreshed files re-decode. Glide rebuilds it on demand.
+            ClearImageDiskCache();
+
             File.WriteAllText(markerPath, $"applied {DateTime.UtcNow:O}");
         }
         catch (Exception ex)
@@ -267,6 +287,71 @@ public static partial class SeedData
             {
                 File.WriteAllText(
                     Path.Combine(FileSystem.AppDataDirectory, "recipe_images_error.txt"),
+                    ex.ToString());
+            }
+            catch { }
+        }
+    }
+
+    /// <summary>
+    /// One-shot: re-sync PrepTime/CookTime/RestTime from the cleaned bundle. The Wikibooks
+    /// scrape jammed the whole "Prep: X Cooking: Y Total: Z" block into a single cookTime
+    /// string with no separators on ~151 recipes, which rendered as one unreadable line on
+    /// the card. tools/clean_recipe_times.py split those back into the proper fields in the
+    /// bundle; this mirrors them onto existing installs. Matches by RecipeName. Self-gated.
+    /// </summary>
+    public static async Task ApplyRecipeTimeCleanupAsync(SQLiteAsyncConnection connection)
+    {
+        var markerPath = Path.Combine(FileSystem.AppDataDirectory, RecipeTimeCleanupMarker);
+        if (File.Exists(markerPath))
+            return;
+
+        try
+        {
+            WikibooksBundle? bundle;
+            using (var asset = await FileSystem.OpenAppPackageFileAsync(WikibooksBundleAsset))
+            using (var gz = new GZipStream(asset, CompressionMode.Decompress))
+            {
+                bundle = await JsonSerializer.DeserializeAsync<WikibooksBundle>(
+                    gz, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            if (bundle?.Recipes == null || bundle.Recipes.Count == 0)
+                return;
+
+            var timesByName = new Dictionary<string, (string?, string?, string?)>(StringComparer.OrdinalIgnoreCase);
+            foreach (var r in bundle.Recipes)
+            {
+                if (r.Name == null) continue;
+                timesByName[r.Name] = (Trunc(r.PrepTime, 50), Trunc(r.CookTime, 50), Trunc(r.RestTime, 50));
+            }
+
+            var rows = await connection.QueryAsync<SavedRecipe>(
+                "SELECT * FROM SavedRecipe WHERE SourceProvider = ?", WikibooksSourceProvider);
+
+            await connection.RunInTransactionAsync(conn =>
+            {
+                foreach (var row in rows)
+                {
+                    if (!timesByName.TryGetValue(row.RecipeName, out var t)) continue;
+                    var (prep, cook, rest) = t;
+                    if (row.PrepTime != prep || row.CookTime != cook || row.RestTime != rest)
+                    {
+                        row.PrepTime = prep;
+                        row.CookTime = cook;
+                        row.RestTime = rest;
+                        conn.Update(row);
+                    }
+                }
+            });
+
+            File.WriteAllText(markerPath, $"applied {DateTime.UtcNow:O}");
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                File.WriteAllText(
+                    Path.Combine(FileSystem.AppDataDirectory, "recipe_time_cleanup_error.txt"),
                     ex.ToString());
             }
             catch { }
@@ -286,10 +371,13 @@ public static partial class SeedData
             var destDir = Path.Combine(FileSystem.AppDataDirectory, "recipe_fix");
             Directory.CreateDirectory(destDir);
             var destPath = Path.Combine(destDir, fileName);
-            if (!File.Exists(destPath))
+            // Always re-extract (overwrite) rather than skip-if-exists: this method only runs
+            // inside the marker-gated ApplyRecipeImagesAsync, so it fires once per image-marker
+            // version. Skipping existing files left stale photos in place when a recipe that was
+            // already local-bundled got a corrected image in a later marker (e.g. the v28 fixes).
+            using (var asset = await FileSystem.OpenAppPackageFileAsync($"recipe_fix/{fileName}"))
+            using (var dest = File.Create(destPath))
             {
-                using var asset = await FileSystem.OpenAppPackageFileAsync($"recipe_fix/{fileName}");
-                using var dest = File.Create(destPath);
                 await asset.CopyToAsync(dest);
             }
             return destPath;
@@ -298,6 +386,22 @@ public static partial class SeedData
         {
             return null;   // packaged asset absent → caller stores null → emoji fallback
         }
+    }
+
+    /// <summary>
+    /// Deletes the platform image loader's on-disk cache (Glide's "image_manager_disk_cache"
+    /// under the app cache dir) so bitmaps whose backing file changed but kept the same path
+    /// are re-decoded instead of served stale. Best-effort; Glide recreates it on demand.
+    /// </summary>
+    private static void ClearImageDiskCache()
+    {
+        try
+        {
+            var glideCache = Path.Combine(FileSystem.CacheDirectory, "image_manager_disk_cache");
+            if (Directory.Exists(glideCache))
+                Directory.Delete(glideCache, recursive: true);
+        }
+        catch { /* non-fatal: images just keep their current cache until next load */ }
     }
 
     public static async Task ApplyServingsBackfillAsync(SQLiteAsyncConnection connection)
@@ -523,6 +627,130 @@ public static partial class SeedData
         catch
         {
             // Best-effort — meal-plan filtering already excludes these at query time.
+        }
+    }
+
+    // Marker for the duplicate-dish purge below. Bump the version suffix whenever
+    // the bundle drops recipes and existing installs must re-sync.
+    private const string DuplicateDishPurgeMarker = "duplicate_dish_purge_2026_07_12_v1.done";
+
+    /// <summary>
+    /// One-shot: re-sync the on-device catalog to the current bundle by deleting
+    /// Wikibooks rows whose name is no longer present. Used to remove the 107
+    /// same-dish duplicate recipes (Meatloaf II–V, Snickerdoodles II–IV, etc.)
+    /// pruned from the bundle. New installs seed straight from the pruned bundle
+    /// and skip this. Delete-only (nutrition refresh is handled by the audit-fix
+    /// migration). Self-gated; runs once.
+    /// </summary>
+    public static async Task ApplyDuplicateDishPurgeAsync(SQLiteAsyncConnection connection)
+    {
+        var markerPath = Path.Combine(FileSystem.AppDataDirectory, DuplicateDishPurgeMarker);
+        if (File.Exists(markerPath))
+            return;
+
+        try
+        {
+            WikibooksBundle? bundle;
+            using (var asset = await FileSystem.OpenAppPackageFileAsync(WikibooksBundleAsset))
+            using (var gz = new GZipStream(asset, CompressionMode.Decompress))
+            {
+                bundle = await JsonSerializer.DeserializeAsync<WikibooksBundle>(
+                    gz, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            if (bundle?.Recipes == null || bundle.Recipes.Count == 0)
+                return;
+
+            var bundleNames = new HashSet<string>(
+                bundle.Recipes.Select(r => r.Name), StringComparer.OrdinalIgnoreCase);
+
+            var rows = await connection.QueryAsync<SavedRecipe>(
+                "SELECT * FROM SavedRecipe WHERE SourceProvider = ?", WikibooksSourceProvider);
+            var toDelete = rows.Where(r => !bundleNames.Contains(r.RecipeName)).ToList();
+
+            if (toDelete.Count > 0)
+            {
+                await connection.RunInTransactionAsync(conn =>
+                {
+                    foreach (var row in toDelete)
+                        conn.Delete(row);
+                });
+                // Sweep child rows orphaned by the deletions.
+                await connection.ExecuteAsync(
+                    "DELETE FROM SavedRecipeIngredient WHERE SavedRecipeId NOT IN (SELECT Id FROM SavedRecipe)");
+                await connection.ExecuteAsync(
+                    "DELETE FROM SavedRecipeDirection WHERE SavedRecipeId NOT IN (SELECT Id FROM SavedRecipe)");
+            }
+
+            File.WriteAllText(markerPath, $"purged {toDelete.Count} duplicate recipes {DateTime.UtcNow:O}");
+        }
+        catch
+        {
+            // Best-effort — don't crash app startup if it fails.
+        }
+    }
+
+    // Marker for the health-classification migration below. Bump the version suffix
+    // if the RecipeHealth thresholds change and existing installs must re-classify.
+    private const string HealthClassifyMarker = "health_classify_2026_07_14_v1.done";
+
+    /// <summary>
+    /// One-shot: classify every catalog recipe on a fitness health lens and (a) stamp
+    /// HealthScore / HealthTier / IsHealthyTreat onto each row, and (b) physically
+    /// delete the clearest junk (cake, candy, sugar-bomb desserts — see
+    /// <see cref="RecipeHealth"/>). Computed entirely on-device from the nutrition
+    /// already seeded on the phone — no bundle, no server. New installs classify at
+    /// seed time and skip this. Self-gated; runs once.
+    /// </summary>
+    public static async Task ApplyHealthClassificationAsync(SQLiteAsyncConnection connection)
+    {
+        var markerPath = Path.Combine(FileSystem.AppDataDirectory, HealthClassifyMarker);
+        if (File.Exists(markerPath))
+            return;
+
+        try
+        {
+            var rows = await connection.QueryAsync<SavedRecipe>(
+                "SELECT * FROM SavedRecipe WHERE SourceProvider = ?", WikibooksSourceProvider);
+            if (rows.Count == 0)
+            {
+                File.WriteAllText(markerPath, $"nothing to classify {DateTime.UtcNow:O}");
+                return;
+            }
+
+            var toDelete = new List<SavedRecipe>();
+            await connection.RunInTransactionAsync(conn =>
+            {
+                foreach (var row in rows)
+                {
+                    var h = RecipeHealth.Classify(row);
+                    if (h.HardRemove)
+                    {
+                        conn.Delete(row);
+                        toDelete.Add(row);
+                        continue;
+                    }
+                    row.HealthScore = h.Score;
+                    row.HealthTier = h.Tier;
+                    row.IsHealthyTreat = h.IsTreat;
+                    conn.Update(row);
+                }
+            });
+
+            if (toDelete.Count > 0)
+            {
+                // Sweep child rows orphaned by the deletions.
+                await connection.ExecuteAsync(
+                    "DELETE FROM SavedRecipeIngredient WHERE SavedRecipeId NOT IN (SELECT Id FROM SavedRecipe)");
+                await connection.ExecuteAsync(
+                    "DELETE FROM SavedRecipeDirection WHERE SavedRecipeId NOT IN (SELECT Id FROM SavedRecipe)");
+            }
+
+            File.WriteAllText(markerPath,
+                $"classified {rows.Count - toDelete.Count} recipes, removed {toDelete.Count} junk {DateTime.UtcNow:O}");
+        }
+        catch
+        {
+            // Best-effort — don't crash app startup if it fails.
         }
     }
 

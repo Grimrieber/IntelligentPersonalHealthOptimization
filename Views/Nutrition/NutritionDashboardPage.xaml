@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             xmlns:controls="clr-namespace:IntelligentPersonalHealthOptimization.Controls"
              x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.NutritionDashboardPage"
              x:DataType="vm:NutritionDashboardViewModel"
              Title="Nutrition Coach">
@@ -16,7 +17,7 @@
                        FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
 
-                <!-- Nutrition Assessment Card -->
+                <!-- Call-to-action: Nutrition Assessment not yet done -->
                 <Frame Style="{StaticResource CardFrame}"
                        IsVisible="{Binding HasNutritionAssessment, Converter={StaticResource InverseBool}}">
                     <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
@@ -35,32 +36,7 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <Frame Style="{StaticResource CardFrame}"
-                       IsVisible="{Binding HasNutritionAssessment}"
-                       BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <VerticalStackLayout Spacing="4" Grid.Column="0">
-                            <Label Text="Nutrition Assessment"
-                                   FontSize="16"
-                                   FontAttributes="Bold" />
-                            <Label Text="{Binding LastAssessmentDate, StringFormat='Last assessed: {0}'}"
-                                   FontSize="13"
-                                   TextColor="{StaticResource Gray500}" />
-                        </VerticalStackLayout>
-                        <Button Text="Re-assess"
-                                Command="{Binding StartNutritionAssessmentCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                BackgroundColor="White"
-                                TextColor="{StaticResource Primary}"
-                                FontAttributes="Bold"
-                                FontSize="13"
-                                HeightRequest="36"
-                                VerticalOptions="Center"
-                                Grid.Column="1" />
-                    </Grid>
-                </Frame>
-
-                <!-- Wellness Check-In (Eating Disorder Screening) -->
+                <!-- Call-to-action: Wellness Check-In not yet done -->
                 <Frame Style="{StaticResource CardFrame}"
                        IsVisible="{Binding HasWellnessCheckIn, Converter={StaticResource InverseBool}}">
                     <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
@@ -79,29 +55,100 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <Frame Style="{StaticResource CardFrame}"
-                       IsVisible="{Binding HasWellnessCheckIn}"
-                       BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <VerticalStackLayout Spacing="4" Grid.Column="0">
-                            <Label Text="Wellness Check-In"
-                                   FontSize="16"
-                                   FontAttributes="Bold" />
-                            <Label Text="{Binding LastWellnessCheckInDate, StringFormat='Last check-in: {0}'}"
-                                   FontSize="13"
-                                   TextColor="{StaticResource Gray500}" />
-                        </VerticalStackLayout>
-                        <Button Text="Re-check"
-                                Command="{Binding StartWellnessCheckInCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                BackgroundColor="White"
-                                TextColor="{StaticResource Primary}"
-                                FontAttributes="Bold"
-                                FontSize="13"
-                                HeightRequest="36"
-                                VerticalOptions="Center"
-                                Grid.Column="1" />
-                    </Grid>
+                <!-- TODAY: calories + macros combined (the daily glance) -->
+                <Frame Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="14">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Today" FontSize="18" FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Button Grid.Column="1"
+                                    Text="View Log"
+                                    Command="{Binding ViewFoodLogCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="13" HeightRequest="36"
+                                    VerticalOptions="Center" />
+                        </Grid>
+
+                        <!-- Calorie ring: centre shows remaining (more actionable than consumed) -->
+                        <Grid WidthRequest="180" HeightRequest="180" HorizontalOptions="Center">
+                            <controls:ProgressRing Progress="{Binding CalorieProgress}"
+                                                   RingColor="{StaticResource Primary}"
+                                                   TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                                   Thickness="16" />
+                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="0">
+                                <Label Text="{Binding CaloriesRemainingValue}"
+                                       FontSize="36" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                <Label Text="{Binding CaloriesRemainingCaption}"
+                                       FontSize="13" HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding CalorieLabel}" FontSize="11" HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray400}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Macro mini-rings: Protein / Carbs / Fat -->
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
+                                <Grid WidthRequest="70" HeightRequest="70" HorizontalOptions="Center">
+                                    <controls:ProgressRing Progress="{Binding ProteinProgress}"
+                                                           RingColor="#2196F3" Thickness="7"
+                                                           TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                    <Label Text="P" FontSize="16" FontAttributes="Bold" TextColor="#2196F3"
+                                           VerticalOptions="Center" HorizontalOptions="Center" />
+                                </Grid>
+                                <Label Text="Protein" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <Label Text="{Binding ProteinLabel}" FontSize="12" FontAttributes="Bold" TextColor="#2196F3" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6" HorizontalOptions="Center">
+                                <Grid WidthRequest="70" HeightRequest="70" HorizontalOptions="Center">
+                                    <controls:ProgressRing Progress="{Binding CarbsProgress}"
+                                                           RingColor="#FF9800" Thickness="7"
+                                                           TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                    <Label Text="C" FontSize="16" FontAttributes="Bold" TextColor="#FF9800"
+                                           VerticalOptions="Center" HorizontalOptions="Center" />
+                                </Grid>
+                                <Label Text="Carbs" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <Label Text="{Binding CarbsLabel}" FontSize="12" FontAttributes="Bold" TextColor="#FF9800" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="Center">
+                                <Grid WidthRequest="70" HeightRequest="70" HorizontalOptions="Center">
+                                    <controls:ProgressRing Progress="{Binding FatProgress}"
+                                                           RingColor="#F44336" Thickness="7"
+                                                           TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                    <Label Text="F" FontSize="16" FontAttributes="Bold" TextColor="#F44336"
+                                           VerticalOptions="Center" HorizontalOptions="Center" />
+                                </Grid>
+                                <Label Text="Fat" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <Label Text="{Binding FatLabel}" FontSize="12" FontAttributes="Bold" TextColor="#F44336" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Water tracker -->
+                        <BoxView HeightRequest="1"
+                                 Color="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                            <Label Grid.Column="0" Text="💧" FontSize="22" VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
+                                <Label Text="Water" FontSize="13" TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding WaterLabel}" FontSize="15" FontAttributes="Bold" TextColor="#29B6F6" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2" Text="−"
+                                    Command="{Binding RemoveWaterCommand}"
+                                    FontSize="20" FontAttributes="Bold"
+                                    WidthRequest="42" HeightRequest="42" CornerRadius="21" Padding="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                    VerticalOptions="Center" />
+                            <Button Grid.Column="3" Text="+"
+                                    Command="{Binding AddWaterCommand}"
+                                    FontSize="20" FontAttributes="Bold"
+                                    WidthRequest="42" HeightRequest="42" CornerRadius="21" Padding="0"
+                                    BackgroundColor="#29B6F6" TextColor="White"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
                 </Frame>
 
                 <!-- Weight & Progress -->
@@ -163,105 +210,13 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Calorie Progress Card -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Daily Calories" Style="{StaticResource SectionHeader}" />
-                        <Label Text="{Binding CalorieLabel}"
-                               FontSize="22"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Primary}"
-                               HorizontalOptions="Center" />
-                        <ProgressBar Progress="{Binding CalorieProgress}"
-                                     ProgressColor="{StaticResource Primary}"
-                                     HeightRequest="12" />
-                    </VerticalStackLayout>
-                </Frame>
-
-                <!-- Macro Progress Cards -->
-                <Label Text="Macronutrients" Style="{StaticResource SectionHeader}" />
-
-                <!-- Protein -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <BoxView Grid.Column="0"
-                                 Color="#2196F3"
-                                 WidthRequest="6"
-                                 CornerRadius="3"
-                                 VerticalOptions="Fill" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="4">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Protein"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                                <Label Grid.Column="1"
-                                       Text="{Binding ProteinLabel}"
-                                       FontSize="14"
-                                       TextColor="{StaticResource Gray500}" />
-                            </Grid>
-                            <ProgressBar Progress="{Binding ProteinProgress}"
-                                         ProgressColor="#2196F3"
-                                         HeightRequest="8" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Frame>
-
-                <!-- Carbs -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <BoxView Grid.Column="0"
-                                 Color="#FF9800"
-                                 WidthRequest="6"
-                                 CornerRadius="3"
-                                 VerticalOptions="Fill" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="4">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Carbohydrates"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                                <Label Grid.Column="1"
-                                       Text="{Binding CarbsLabel}"
-                                       FontSize="14"
-                                       TextColor="{StaticResource Gray500}" />
-                            </Grid>
-                            <ProgressBar Progress="{Binding CarbsProgress}"
-                                         ProgressColor="#FF9800"
-                                         HeightRequest="8" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Frame>
-
-                <!-- Fat -->
-                <Frame Style="{StaticResource CardFrame}">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <BoxView Grid.Column="0"
-                                 Color="#F44336"
-                                 WidthRequest="6"
-                                 CornerRadius="3"
-                                 VerticalOptions="Fill" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="4">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Fat"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                                <Label Grid.Column="1"
-                                       Text="{Binding FatLabel}"
-                                       FontSize="14"
-                                       TextColor="{StaticResource Gray500}" />
-                            </Grid>
-                            <ProgressBar Progress="{Binding FatProgress}"
-                                         ProgressColor="#F44336"
-                                         HeightRequest="8" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Frame>
-
                 <!-- Today's Planned Meals -->
-                <Label Text="Today's Meals" Style="{StaticResource SectionHeader}"
-                       IsVisible="{Binding HasPlannedMeals}" />
+                <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding HasPlannedMeals}">
+                    <Label Text="Today's Meals" Style="{StaticResource SectionHeader}" />
+                    <Label Grid.Column="1" Text="{Binding PlannedTotalText}"
+                           FontSize="12" TextColor="{StaticResource Gray500}"
+                           VerticalOptions="Center" />
+                </Grid>
 
                 <VerticalStackLayout Spacing="8" IsVisible="{Binding HasPlannedMeals}"
                                      BindableLayout.ItemsSource="{Binding TodaysPlannedMeals}">
@@ -270,7 +225,22 @@
                             <Frame Margin="0,4" Padding="14,10" CornerRadius="12" HasShadow="False"
                                    BackgroundColor="{Binding CardColor}"
                                    BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
-                                <VerticalStackLayout Spacing="2">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                  <!-- Thumbnail: emoji/accent tile with the dish photo
+                                       on top (mirrors the Recipes-tab card). -->
+                                  <Border Grid.Column="0" WidthRequest="56" HeightRequest="56"
+                                          StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                          VerticalOptions="Start" Margin="0,2,0,0">
+                                      <Grid WidthRequest="56" HeightRequest="56">
+                                          <Border StrokeThickness="0" BackgroundColor="{Binding Accent}">
+                                              <Label Text="{Binding Emoji}" FontSize="24"
+                                                     HorizontalOptions="Center" VerticalOptions="Center" />
+                                          </Border>
+                                          <Image Source="{Binding ImageUrl}" Aspect="AspectFill"
+                                                 WidthRequest="56" HeightRequest="56" />
+                                      </Grid>
+                                  </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
                                     <!-- Recipe name (tappable for recipe) + calories -->
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                         <Label Text="{Binding RecipeName}" FontSize="15" FontAttributes="Bold"
@@ -285,15 +255,25 @@
                                                TextColor="{StaticResource Primary}" Grid.Column="1"
                                                VerticalOptions="Center" />
                                     </Grid>
-                                    <!-- Meal type (also tappable) -->
-                                    <Label Text="{Binding MealTypeName}" FontSize="12"
-                                           TextColor="{StaticResource Gray500}">
-                                        <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NutritionDashboardViewModel}}, Path=ViewPlannedMealCommand}"
-                                                CommandParameter="{Binding .}" />
-                                        </Label.GestureRecognizers>
-                                    </Label>
+                                    <!-- Meal type (also tappable) + health badge -->
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{Binding MealTypeName}" FontSize="12"
+                                               VerticalOptions="Center"
+                                               TextColor="{StaticResource Gray500}">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NutritionDashboardViewModel}}, Path=ViewPlannedMealCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                        <Border IsVisible="{Binding ShowHealthBadge}"
+                                                BackgroundColor="{Binding HealthBadgeColor}"
+                                                StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                                Padding="7,2" VerticalOptions="Center">
+                                            <Label Text="{Binding HealthBadgeText}"
+                                                   FontSize="10" FontAttributes="Bold" TextColor="White" />
+                                        </Border>
+                                    </HorizontalStackLayout>
                                     <!-- Meal-prep badge: this meal repeats across the prep block -->
                                     <Border IsVisible="{Binding HasMealPrepNote}"
                                             Stroke="Transparent"
@@ -342,6 +322,7 @@
                                                 CommandParameter="{Binding .}" />
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
+                                </Grid>
                             </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -360,6 +341,43 @@
                             Style="{StaticResource SecondaryButton}"
                             FontSize="14" />
                 </Grid>
+
+                <!-- Slim status chips (done state): re-assess / re-check, low frequency -->
+                <Frame Style="{StaticResource CardFrame}" Padding="12,10"
+                       IsVisible="{Binding HasNutritionAssessment}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <BoxView Grid.Column="0" Color="#43A047" WidthRequest="4" CornerRadius="2" VerticalOptions="Fill" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Nutrition Assessment" FontSize="14" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding LastAssessmentDate, StringFormat='Last assessed: {0}'}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="Re-assess"
+                                Command="{Binding StartNutritionAssessmentCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="12" HeightRequest="34" Padding="12,0"
+                                VerticalOptions="Center" />
+                    </Grid>
+                </Frame>
+
+                <Frame Style="{StaticResource CardFrame}" Padding="12,10"
+                       IsVisible="{Binding HasWellnessCheckIn}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <BoxView Grid.Column="0" Color="#1E88E5" WidthRequest="4" CornerRadius="2" VerticalOptions="Fill" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Wellness Check-In" FontSize="14" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding LastWellnessCheckInDate, StringFormat='Last check-in: {0}'}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="Re-check"
+                                Command="{Binding StartWellnessCheckInCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                FontSize="12" HeightRequest="34" Padding="12,0"
+                                VerticalOptions="Center" />
+                    </Grid>
+                </Frame>
 
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
                                    IsVisible="{Binding IsBusy}"

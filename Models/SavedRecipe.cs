@@ -65,6 +65,12 @@ public class SavedRecipe
     [MaxLength(200)]
     public string? ServingSizeNote { get; set; }
 
+    /// <summary>Wikimedia Commons thumbnail URL for the dish, when the source
+    /// Wikibooks page has a photo (~20% of recipes). Null = no image; the UI
+    /// falls back to the category emoji tile. Loaded at runtime (not bundled).</summary>
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
+
     // Precomputed diet-compatibility flags (classified offline from the full
     // ingredient list; see the diet classifier + DietConflictKeywords fallback).
     // Used by meal-plan generation and the swap picker so a diet can never be violated.
@@ -78,6 +84,20 @@ public class SavedRecipe
     public bool IsHalal { get; set; }
     public bool IsKosher { get; set; }
     public bool IsMediterranean { get; set; }
+
+    // Precomputed health-consciousness classification (see RecipeHealth). Scored
+    // on a fitness lens from the nutrition snapshot above; drives the "Healthy"
+    // browse filter, the tier badge, and meal-plan junk exclusion.
+    /// <summary>0-100 fitness health score; higher = leaner. Null until classified.</summary>
+    public int? HealthScore { get; set; }
+
+    /// <summary>"Healthy" / "Moderate" / "Indulgent" (see <see cref="Data.RecipeHealth"/>).</summary>
+    [MaxLength(12)]
+    public string? HealthTier { get; set; }
+
+    /// <summary>True for a sweet/dessert recipe that still clears the health bar
+    /// (a lean high-protein treat) — surfaced so smart treats aren't hidden.</summary>
+    public bool IsHealthyTreat { get; set; }
 
     [MaxLength(500)]
     public string? TagsJson { get; set; }

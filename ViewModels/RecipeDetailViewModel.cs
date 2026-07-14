@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IntelligentPersonalHealthOptimization.Data;
 using IntelligentPersonalHealthOptimization.Models.Recipe;
 using IntelligentPersonalHealthOptimization.Services.Interfaces;
+using Microsoft.Maui.Graphics;
 
 namespace IntelligentPersonalHealthOptimization.ViewModels;
 
@@ -39,6 +41,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private string _saveButtonText = "Save Recipe";
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasImage))]
+    private string? _imageUrl;
+
+    public bool HasImage => !string.IsNullOrEmpty(ImageUrl);
+
     // Formatted display properties
     [ObservableProperty]
     private string _recipeName = string.Empty;
@@ -66,6 +74,16 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _hasNutrition;
+
+    // Health-consciousness tier badge (see RecipeHealth).
+    [ObservableProperty]
+    private bool _showHealthBadge;
+
+    [ObservableProperty]
+    private string _healthBadgeText = string.Empty;
+
+    [ObservableProperty]
+    private Color _healthBadgeColor = Colors.Gray;
 
     [ObservableProperty]
     private bool _hasPrepTime;
@@ -182,6 +200,8 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
             // Cookbook recipes are favorited in place: RecipeId is the catalog
             // row's Id, so "saved" means IsFavorite is set on that row.
+            ImageUrl = Recipe.Recipe?.ImageUrl;
+            SetHealthBadge(Recipe.Recipe?.HealthTier, Recipe.Recipe?.IsHealthyTreat ?? false);
             IsSaved = await _savedRecipeService.IsFavoriteAsync(RecipeId);
             UpdateSaveButton();
         }
@@ -212,6 +232,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
             RecipeName = saved.RecipeName;
             CategoryName = saved.CategoryName;
+            ImageUrl = saved.ImageUrl;
             Title = RecipeName;
 
             PrepTime = saved.PrepTime ?? string.Empty;
@@ -274,6 +295,8 @@ public partial class RecipeDetailViewModel : BaseViewModel
                 ));
             DirectionGroups = new ObservableCollection<DirectionGrouping>(directionGrouped);
 
+            SetHealthBadge(saved.HealthTier, saved.IsHealthyTreat);
+
             // Mark as saved
             IsSaved = true;
             UpdateSaveButton();
@@ -291,13 +314,18 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task ToggleSaveAsync()
     {
-        if (Recipe == null) return;
+        // The catalog lives in the SavedRecipe table, so the favourite id is
+        // RecipeId on the cookbook path and SavedRecipeId when opened from a
+        // meal plan. (Previously this guarded on Recipe != null, which is only
+        // set on the cookbook path — so the star silently no-op'd from a plan.)
+        var favoriteId = RecipeId > 0 ? RecipeId : SavedRecipeId;
+        if (favoriteId <= 0) return;
 
         try
         {
             // Flip IsFavorite on the catalog row — same mechanism the star on
             // the browse list uses, so the two stay in sync.
-            await _savedRecipeService.ToggleFavoriteAsync(RecipeId);
+            await _savedRecipeService.ToggleFavoriteAsync(favoriteId);
             IsSaved = !IsSaved;
             UpdateSaveButton();
         }
@@ -310,5 +338,19 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private void UpdateSaveButton()
     {
         SaveButtonText = IsSaved ? "Remove from Saved" : "Save Recipe";
+    }
+
+    /// <summary>Set the health-tier badge from a classified row.</summary>
+    private void SetHealthBadge(string? tier, bool isTreat)
+    {
+        ShowHealthBadge = !string.IsNullOrEmpty(tier);
+        HealthBadgeText = isTreat ? "Healthy Treat" : (tier ?? string.Empty);
+        HealthBadgeColor = tier switch
+        {
+            RecipeHealth.Healthy => Color.FromArgb("#1F8A4C"),
+            RecipeHealth.Moderate => Color.FromArgb("#B9791A"),
+            RecipeHealth.Indulgent => Color.FromArgb("#BB5340"),
+            _ => Colors.Gray,
+        };
     }
 }

@@ -68,10 +68,24 @@
                                        TextColor="{StaticResource Primary}"
                                        VerticalOptions="Center" />
                             </Grid>
-                            <!-- Category -->
-                            <Label Text="{Binding Category}"
-                                   FontSize="12"
-                                   TextColor="{StaticResource Gray500}" />
+                            <!-- Category + match-to-target -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Label Text="{Binding Category}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                                <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Border IsVisible="{Binding IsBestMatch}"
+                                            Stroke="Transparent"
+                                            BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}"
+                                            StrokeShape="RoundRectangle 6" Padding="6,2">
+                                        <Label Text="Closest match" FontSize="10" FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#1B5E20, Dark={StaticResource White}}" />
+                                    </Border>
+                                    <Label Text="{Binding MatchText}" FontSize="11"
+                                           TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                            </Grid>
                             <!-- Servings note -->
                             <Label Text="{Binding ServingsNote}"
                                    FontSize="12"

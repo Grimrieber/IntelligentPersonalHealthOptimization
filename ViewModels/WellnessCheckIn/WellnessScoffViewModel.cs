@@ -17,12 +17,12 @@ public partial class WellnessScoffViewModel : BaseViewModel
     [ObservableProperty] private string _stepIndicator = string.Empty;
     [ObservableProperty] private double _progressPercentage;
 
-    // SCOFF Questions (0=No, 1=Yes)
-    [ObservableProperty] private int _scoffSickIndex;
-    [ObservableProperty] private int _scoffControlIndex;
-    [ObservableProperty] private int _scoffWeightLossIndex;
-    [ObservableProperty] private int _scoffBodyImageIndex;
-    [ObservableProperty] private int _scoffFoodDominatesIndex;
+    // SCOFF Questions (-1=unanswered, 0=No, 1=Yes)
+    [ObservableProperty] private int _scoffSickIndex = -1;
+    [ObservableProperty] private int _scoffControlIndex = -1;
+    [ObservableProperty] private int _scoffWeightLossIndex = -1;
+    [ObservableProperty] private int _scoffBodyImageIndex = -1;
+    [ObservableProperty] private int _scoffFoodDominatesIndex = -1;
 
     // Nutrition Context
     [ObservableProperty] private int _mealsPerDayIndex;        // 0=1-2, 1=3, 2=4+
@@ -56,11 +56,16 @@ public partial class WellnessScoffViewModel : BaseViewModel
     private Task LoadAsync()
     {
         var data = _coordinator.Data;
-        ScoffSickIndex = data.ScoffSick ? 1 : 0;
-        ScoffControlIndex = data.ScoffControl ? 1 : 0;
-        ScoffWeightLossIndex = data.ScoffWeightLoss ? 1 : 0;
-        ScoffBodyImageIndex = data.ScoffBodyImage ? 1 : 0;
-        ScoffFoodDominatesIndex = data.ScoffFoodDominates ? 1 : 0;
+        // Only restore answers if they were actually given before; otherwise leave
+        // the pickers unanswered (-1) so the user must respond.
+        if (data.ScoffAnswered)
+        {
+            ScoffSickIndex = data.ScoffSick ? 1 : 0;
+            ScoffControlIndex = data.ScoffControl ? 1 : 0;
+            ScoffWeightLossIndex = data.ScoffWeightLoss ? 1 : 0;
+            ScoffBodyImageIndex = data.ScoffBodyImage ? 1 : 0;
+            ScoffFoodDominatesIndex = data.ScoffFoodDominates ? 1 : 0;
+        }
         MealsPerDayIndex = data.MealsPerDay switch { <= 2 => 0, 3 => 1, _ => 2 };
         WeighFrequencyIndex = data.WeighFrequency;
         PostMealFeelingIndex = data.PostMealFeeling;
@@ -72,9 +77,14 @@ public partial class WellnessScoffViewModel : BaseViewModel
         return Task.CompletedTask;
     }
 
+    private bool AllScoffAnswered =>
+        ScoffSickIndex >= 0 && ScoffControlIndex >= 0 && ScoffWeightLossIndex >= 0 &&
+        ScoffBodyImageIndex >= 0 && ScoffFoodDominatesIndex >= 0;
+
     private void SyncToCoordinator()
     {
         var data = _coordinator.Data;
+        data.ScoffAnswered = AllScoffAnswered;
         data.ScoffSick = ScoffSickIndex == 1;
         data.ScoffControl = ScoffControlIndex == 1;
         data.ScoffWeightLoss = ScoffWeightLossIndex == 1;
@@ -90,6 +100,14 @@ public partial class WellnessScoffViewModel : BaseViewModel
     [RelayCommand]
     private async Task GoNextAsync()
     {
+        if (!AllScoffAnswered)
+        {
+            await Shell.Current.DisplayAlert("Please answer all questions",
+                "These questions help us support you properly — please respond to each one before continuing.",
+                "OK");
+            return;
+        }
+
         SyncToCoordinator();
         await _coordinator.GoNextAsync();
     }

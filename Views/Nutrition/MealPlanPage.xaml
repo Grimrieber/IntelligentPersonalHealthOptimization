@@ -80,6 +80,17 @@
                                    FontSize="12"
                                    HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource Gray500}" />
+                            <!-- On-target signal: green when on/under, amber when over -->
+                            <Label Text="{Binding DayVsTargetText}"
+                                   FontSize="12" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#4CAF50"
+                                   IsVisible="{Binding IsDayOver, Converter={StaticResource InverseBool}}" />
+                            <Label Text="{Binding DayVsTargetText}"
+                                   FontSize="12" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#FB8C00"
+                                   IsVisible="{Binding IsDayOver}" />
                         </VerticalStackLayout>
                         <Button Grid.Column="2"
                                 Text="&gt;"
@@ -110,7 +121,22 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlanViewModel}}, Path=ViewMealDetailCommand}"
                                         CommandParameter="{Binding .}" />
                                 </Frame.GestureRecognizers>
-                                <VerticalStackLayout Spacing="2">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                  <!-- Thumbnail: emoji/accent tile with the dish photo
+                                       on top (mirrors the Recipes-tab card). -->
+                                  <Border Grid.Column="0" WidthRequest="56" HeightRequest="56"
+                                          StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                          VerticalOptions="Center">
+                                      <Grid WidthRequest="56" HeightRequest="56">
+                                          <Border StrokeThickness="0" BackgroundColor="{Binding Accent}">
+                                              <Label Text="{Binding Emoji}" FontSize="24"
+                                                     HorizontalOptions="Center" VerticalOptions="Center" />
+                                          </Border>
+                                          <Image Source="{Binding ImageUrl}" Aspect="AspectFill"
+                                                 WidthRequest="56" HeightRequest="56" />
+                                      </Grid>
+                                  </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
                                     <!-- Row 1: Recipe name + calories -->
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                         <Label Text="{Binding MealName}"
@@ -124,11 +150,21 @@
                                                VerticalOptions="Center" />
                                     </Grid>
 
-                                    <!-- Row 2: Meal type + swap -->
+                                    <!-- Row 2: Meal type + health badge + swap -->
                                     <Grid ColumnDefinitions="*,Auto">
-                                        <Label Text="{Binding MealTypeName}"
-                                               FontSize="12"
-                                               TextColor="{StaticResource Gray500}" />
+                                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                            <Label Text="{Binding MealTypeName}"
+                                                   FontSize="12"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource Gray500}" />
+                                            <Border IsVisible="{Binding ShowHealthBadge}"
+                                                    BackgroundColor="{Binding HealthBadgeColor}"
+                                                    StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                                    Padding="7,2" VerticalOptions="Center">
+                                                <Label Text="{Binding HealthBadgeText}"
+                                                       FontSize="10" FontAttributes="Bold" TextColor="White" />
+                                            </Border>
+                                        </HorizontalStackLayout>
                                         <Button Grid.Column="1"
                                                 Text="Swap"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlanViewModel}}, Path=SwapMealCommand}"
@@ -164,6 +200,7 @@
                                                TextColor="{StaticResource Gray400}" />
                                     </Grid>
                                 </VerticalStackLayout>
+                                </Grid>
                             </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

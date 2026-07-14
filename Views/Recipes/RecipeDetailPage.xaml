@@ -17,9 +17,20 @@
                            FontSize="26"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-                    <Label Text="{Binding CategoryName}"
-                           FontSize="14"
-                           TextColor="{StaticResource Gray500}" />
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="{Binding CategoryName}"
+                               FontSize="14"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource Gray500}" />
+                        <!-- Health tier badge -->
+                        <Border IsVisible="{Binding ShowHealthBadge}"
+                                BackgroundColor="{Binding HealthBadgeColor}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 9"
+                                Padding="9,3" VerticalOptions="Center">
+                            <Label Text="{Binding HealthBadgeText}"
+                                   FontSize="11" FontAttributes="Bold" TextColor="White" />
+                        </Border>
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
 
                 <!-- Star: save / unsave. Dim = not saved, bright = saved. -->
@@ -34,6 +45,14 @@
                     </Label.GestureRecognizers>
                 </Label>
             </Grid>
+
+            <!-- Hero photo (Wikimedia Commons), when available -->
+            <Border IsVisible="{Binding HasImage}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 14"
+                    HeightRequest="200">
+                <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+            </Border>
 
             <!-- Time / Servings Cards -->
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
@@ -186,7 +205,7 @@
                 <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
 
                 <Frame Style="{StaticResource CardFrame}" Padding="16">
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="16">
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="16">
                         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2" HorizontalOptions="Center">
                             <Label Text="Calories" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
                             <Label Text="{Binding Calories}" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
@@ -221,8 +240,23 @@
                             <Label Text="Sodium" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
                             <Label Text="{Binding Sodium}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
                         </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="5" Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="Saturated Fat" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding SaturatedFat}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="5" Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="Cholesterol" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Cholesterol}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
                     </Grid>
                 </Frame>
+
+                <!-- Discoverable save action (beyond the header star) -->
+                <Button Text="{Binding SaveButtonText}"
+                        Command="{Binding ToggleSaveCommand}"
+                        Style="{StaticResource SecondaryButton}"
+                        Margin="0,4,0,0" />
             </VerticalStackLayout>
 
             <BoxView HeightRequest="20" Color="Transparent" />
