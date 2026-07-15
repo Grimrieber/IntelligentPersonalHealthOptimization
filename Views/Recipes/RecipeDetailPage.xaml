@@ -32,6 +32,22 @@
                                    FontSize="11" FontAttributes="Bold" TextColor="White" />
                         </Border>
                     </HorizontalStackLayout>
+
+                    <!-- Diet-compatibility chips (Vegan / Gluten-Free / …) -->
+                    <FlexLayout Wrap="Wrap" Direction="Row" Margin="0,4,0,0"
+                                IsVisible="{Binding HasDietBadges}"
+                                BindableLayout.ItemsSource="{Binding DietBadges}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border StrokeThickness="1" StrokeShape="RoundRectangle 8"
+                                        Stroke="#2E7D32" BackgroundColor="Transparent"
+                                        Padding="8,3" Margin="0,0,6,4">
+                                    <Label Text="{Binding .}" FontSize="11" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#2E7D32, Dark=#7CCF86}" />
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
                 </VerticalStackLayout>
 
                 <!-- Star: save / unsave. Dim = not saved, bright = saved. -->

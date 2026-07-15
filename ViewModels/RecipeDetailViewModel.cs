@@ -604,6 +604,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
             // row's Id, so "saved" means IsFavorite is set on that row.
             ImageUrl = Recipe.Recipe?.ImageUrl;
             SetHealthBadge(Recipe.Recipe?.HealthTier, Recipe.Recipe?.IsHealthyTreat ?? false);
+            var ri = Recipe.Recipe;
+            if (ri != null)
+                SetDietBadges(ri.IsVegetarian, ri.IsVegan, ri.IsPescatarian, ri.IsGlutenFree,
+                    ri.IsDairyFree, ri.IsKeto, ri.IsPaleo, ri.IsHalal, ri.IsKosher, ri.IsMediterranean);
             IsSaved = await _savedRecipeService.IsFavoriteAsync(RecipeId);
             UpdateSaveButton();
 
@@ -703,6 +707,8 @@ public partial class RecipeDetailViewModel : BaseViewModel
             DirectionGroups = new ObservableCollection<DirectionGrouping>(directionGrouped);
 
             SetHealthBadge(saved.HealthTier, saved.IsHealthyTreat);
+            SetDietBadges(saved.IsVegetarian, saved.IsVegan, saved.IsPescatarian, saved.IsGlutenFree,
+                saved.IsDairyFree, saved.IsKeto, saved.IsPaleo, saved.IsHalal, saved.IsKosher, saved.IsMediterranean);
             SetMyPersonal(saved.MyRating, saved.MyNote);
 
             RecordRecentView();
@@ -749,6 +755,34 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private void UpdateSaveButton()
     {
         SaveButtonText = IsSaved ? "Remove from Saved" : "Save Recipe";
+    }
+
+    // Diet-compatibility badges (Vegan / Gluten-Free / …) from the precomputed flags.
+    [ObservableProperty]
+    private ObservableCollection<string> _dietBadges = [];
+
+    [ObservableProperty]
+    private bool _hasDietBadges;
+
+    /// <summary>Build the diet-badge chips from the precomputed flags. Suppresses
+    /// redundant labels (vegan implies vegetarian; vegetarian implies pescatarian).</summary>
+    private void SetDietBadges(bool veg, bool vegan, bool pesc, bool gf, bool df,
+        bool keto, bool paleo, bool halal, bool kosher, bool med)
+    {
+        var badges = new List<string>();
+        if (vegan) badges.Add("Vegan");
+        else if (veg) badges.Add("Vegetarian");
+        else if (pesc) badges.Add("Pescatarian");
+        if (gf) badges.Add("Gluten-Free");
+        if (df) badges.Add("Dairy-Free");
+        if (keto) badges.Add("Keto");
+        if (paleo) badges.Add("Paleo");
+        if (med) badges.Add("Mediterranean");
+        if (halal) badges.Add("Halal");
+        if (kosher) badges.Add("Kosher");
+
+        DietBadges = new ObservableCollection<string>(badges);
+        HasDietBadges = badges.Count > 0;
     }
 
     // Tier of the currently-loaded recipe, captured for the recently-viewed strip.
