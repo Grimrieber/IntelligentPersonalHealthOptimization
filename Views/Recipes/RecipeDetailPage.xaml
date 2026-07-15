@@ -319,6 +319,13 @@
                     </Grid>
                 </Frame>
 
+                <!-- Log this recipe (at the chosen serving count) to today's nutrition -->
+                <Button Text="&#x1F37D;  Log to Today"
+                        Command="{Binding LogRecipeCommand}"
+                        IsVisible="{Binding HasNutrition}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        FontAttributes="Bold" Margin="0,4,0,0" />
+
                 <!-- Discoverable save action (beyond the header star) -->
                 <Button Text="{Binding SaveButtonText}"
                         Command="{Binding ToggleSaveCommand}"

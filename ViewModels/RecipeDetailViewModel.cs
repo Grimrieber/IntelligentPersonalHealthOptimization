@@ -17,17 +17,73 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private readonly ISavedRecipeService _savedRecipeService;
     private readonly IUserService _userService;
     private readonly INutritionService _nutritionService;
+    private readonly IDatabaseService _databaseService;
 
     public RecipeDetailViewModel(
         IRecipeService recipeService,
         ISavedRecipeService savedRecipeService,
         IUserService userService,
-        INutritionService nutritionService)
+        INutritionService nutritionService,
+        IDatabaseService databaseService)
     {
         _recipeService = recipeService;
         _savedRecipeService = savedRecipeService;
         _userService = userService;
         _nutritionService = nutritionService;
+        _databaseService = databaseService;
+    }
+
+    /// <summary>Log this recipe to today's food log (respecting the serving scaler),
+    /// after asking which meal it counts as.</summary>
+    [RelayCommand]
+    private async Task LogRecipeAsync()
+    {
+        if (!_baseCal.HasValue)
+        {
+            await Shell.Current.DisplayAlert("Can't log", "This recipe has no nutrition to log.", "OK");
+            return;
+        }
+
+        var choice = await Shell.Current.DisplayActionSheet(
+            "Log to today as…", "Cancel", null, "Breakfast", "Lunch", "Dinner", "Snack");
+        if (string.IsNullOrEmpty(choice) || choice == "Cancel") return;
+
+        var mealType = choice switch
+        {
+            "Breakfast" => Models.Enums.MealType.Breakfast,
+            "Lunch" => Models.Enums.MealType.Lunch,
+            "Dinner" => Models.Enums.MealType.Dinner,
+            _ => Models.Enums.MealType.AfternoonSnack,
+        };
+
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            if (user == null) return;
+
+            var m = ServingMultiplier;
+            var entry = new Models.FoodLogEntry
+            {
+                UserId = user.Id,
+                LogDate = DateTime.Today,
+                MealType = mealType,
+                SavedRecipeId = RecipeId > 0 ? RecipeId : SavedRecipeId,
+                Calories = (_baseCal ?? 0) * m,
+                ProteinG = (_baseProtein ?? 0) * m,
+                CarbsG = (_baseCarbs ?? 0) * m,
+                FatG = (_baseFat ?? 0) * m,
+                Notes = RecipeName,
+            };
+            await _databaseService.InsertAsync(entry);
+
+            var kcal = (_baseCal ?? 0) * m;
+            await Shell.Current.DisplayAlert("Logged",
+                $"{RecipeName} ({m} serving{(m > 1 ? "s" : "")}, {kcal:F0} kcal) added to today.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", $"Could not log recipe: {ex.Message}", "OK");
+        }
     }
 
     [ObservableProperty]
