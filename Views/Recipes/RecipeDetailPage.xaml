@@ -198,11 +198,32 @@
 
             <!-- ===== NUTRITION FACTS ===== -->
             <VerticalStackLayout Spacing="8" IsVisible="{Binding HasNutrition}">
-                <Label Text="Nutrition Facts - Per Serving"
+                <Label Text="Nutrition Facts"
                        FontSize="20"
                        FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
                 <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
+
+                <!-- Serving scaler — step servings to portion the recipe to your macros -->
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="0,4,0,2"
+                      IsVisible="{Binding HasNutrition}">
+                    <Button Grid.Column="0" Text="&#x2212;"
+                            Command="{Binding DecreaseServingsCommand}"
+                            IsEnabled="{Binding CanDecreaseServings}"
+                            WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0"
+                            FontSize="20" FontAttributes="Bold"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                            TextColor="{StaticResource Primary}" />
+                    <Label Grid.Column="1" Text="{Binding ScaleLabel}"
+                           FontSize="14" FontAttributes="Bold"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <Button Grid.Column="2" Text="+"
+                            Command="{Binding IncreaseServingsCommand}"
+                            WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0"
+                            FontSize="20" FontAttributes="Bold"
+                            BackgroundColor="{StaticResource Primary}" TextColor="White" />
+                </Grid>
 
                 <!-- Fits your goals: verdict vs the user's calorie/macro targets -->
                 <Border IsVisible="{Binding ShowGoalFit}" StrokeThickness="0" StrokeShape="RoundRectangle 10"

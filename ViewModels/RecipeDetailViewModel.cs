@@ -241,6 +241,59 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private string _servingSizeNote = string.Empty;
 
+    // ---- serving scaler ----
+    // Base (per-serving) nutrition captured on load; the displayed values are these
+    // scaled by ServingMultiplier so the user can portion to their macros.
+    private int? _baseCal;
+    private double? _baseProtein, _baseCarbs, _baseFat, _baseFiber, _baseSugar, _baseSatFat, _baseSodium, _baseChol;
+
+    [ObservableProperty]
+    private int _servingMultiplier = 1;
+
+    public bool CanDecreaseServings => ServingMultiplier > 1;
+    public string ScaleLabel => ServingMultiplier == 1 ? "Per serving" : $"For {ServingMultiplier} servings";
+
+    [RelayCommand]
+    private void IncreaseServings()
+    {
+        if (ServingMultiplier >= 12) return;
+        ServingMultiplier++;
+        ApplyServingScale();
+    }
+
+    [RelayCommand]
+    private void DecreaseServings()
+    {
+        if (ServingMultiplier <= 1) return;
+        ServingMultiplier--;
+        ApplyServingScale();
+    }
+
+    private void SetBaseNutrition(int? cal, double? protein, double? carbs, double? fat,
+        double? fiber, double? sugar, double? satfat, double? sodium, double? chol)
+    {
+        _baseCal = cal; _baseProtein = protein; _baseCarbs = carbs; _baseFat = fat;
+        _baseFiber = fiber; _baseSugar = sugar; _baseSatFat = satfat; _baseSodium = sodium; _baseChol = chol;
+        ServingMultiplier = 1;
+        ApplyServingScale();
+    }
+
+    private void ApplyServingScale()
+    {
+        var m = ServingMultiplier;
+        Calories = _baseCal.HasValue ? (_baseCal.Value * m).ToString() : "--";
+        Protein = _baseProtein.HasValue ? $"{_baseProtein.Value * m:F1}g" : "--";
+        Carbs = _baseCarbs.HasValue ? $"{_baseCarbs.Value * m:F1}g" : "--";
+        Fat = _baseFat.HasValue ? $"{_baseFat.Value * m:F1}g" : "--";
+        Fiber = _baseFiber.HasValue ? $"{_baseFiber.Value * m:F1}g" : "--";
+        Sugar = _baseSugar.HasValue ? $"{_baseSugar.Value * m:F1}g" : "--";
+        SaturatedFat = _baseSatFat.HasValue ? $"{_baseSatFat.Value * m:F1}g" : "--";
+        Sodium = _baseSodium.HasValue ? $"{_baseSodium.Value * m:F1}mg" : "--";
+        Cholesterol = _baseChol.HasValue ? $"{_baseChol.Value * m:F1}mg" : "--";
+        OnPropertyChanged(nameof(ScaleLabel));
+        OnPropertyChanged(nameof(CanDecreaseServings));
+    }
+
     // Grouped data for display
     [ObservableProperty]
     private ObservableCollection<IngredientGrouping> _ingredientGroups = [];
@@ -298,15 +351,9 @@ public partial class RecipeDetailViewModel : BaseViewModel
             if (Recipe.Nutrition != null)
             {
                 var n = Recipe.Nutrition;
-                Calories = n.CaloriesPerServing?.ToString() ?? "--";
-                Protein = n.ProteinGrams.HasValue ? $"{n.ProteinGrams:F1}g" : "--";
-                Carbs = n.TotalCarbsGrams.HasValue ? $"{n.TotalCarbsGrams:F1}g" : "--";
-                Fat = n.TotalFatGrams.HasValue ? $"{n.TotalFatGrams:F1}g" : "--";
-                Fiber = n.FiberGrams.HasValue ? $"{n.FiberGrams:F1}g" : "--";
-                Sugar = n.SugarGrams.HasValue ? $"{n.SugarGrams:F1}g" : "--";
-                SaturatedFat = n.SaturatedFatGrams.HasValue ? $"{n.SaturatedFatGrams:F1}g" : "--";
-                Cholesterol = n.CholesterolMg.HasValue ? $"{n.CholesterolMg:F1}mg" : "--";
-                Sodium = n.SodiumMg.HasValue ? $"{n.SodiumMg:F1}mg" : "--";
+                SetBaseNutrition(n.CaloriesPerServing, (double?)n.ProteinGrams, (double?)n.TotalCarbsGrams,
+                    (double?)n.TotalFatGrams, (double?)n.FiberGrams, (double?)n.SugarGrams,
+                    (double?)n.SaturatedFatGrams, (double?)n.SodiumMg, (double?)n.CholesterolMg);
                 ServingSizeNote = n.ServingSizeNote ?? string.Empty;
                 SetMacroBar((double?)n.ProteinGrams, (double?)n.TotalCarbsGrams, (double?)n.TotalFatGrams);
                 await ApplyGoalFitAsync(n.CaloriesPerServing, (double?)n.ProteinGrams, Recipe.Recipe?.HealthTier);
@@ -366,16 +413,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
             // Nutrition from saved snapshot
             HasNutrition = saved.CaloriesPerServing.HasValue;
-            Calories = saved.CaloriesPerServing?.ToString() ?? "--";
-            Protein = saved.ProteinGrams.HasValue ? $"{saved.ProteinGrams:F1}g" : "--";
-            Carbs = saved.CarbsGrams.HasValue ? $"{saved.CarbsGrams:F1}g" : "--";
-            Fat = saved.FatGrams.HasValue ? $"{saved.FatGrams:F1}g" : "--";
-            Fiber = saved.FiberGrams.HasValue ? $"{saved.FiberGrams:F1}g" : "--";
-            Sugar = saved.SugarGrams.HasValue ? $"{saved.SugarGrams:F1}g" : "--";
+            SetBaseNutrition(saved.CaloriesPerServing, saved.ProteinGrams, saved.CarbsGrams,
+                saved.FatGrams, saved.FiberGrams, saved.SugarGrams, saved.SatFatGrams,
+                saved.SodiumMg, saved.CholesterolMg);
             ServingSizeNote = saved.ServingSizeNote ?? string.Empty;
-            SaturatedFat = "--";
-            Cholesterol = "--";
-            Sodium = "--";
             SetMacroBar(saved.ProteinGrams, saved.CarbsGrams, saved.FatGrams);
             await ApplyGoalFitAsync(saved.CaloriesPerServing, saved.ProteinGrams, saved.HealthTier);
 
