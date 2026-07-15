@@ -346,11 +346,14 @@
                                    LineBreakMode="WordWrap"
                                    MaxLines="2"
                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-                            <!-- Prep/Cook — wrap (FlexLayout) so long/messy time strings
-                                 don't clip at the right edge. -->
-                            <FlexLayout Grid.Row="1" Grid.Column="1" Wrap="Wrap" Direction="Row">
+                            <!-- Prep/Cook — stacked in a VerticalStackLayout (NOT FlexLayout):
+                                 a wrapping Label's height is mis-measured inside a FlexLayout,
+                                 so a long cook string (e.g. "5 minutes per skillet of pancakes")
+                                 that wraps to 2 lines overflowed into the badge row below. A
+                                 vertical stack measures each wrapped label correctly. -->
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
                                 <Label IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}"
-                                       FontSize="12" Margin="0,0,12,0" LineBreakMode="WordWrap">
+                                       FontSize="12" LineBreakMode="WordWrap">
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="Prep: " TextColor="{StaticResource Gray500}" />
@@ -367,7 +370,7 @@
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-                            </FlexLayout>
+                            </VerticalStackLayout>
                             <FlexLayout Grid.Row="2" Grid.Column="1" Wrap="Wrap" AlignItems="Center">
                                 <!-- Health tier chip (green Healthy / amber Moderate /
                                      clay Indulgent; "Treat" = a lean sweet). -->
@@ -441,16 +444,28 @@
                                    LineBreakMode="WordWrap"
                                    MaxLines="2"
                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="12">
-                                <HorizontalStackLayout Spacing="4" IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}">
-                                    <Label Text="Prep:" FontSize="12" TextColor="{StaticResource Gray500}" />
-                                    <Label Text="{Binding PrepTime}" FontSize="12" FontAttributes="Bold" />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Spacing="4" IsVisible="{Binding CookTime, Converter={StaticResource IsNotEmptyConverter}}">
-                                    <Label Text="Cook:" FontSize="12" TextColor="{StaticResource Gray500}" />
-                                    <Label Text="{Binding CookTime}" FontSize="12" FontAttributes="Bold" />
-                                </HorizontalStackLayout>
-                            </HorizontalStackLayout>
+                            <!-- Prep/Cook stacked with WordWrap so long time strings wrap
+                                 instead of clipping at the right edge (Column 0 is *-width). -->
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                <Label IsVisible="{Binding PrepTime, Converter={StaticResource IsNotEmptyConverter}}"
+                                       FontSize="12" LineBreakMode="WordWrap">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Prep: " TextColor="{StaticResource Gray500}" />
+                                            <Span Text="{Binding PrepTime}" FontAttributes="Bold" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label IsVisible="{Binding CookTime, Converter={StaticResource IsNotEmptyConverter}}"
+                                       FontSize="12" LineBreakMode="WordWrap">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Cook: " TextColor="{StaticResource Gray500}" />
+                                            <Span Text="{Binding CookTime}" FontAttributes="Bold" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
                             <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12">
                                 <Label Text="{Binding CategoryName}" FontSize="12" TextColor="{StaticResource Gray500}" />
                                 <Label Text="{Binding Servings, StringFormat='Serving Size: {0}'}" FontSize="12" TextColor="{StaticResource Gray500}" />
