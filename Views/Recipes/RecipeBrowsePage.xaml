@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
              xmlns:recipe="clr-namespace:IntelligentPersonalHealthOptimization.Models.Recipe"
              xmlns:models="clr-namespace:IntelligentPersonalHealthOptimization.Models"
+             xmlns:data="clr-namespace:IntelligentPersonalHealthOptimization.Data"
              x:Class="IntelligentPersonalHealthOptimization.Views.Recipes.RecipeBrowsePage"
              x:DataType="vm:RecipeBrowseViewModel"
              Title="{Binding Title}">
@@ -166,7 +167,53 @@
                 <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
             </CollectionView.ItemsLayout>
             <CollectionView.Header>
-                <BoxView HeightRequest="4" Color="Transparent" />
+                <!-- "Jump back in" — recently viewed recipes strip -->
+                <VerticalStackLayout Spacing="8" Margin="8,4,8,10"
+                                     IsVisible="{Binding HasRecentlyViewed}">
+                    <Label Text="Jump back in"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                    <!-- ScrollView + BindableLayout (a nested horizontal CollectionView
+                         inside a CollectionView header renders blank on Android). -->
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Spacing="10"
+                                               BindableLayout.ItemsSource="{Binding RecentlyViewed}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="data:RecentRecipe">
+                                    <Frame Style="{StaticResource CardFrame}" Padding="0" WidthRequest="130">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=OpenRecentCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Frame.GestureRecognizers>
+                                        <Grid RowDefinitions="80,Auto" RowSpacing="0">
+                                            <Image Grid.Row="0"
+                                                   Source="{Binding ImageUrl}"
+                                                   Aspect="AspectFill"
+                                                   IsVisible="{Binding HasImage}" />
+                                            <Border Grid.Row="0"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                                                    StrokeThickness="0"
+                                                    IsVisible="{Binding HasImage, Converter={StaticResource InverseBool}}">
+                                                <Label Text="&#x1F374;" FontSize="30"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                            <VerticalStackLayout Grid.Row="1" Padding="8,6" Spacing="2">
+                                                <Label Text="{Binding Name}"
+                                                       FontSize="12" FontAttributes="Bold"
+                                                       LineBreakMode="TailTruncation" MaxLines="2"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                                <Label Text="{Binding CaloriesText}"
+                                                       FontSize="11"
+                                                       TextColor="{StaticResource Gray500}" />
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
             </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="recipe:RecipeCategory">

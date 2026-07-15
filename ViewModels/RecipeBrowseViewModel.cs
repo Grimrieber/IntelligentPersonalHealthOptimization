@@ -39,6 +39,30 @@ public partial class RecipeBrowseViewModel : BaseViewModel
     [ObservableProperty]
     private ObservableCollection<SavedRecipe> _savedRecipes = [];
 
+    /// <summary>"Jump back in" strip on the Cookbook landing — the recipes the
+    /// user opened most recently (see <see cref="Data.RecentRecipes"/>).</summary>
+    [ObservableProperty]
+    private ObservableCollection<Data.RecentRecipe> _recentlyViewed = [];
+
+    [ObservableProperty]
+    private bool _hasRecentlyViewed;
+
+    /// <summary>Re-read the recently-viewed list from storage. Called on every
+    /// page appearance so returning from a recipe refreshes the strip.</summary>
+    public void RefreshRecentlyViewed()
+    {
+        var recent = Data.RecentRecipes.Get();
+        RecentlyViewed = new ObservableCollection<Data.RecentRecipe>(recent);
+        HasRecentlyViewed = recent.Count > 0;
+    }
+
+    [RelayCommand]
+    private async Task OpenRecentAsync(Data.RecentRecipe recent)
+    {
+        if (recent == null || recent.Id <= 0) return;
+        await Shell.Current.GoToAsync($"RecipeDetail?recipeId={recent.Id}");
+    }
+
     [ObservableProperty]
     private RecipeCategory? _selectedCategory;
 

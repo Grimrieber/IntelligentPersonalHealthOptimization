@@ -589,6 +589,8 @@ public partial class RecipeDetailViewModel : BaseViewModel
             // Personal rating & notes live on the catalog SavedRecipe row (Id == RecipeId).
             var savedRow = await _savedRecipeService.GetSavedRecipeAsync(RecipeId);
             SetMyPersonal(savedRow?.MyRating ?? 0, savedRow?.MyNote);
+
+            RecordRecentView();
         }
         catch (Exception ex)
         {
@@ -681,6 +683,8 @@ public partial class RecipeDetailViewModel : BaseViewModel
             SetHealthBadge(saved.HealthTier, saved.IsHealthyTreat);
             SetMyPersonal(saved.MyRating, saved.MyNote);
 
+            RecordRecentView();
+
             // Mark as saved
             IsSaved = true;
             UpdateSaveButton();
@@ -724,9 +728,19 @@ public partial class RecipeDetailViewModel : BaseViewModel
         SaveButtonText = IsSaved ? "Remove from Saved" : "Save Recipe";
     }
 
+    // Tier of the currently-loaded recipe, captured for the recently-viewed strip.
+    private string? _currentTier;
+
+    /// <summary>Record the just-opened recipe in the recently-viewed list.</summary>
+    private void RecordRecentView()
+    {
+        Data.RecentRecipes.Add(TargetSavedId, RecipeName, ImageUrl, _currentTier, _baseCal);
+    }
+
     /// <summary>Set the health-tier badge from a classified row.</summary>
     private void SetHealthBadge(string? tier, bool isTreat)
     {
+        _currentTier = tier;
         ShowHealthBadge = !string.IsNullOrEmpty(tier);
         HealthBadgeText = isTreat ? "Healthy Treat" : (tier ?? string.Empty);
         HealthBadgeColor = tier switch

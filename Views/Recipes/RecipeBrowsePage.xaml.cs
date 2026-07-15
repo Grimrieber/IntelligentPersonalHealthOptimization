@@ -20,6 +20,9 @@ public partial class RecipeBrowsePage : ContentPage
         {
             if (_vm.Categories.Count == 0)
                 await _vm.LoadCategoriesCommand.ExecuteAsync(null);
+
+            // Refresh the "Jump back in" strip each time (e.g. after viewing a recipe).
+            _vm.RefreshRecentlyViewed();
         }
         catch (Exception ex)
         {
