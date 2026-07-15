@@ -36,6 +36,27 @@ public partial class RecipeDetailViewModel : BaseViewModel
         _foodService = foodService;
     }
 
+    /// <summary>Add every ingredient of this recipe to the shopping list.</summary>
+    [RelayCommand]
+    private async Task AddToShoppingListAsync()
+    {
+        var descriptions = IngredientGroups
+            .SelectMany(g => g.Items)
+            .Select(i => i.Description)
+            .Where(d => !string.IsNullOrWhiteSpace(d))
+            .ToList();
+
+        if (descriptions.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Nothing to add", "This recipe has no ingredients listed.", "OK");
+            return;
+        }
+
+        Data.ExtraShoppingItems.Add(RecipeName, descriptions);
+        await Shell.Current.DisplayAlert("Added to Shopping List",
+            $"{descriptions.Count} ingredient{(descriptions.Count == 1 ? "" : "s")} from {RecipeName} added to your shopping list.", "OK");
+    }
+
     /// <summary>Open the distraction-free step-by-step cooking view.</summary>
     [RelayCommand]
     private async Task StartCookingAsync()

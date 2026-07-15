@@ -14,6 +14,13 @@
                 <Label Text="Shopping List" FontSize="22" FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
                 <Label Text="{Binding Summary}" FontSize="13" TextColor="{StaticResource Gray500}" />
+                <Label Text="Remove items added from recipes"
+                       IsVisible="{Binding HasExtraItems}"
+                       FontSize="12" TextColor="{StaticResource Primary}" Margin="0,2,0,0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ClearAddedItemsCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
             </VerticalStackLayout>
             <Button Grid.Column="1" Text="Clear"
                     Command="{Binding ClearChecksCommand}"
@@ -28,10 +35,10 @@
                              VerticalOptions="Center" HorizontalOptions="Center"
                              Padding="40" Spacing="10">
             <Label Text="&#x1F6D2;" FontSize="44" HorizontalOptions="Center" />
-            <Label Text="No meal plan to shop for"
+            <Label Text="Nothing to shop for yet"
                    FontSize="17" FontAttributes="Bold"
                    TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-            <Label Text="Generate a meal plan in the Nutrition Coach and your ingredients will show up here, grouped by aisle."
+            <Label Text="Open any recipe and tap &#x201C;Add to Shopping List,&#x201D; or generate a meal plan in the Nutrition Coach. Ingredients show up here grouped by aisle."
                    FontSize="13" TextColor="{StaticResource Gray500}"
                    HorizontalTextAlignment="Center" HorizontalOptions="Center" />
         </VerticalStackLayout>

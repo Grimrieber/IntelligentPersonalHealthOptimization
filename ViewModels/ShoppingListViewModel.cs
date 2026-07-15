@@ -39,6 +39,9 @@ public partial class ShoppingListViewModel : BaseViewModel
     [ObservableProperty]
     private string _summary = string.Empty;
 
+    [ObservableProperty]
+    private bool _hasExtraItems;
+
     private readonly List<GroceryItem> _allItems = new();
 
     [RelayCommand]
@@ -54,33 +57,41 @@ public partial class ShoppingListViewModel : BaseViewModel
             var user = await _userService.GetCurrentUserAsync();
             if (user == null) { Finish(); return; }
 
-            var plan = await _nutritionService.GetActiveMealPlanAsync(user.Id);
-            if (plan == null) { Finish(); return; }
+            // Gather every ingredient line, tagged with its recipe.
+            var lines = new List<(string recipe, string description)>();
 
-            // Collect the unique catalog recipes used across the plan, keeping a
-            // display name for each (from the meal item).
-            var recipeNames = new Dictionary<int, string>();
-            var days = await _nutritionService.GetMealPlanDaysAsync(plan.Id);
-            foreach (var day in days)
+            var plan = await _nutritionService.GetActiveMealPlanAsync(user.Id);
+            if (plan != null)
             {
-                var items = await _nutritionService.GetMealItemsAsync(day.Id);
-                foreach (var it in items)
+                // Collect the unique catalog recipes used across the plan, keeping a
+                // display name for each (from the meal item).
+                var recipeNames = new Dictionary<int, string>();
+                var days = await _nutritionService.GetMealPlanDaysAsync(plan.Id);
+                foreach (var day in days)
                 {
-                    if (it.SavedRecipeId > 0 && !recipeNames.ContainsKey(it.SavedRecipeId))
-                        recipeNames[it.SavedRecipeId] = string.IsNullOrWhiteSpace(it.MealName)
-                            ? "Recipe" : it.MealName;
+                    var items = await _nutritionService.GetMealItemsAsync(day.Id);
+                    foreach (var it in items)
+                    {
+                        if (it.SavedRecipeId > 0 && !recipeNames.ContainsKey(it.SavedRecipeId))
+                            recipeNames[it.SavedRecipeId] = string.IsNullOrWhiteSpace(it.MealName)
+                                ? "Recipe" : it.MealName;
+                    }
+                }
+
+                foreach (var (recipeId, name) in recipeNames)
+                {
+                    var ingredients = await _savedRecipeService.GetSavedIngredientsAsync(recipeId);
+                    foreach (var ing in ingredients)
+                        if (!string.IsNullOrWhiteSpace(ing.Description))
+                            lines.Add((name, ing.Description));
                 }
             }
 
-            // Gather every ingredient line, tagged with its recipe.
-            var lines = new List<(string recipe, string description)>();
-            foreach (var (recipeId, name) in recipeNames)
-            {
-                var ingredients = await _savedRecipeService.GetSavedIngredientsAsync(recipeId);
-                foreach (var ing in ingredients)
-                    if (!string.IsNullOrWhiteSpace(ing.Description))
-                        lines.Add((name, ing.Description));
-            }
+            // Merge in any ad-hoc items added from recipes' "Add to Shopping List".
+            var extra = Data.ExtraShoppingItems.Get();
+            HasExtraItems = extra.Count > 0;
+            foreach (var x in extra)
+                lines.Add((x.Recipe, x.Description));
 
             var entries = GroceryList.Build(lines);
 
@@ -144,8 +155,17 @@ public partial class ShoppingListViewModel : BaseViewModel
         var total = _allItems.Count;
         var got = _allItems.Count(i => i.IsChecked);
         Summary = total == 0
-            ? "No meal plan to shop for yet."
+            ? "Nothing to shop for yet — add a recipe's ingredients from its page, or generate a meal plan."
             : $"{got}/{total} items checked";
+    }
+
+    /// <summary>Remove the ad-hoc items added from recipe pages (keeps meal-plan items).</summary>
+    [RelayCommand]
+    private async Task ClearAddedItemsAsync()
+    {
+        Data.ExtraShoppingItems.Clear();
+        HasExtraItems = false;
+        await LoadAsync();
     }
 
     [RelayCommand]
