@@ -33,6 +33,15 @@ public partial class RecipeDetailViewModel : BaseViewModel
         _databaseService = databaseService;
     }
 
+    /// <summary>Open the distraction-free step-by-step cooking view.</summary>
+    [RelayCommand]
+    private async Task StartCookingAsync()
+    {
+        var id = RecipeId > 0 ? RecipeId : SavedRecipeId;
+        if (id > 0)
+            await Shell.Current.GoToAsync($"{Constants.RouteConstants.CookMode}?recipeId={id}");
+    }
+
     /// <summary>Log this recipe to today's food log (respecting the serving scaler),
     /// after asking which meal it counts as.</summary>
     [RelayCommand]

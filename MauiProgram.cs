@@ -114,6 +114,7 @@ public static class MauiProgram
         builder.Services.AddTransient<BarcodeScannerViewModel>();
         builder.Services.AddTransient<MealPlanViewModel>();
         builder.Services.AddTransient<ShoppingListViewModel>();
+        builder.Services.AddTransient<CookModeViewModel>();
         builder.Services.AddTransient<MealSelectionViewModel>();
         builder.Services.AddTransient<AddCustomFoodViewModel>();
 
@@ -199,6 +200,7 @@ public static class MauiProgram
         builder.Services.AddTransient<BarcodeScannerPage>();
         builder.Services.AddTransient<MealPlanPage>();
         builder.Services.AddTransient<Views.Nutrition.ShoppingListPage>();
+        builder.Services.AddTransient<Views.Recipes.CookModePage>();
         builder.Services.AddTransient<MealSelectionPage>();
         builder.Services.AddTransient<AddCustomFoodPage>();
 

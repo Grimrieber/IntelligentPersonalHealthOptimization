@@ -139,6 +139,12 @@
 
                 <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
 
+                <!-- Distraction-free step-by-step cooking view -->
+                <Button Text="&#x1F468;&#x200D;&#x1F373;  Start Cooking"
+                        Command="{Binding StartCookingCommand}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        FontAttributes="Bold" Margin="0,2,0,4" />
+
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding DirectionGroups}" Spacing="4">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="recipe:DirectionGrouping">

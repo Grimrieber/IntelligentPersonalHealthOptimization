@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Recipes.CookModePage"
+             x:DataType="vm:CookModeViewModel"
+             Title="{Binding RecipeName}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20,12,20,20" RowSpacing="14">
+
+        <!-- Progress -->
+        <VerticalStackLayout Grid.Row="0" Spacing="6">
+            <Label Text="{Binding StepLabel}" FontSize="14" FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}" HorizontalOptions="Center" />
+            <ProgressBar Progress="{Binding Progress}" ProgressColor="{StaticResource Primary}" />
+        </VerticalStackLayout>
+
+        <!-- Current step -->
+        <Border Grid.Row="1" StrokeThickness="0" StrokeShape="RoundRectangle 16"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                Padding="22">
+            <ScrollView>
+                <Label Text="{Binding CurrentInstruction}"
+                       FontSize="24" LineHeight="1.35"
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            </ScrollView>
+        </Border>
+
+        <!-- Controls -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Grid.Column="0" Text="‹ Previous"
+                    Command="{Binding PreviousCommand}"
+                    IsEnabled="{Binding CanGoPrevious}"
+                    Style="{StaticResource SecondaryButton}"
+                    HeightRequest="54" />
+            <Button Grid.Column="1" Text="Next ›"
+                    Command="{Binding NextCommand}"
+                    IsVisible="{Binding IsLastStep, Converter={StaticResource InverseBool}}"
+                    BackgroundColor="{StaticResource Primary}" TextColor="White"
+                    FontAttributes="Bold" HeightRequest="54" />
+            <Button Grid.Column="1" Text="&#x2713;  Done"
+                    Command="{Binding FinishCommand}"
+                    IsVisible="{Binding IsLastStep}"
+                    BackgroundColor="{StaticResource Primary}" TextColor="White"
+                    FontAttributes="Bold" HeightRequest="54" />
+        </Grid>
+    </Grid>
+</ContentPage>
