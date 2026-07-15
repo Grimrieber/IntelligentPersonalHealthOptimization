@@ -53,6 +53,32 @@ public class LocalRecipeService : IRecipeService
         return await MapWithCountsAsync(conn, inCategory);
     }
 
+    public async Task<List<RecipeItem>> GetAllRecipesAsync()
+    {
+        var conn = await _db.GetConnectionAsync();
+        var rows = await conn.Table<SavedRecipe>()
+            .Where(r => r.SourceProvider == BundledSource)
+            .OrderBy(r => r.RecipeName)
+            .ToListAsync();
+
+        // Ingredient/direction counts via a single full-table GROUP BY each — cheap,
+        // and avoids a 2k-parameter IN clause (which would exceed SQLite's variable limit).
+        var ingCounts = (await conn.QueryAsync<CountRow>(
+                "SELECT SavedRecipeId, COUNT(*) AS Cnt FROM SavedRecipeIngredient GROUP BY SavedRecipeId"))
+            .ToDictionary(r => r.SavedRecipeId, r => r.Cnt);
+        var dirCounts = (await conn.QueryAsync<CountRow>(
+                "SELECT SavedRecipeId, COUNT(*) AS Cnt FROM SavedRecipeDirection GROUP BY SavedRecipeId"))
+            .ToDictionary(r => r.SavedRecipeId, r => r.Cnt);
+
+        return rows.Select(r =>
+        {
+            var item = MapToRecipeItem(r);
+            item.IngredientCount = ingCounts.GetValueOrDefault(r.Id, 0);
+            item.DirectionCount = dirCounts.GetValueOrDefault(r.Id, 0);
+            return item;
+        }).ToList();
+    }
+
     public async Task<List<RecipeItem>> SearchRecipesAsync(string searchTerm)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))

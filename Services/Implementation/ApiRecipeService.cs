@@ -52,6 +52,12 @@ public class ApiRecipeService : IRecipeService
         return result ?? [];
     }
 
+    public async Task<List<RecipeItem>> GetAllRecipesAsync()
+    {
+        var result = await _http.GetFromJsonAsync<List<RecipeItem>>("api/recipes", JsonOptions);
+        return result ?? [];
+    }
+
     public async Task<List<RecipeItem>> SearchRecipesAsync(string searchTerm)
     {
         var encoded = Uri.EscapeDataString(searchTerm);

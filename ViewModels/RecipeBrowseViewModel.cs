@@ -338,6 +338,40 @@ public partial class RecipeBrowseViewModel : BaseViewModel
         }
     }
 
+    /// <summary>Load the ENTIRE catalog into the recipe list so the macro/diet
+    /// filters and sort apply across every category at once.</summary>
+    [RelayCommand]
+    private async Task ShowAllRecipesAsync()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        try
+        {
+            var items = await _recipeService.GetAllRecipesAsync();
+            MarkSavedState(items);
+            _currentRecipes = items;
+            ApplyRecipeFilter();
+            IsShowingGroups = false;
+            IsShowingCategories = false;
+            IsShowingRecipeList = true;
+            IsShowingSaved = false;
+            SelectedCategory = null;
+            _selectedGroupName = string.Empty;
+            BackLabel = "‹ All Categories";
+            CanGoBack = true;
+            ShowFilters = true; // reveal the filter panel — that's the point of this view
+            Title = "All Recipes";
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     [RelayCommand]
     private async Task ViewRecipeAsync(RecipeItem recipe)
     {
