@@ -62,12 +62,18 @@
                             <Label Text="Today" FontSize="18" FontAttributes="Bold"
                                    VerticalOptions="Center"
                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                            <Button Grid.Column="1"
-                                    Text="View Log"
-                                    Command="{Binding ViewFoodLogCommand}"
-                                    Style="{StaticResource SecondaryButton}"
-                                    FontSize="13" HeightRequest="36"
-                                    VerticalOptions="Center" />
+                            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                <Button Text="&#x1F4C8;  Trends"
+                                        Command="{Binding ViewTrendsCommand}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        FontSize="13" HeightRequest="36"
+                                        VerticalOptions="Center" />
+                                <Button Text="View Log"
+                                        Command="{Binding ViewFoodLogCommand}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        FontSize="13" HeightRequest="36"
+                                        VerticalOptions="Center" />
+                            </HorizontalStackLayout>
                         </Grid>
 
                         <!-- Calorie ring: centre shows remaining (more actionable than consumed) -->

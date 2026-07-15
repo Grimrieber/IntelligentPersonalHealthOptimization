@@ -638,6 +638,12 @@ public partial class NutritionDashboardViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task ViewTrendsAsync()
+    {
+        await Shell.Current.GoToAsync(RouteConstants.NutritionTrends);
+    }
+
+    [RelayCommand]
     private async Task StartNutritionAssessmentAsync()
     {
         if (HasNutritionAssessment)

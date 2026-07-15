@@ -109,6 +109,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("RecipeDetail", typeof(RecipeDetailPage));
         Routing.RegisterRoute("shoppinglist", typeof(Views.Nutrition.ShoppingListPage));
         Routing.RegisterRoute("cookmode", typeof(Views.Recipes.CookModePage));
+        Routing.RegisterRoute("nutritiontrends", typeof(Views.Nutrition.NutritionTrendsPage));
 
         // Schedule routes
         Routing.RegisterRoute("calendar", typeof(CalendarPage));

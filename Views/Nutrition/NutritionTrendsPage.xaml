@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.NutritionTrendsPage"
+             x:DataType="vm:NutritionTrendsViewModel"
+             Title="Nutrition Trends">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Last 7 Days" FontSize="22" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+
+            <!-- Averages summary -->
+            <Border StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="16" IsVisible="{Binding HasData}">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Avg calories" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding AvgCalories}" FontSize="22" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Avg protein" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding AvgProtein}" FontSize="22" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                        <Label Text="Target" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                        <Label Text="{Binding TargetCalories, StringFormat='{0} kcal'}" FontSize="17" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Calorie bar chart -->
+            <Border StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="12,16" IsVisible="{Binding HasData}">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="6" HorizontalOptions="Center"
+                                           BindableLayout.ItemsSource="{Binding Days}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TrendDay">
+                                <VerticalStackLayout Spacing="4" WidthRequest="42" VerticalOptions="End">
+                                    <Label Text="{Binding Calories}" FontSize="10"
+                                           TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                    <Grid HeightRequest="140" VerticalOptions="End">
+                                        <Border BackgroundColor="{Binding BarColor}"
+                                                WidthRequest="26" HeightRequest="{Binding BarHeight}"
+                                                VerticalOptions="End" HorizontalOptions="Center"
+                                                StrokeThickness="0" StrokeShape="RoundRectangle 4" />
+                                    </Grid>
+                                    <Label Text="{Binding DayLabel}" FontSize="11" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+
+                    <!-- Legend -->
+                    <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                            <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="2" Color="#1F8A4C" VerticalOptions="Center" />
+                            <Label Text="On target" FontSize="11" TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                            <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="2" Color="#6C4FD8" VerticalOptions="Center" />
+                            <Label Text="Off target / other" FontSize="11" TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Label Text="{Binding OnTargetSummary}" FontSize="13" FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Empty state -->
+            <VerticalStackLayout IsVisible="{Binding HasData, Converter={StaticResource InverseBool}}"
+                                 Spacing="10" Padding="20,40" HorizontalOptions="Center">
+                <Label Text="&#x1F4C8;" FontSize="44" HorizontalOptions="Center" />
+                <Label Text="No meals logged yet" FontSize="17" FontAttributes="Bold"
+                       TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                <Label Text="Log meals from your plan or tap “Log to Today” on any recipe — your 7-day trend will build here."
+                       FontSize="13" TextColor="{StaticResource Gray500}"
+                       HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
