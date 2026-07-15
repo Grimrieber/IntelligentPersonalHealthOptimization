@@ -212,7 +212,11 @@ public static partial class SeedData
     //      FileImageSource ("asset:<id>.jpg"), same proven path as the Pixabay locals. Pexels
     //      (real CDN, no throttle) stays a stable hotlink. Now list thumbnails never throttle,
     //      never rot, work offline. schemaVersion 59.
-    private const string RecipeImagesMarker = "recipe_images_2026_07_12_v31.done";
+    // v32: full offline. Localized the remaining ~1191 pexels-hotlinked photos to
+    //      Resources/Raw/recipe_fix/<id>.jpg (asset:<id>.jpg), same path as the wikimedia/pixabay
+    //      locals — so the WHOLE catalog's images work in airplane mode. Bundle now: 2630
+    //      local-bundled + 111 emoji, ZERO hotlinks. schemaVersion 64. (tools/bundle_pexels_local.py)
+    private const string RecipeImagesMarker = "recipe_images_2026_07_15_v32.done";
     private const string RecipeTimeCleanupMarker = "recipe_time_cleanup_2026_07_12_v2.done";
 
     /// <summary>
