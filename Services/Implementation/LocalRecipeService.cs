@@ -246,6 +246,7 @@ public class LocalRecipeService : IRecipeService
             DateAdded = r.SavedAt,
             LastMadeOn = null,
             Rating = r.Rating,
+            MyRating = r.MyRating,
             IsFavorite = r.IsFavorite,
             HasNutrition = r.CaloriesPerServing.HasValue,
             HealthTier = r.HealthTier,

@@ -66,6 +66,13 @@ public class RecipeItem : INotifyPropertyChanged
     public bool IsKosher { get; set; }
     public bool IsMediterranean { get; set; }
 
+    /// <summary>The user's personal 1-5 star rating (0 = unrated). Surfaced on
+    /// browse cards and sortable via "My rating".</summary>
+    public int MyRating { get; set; }
+    public bool HasMyRating => MyRating > 0;
+    /// <summary>Filled stars for the card, e.g. "★★★★" for a 4-star rating.</summary>
+    public string MyRatingStars => MyRating > 0 ? new string('★', MyRating) : string.Empty;
+
     public bool IsHealthy => HealthTier == Data.RecipeHealth.Healthy;
     public bool ShowHealthBadge => Data.HealthBadgeStyle.ShouldShow(HealthTier);
 

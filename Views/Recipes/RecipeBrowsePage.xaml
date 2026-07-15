@@ -385,6 +385,10 @@
                                        IsVisible="{Binding CaloriesPerServing, Converter={StaticResource IsNotEmptyConverter}}"
                                        FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Gray500}" Margin="0,0,12,0" />
                                 <Label Text="{Binding IngredientCount, StringFormat='{0} ingredients'}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                <!-- Your personal star rating, gold, when rated -->
+                                <Label Text="{Binding MyRatingStars}"
+                                       IsVisible="{Binding HasMyRating}"
+                                       FontSize="12" TextColor="#F2B01E" Margin="12,0,0,0" />
                             </FlexLayout>
 
                             <!-- Star: save / unsave this recipe to "My Saved".

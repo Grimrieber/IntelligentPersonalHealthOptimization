@@ -87,7 +87,7 @@ public partial class RecipeBrowseViewModel : BaseViewModel
     public List<string> SortOptions { get; } = new()
     {
         "Default", "Highest protein", "Lowest calories",
-        "Highest fiber", "Lowest sugar", "Best health score",
+        "Highest fiber", "Lowest sugar", "Best health score", "My rating",
     };
 
     [ObservableProperty]
@@ -293,6 +293,7 @@ public partial class RecipeBrowseViewModel : BaseViewModel
             "Highest fiber" => src.OrderByDescending(r => r.FiberGrams ?? -1),
             "Lowest sugar" => src.OrderBy(r => r.SugarGrams ?? double.MaxValue),
             "Best health score" => src.OrderByDescending(r => r.HealthScore ?? -1),
+            "My rating" => src.OrderByDescending(r => r.MyRating).ThenBy(r => r.RecipeName),
             _ => src, // Default: keep the incoming order (alphabetical from the query).
         };
 
