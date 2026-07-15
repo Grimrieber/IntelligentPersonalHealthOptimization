@@ -68,12 +68,21 @@
                                        TextColor="{StaticResource Primary}"
                                        VerticalOptions="Center" />
                             </Grid>
-                            <!-- Category + match-to-target -->
+                            <!-- Category + health badge + match-to-target -->
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                <Label Text="{Binding Category}"
-                                       FontSize="12"
-                                       TextColor="{StaticResource Gray500}"
-                                       VerticalOptions="Center" />
+                                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                    <Label Text="{Binding Category}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource Gray500}"
+                                           VerticalOptions="Center" />
+                                    <Border IsVisible="{Binding ShowHealthBadge}"
+                                            BackgroundColor="{Binding HealthBadgeColor}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 7"
+                                            Padding="6,1" VerticalOptions="Center">
+                                        <Label Text="{Binding HealthBadgeText}"
+                                               FontSize="10" FontAttributes="Bold" TextColor="White" />
+                                    </Border>
+                                </HorizontalStackLayout>
                                 <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
                                     <Border IsVisible="{Binding IsBestMatch}"
                                             Stroke="Transparent"

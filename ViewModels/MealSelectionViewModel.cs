@@ -151,7 +151,9 @@ public partial class MealSelectionViewModel : BaseViewModel, IQueryAttributable
                     CarbsG = (r.CarbsGrams ?? 0) * servings,
                     FatG = (r.FatGrams ?? 0) * servings,
                     CalorieDelta = delta,
-                    MatchText = delta == 0 ? "exact match" : $"±{delta} kcal"
+                    MatchText = delta == 0 ? "exact match" : $"±{delta} kcal",
+                    HealthTier = r.HealthTier,
+                    IsHealthyTreat = r.IsHealthyTreat,
                 };
             })
             .OrderBy(m => m.CalorieDelta)
@@ -269,6 +271,14 @@ public class MealOptionItem
     public int CalorieDelta { get; set; }
     public string MatchText { get; set; } = string.Empty;
     public bool IsBestMatch { get; set; }
+
+    // Health-tier badge — same signal the recipe/meal cards show, so a healthier
+    // swap is obvious at a glance (shared HealthBadgeStyle keeps it consistent).
+    public string? HealthTier { get; set; }
+    public bool IsHealthyTreat { get; set; }
+    public bool ShowHealthBadge => Data.HealthBadgeStyle.ShouldShow(HealthTier);
+    public string HealthBadgeText => Data.HealthBadgeStyle.TextFor(HealthTier, IsHealthyTreat);
+    public Microsoft.Maui.Graphics.Color HealthBadgeColor => Data.HealthBadgeStyle.ColorFor(HealthTier);
 }
 
 public record MealSelectedMessage(string MealName, MealType MealType, int MealPlanDayId, int NutritionProfileId);
