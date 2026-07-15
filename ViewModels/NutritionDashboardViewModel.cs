@@ -473,12 +473,24 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 .Select(m => m.FoodLogEntryId)
                 .ToHashSet();
 
-            foreach (var orphan in todayLog.Where(l => !matchedLogIds.Contains(l.Id)))
+            var orphans = todayLog.Where(l => !matchedLogIds.Contains(l.Id)).ToList();
+
+            // Resolve the dish photo + health tier for orphan logged recipes (they
+            // carry a SavedRecipeId but weren't part of the plan, so they weren't in
+            // recipeMeta) — otherwise the card falls back to the emoji tile.
+            var orphanMeta = await _nutritionService.GetRecipeCardMetaAsync(
+                orphans.Where(o => o.SavedRecipeId > 0).Select(o => o.SavedRecipeId));
+
+            foreach (var orphan in orphans)
             {
+                var meta = orphan.SavedRecipeId > 0 && orphanMeta.TryGetValue(orphan.SavedRecipeId, out var om) ? om : null;
                 TodaysPlannedMeals.Add(new PlannedMealItem
                 {
                     MealPlanItemId = 0,
                     SavedRecipeId = orphan.SavedRecipeId,
+                    ImageUrl = meta?.ImageUrl,
+                    HealthTier = meta?.HealthTier,
+                    IsHealthyTreat = meta?.IsHealthyTreat ?? false,
                     MealTypeName = FormatMealType(orphan.MealType),
                     RecipeName = !string.IsNullOrEmpty(orphan.Notes) ? orphan.Notes : "Logged Meal",
                     Calories = $"{orphan.Calories:F0} kcal",
