@@ -149,10 +149,15 @@ public partial class FoodLogViewModel : BaseViewModel
                 foreach (var entry in mealEntries)
                 {
                     var food = await _foodService.GetFoodByIdAsync(entry.FoodId);
+                    // Recipe-logged entries have FoodId 0 and store the recipe name in
+                    // Notes — use that so they don't render as "Food #0".
+                    var name = food?.Name;
+                    if (string.IsNullOrWhiteSpace(name))
+                        name = !string.IsNullOrWhiteSpace(entry.Notes) ? entry.Notes : $"Food #{entry.FoodId}";
                     loggedItems.Add(new FoodLogEntryDisplayItem
                     {
                         Id = entry.Id,
-                        FoodName = food?.Name ?? $"Food #{entry.FoodId}",
+                        FoodName = name,
                         ServingSize = $"{entry.ServingSizeG:F0}g",
                         Calories = $"{entry.Calories:F0} kcal",
                         ProteinG = $"{entry.ProteinG:F0}g",
