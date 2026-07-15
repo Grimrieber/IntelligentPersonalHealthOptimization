@@ -18,19 +18,22 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private readonly IUserService _userService;
     private readonly INutritionService _nutritionService;
     private readonly IDatabaseService _databaseService;
+    private readonly IFoodService _foodService;
 
     public RecipeDetailViewModel(
         IRecipeService recipeService,
         ISavedRecipeService savedRecipeService,
         IUserService userService,
         INutritionService nutritionService,
-        IDatabaseService databaseService)
+        IDatabaseService databaseService,
+        IFoodService foodService)
     {
         _recipeService = recipeService;
         _savedRecipeService = savedRecipeService;
         _userService = userService;
         _nutritionService = nutritionService;
         _databaseService = databaseService;
+        _foodService = foodService;
     }
 
     /// <summary>Open the distraction-free step-by-step cooking view.</summary>
@@ -196,7 +199,18 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private Color _goalFitColor = Colors.Gray;
 
-    /// <summary>Fetch the user's targets and rate how this recipe fits their goal.</summary>
+    // "Fits your remaining macros today" — only meaningful once something's logged today.
+    [ObservableProperty]
+    private bool _showRemainingToday;
+
+    [ObservableProperty]
+    private string _remainingTodayText = string.Empty;
+
+    [ObservableProperty]
+    private Color _remainingTodayColor = Colors.Gray;
+
+    /// <summary>Fetch the user's targets and rate how this recipe fits their goal,
+    /// plus how it fits what's left of today's calorie/protein budget.</summary>
     private async Task ApplyGoalFitAsync(int? calories, double? protein, string? tier)
     {
         try
@@ -204,10 +218,30 @@ public partial class RecipeDetailViewModel : BaseViewModel
             var user = await _userService.GetCurrentUserAsync();
             var profile = user != null ? await _nutritionService.GetNutritionProfileAsync(user.Id) : null;
             SetGoalFit(calories, protein, tier, profile);
+
+            ShowRemainingToday = false;
+            if (user != null && profile != null && profile.TargetCalories > 0 && calories is int cal && cal > 0)
+            {
+                var totals = await _foodService.GetDailyTotalsAsync(user.Id, DateTime.Today);
+                if (totals.calories > 0) // only once they've logged today
+                {
+                    var remCal = Math.Max(0, profile.TargetCalories - totals.calories);
+                    var remPro = Math.Max(0, profile.TargetProteinG - totals.proteinG);
+                    var fits = cal <= remCal;
+                    RemainingTodayColor = fits
+                        ? HealthBadgeStyle.ColorFor(RecipeHealth.Healthy)
+                        : HealthBadgeStyle.ColorFor(RecipeHealth.Indulgent);
+                    RemainingTodayText = fits
+                        ? $"Fits today — you have {remCal:F0} kcal · {remPro:F0}g protein left"
+                        : $"Over budget — only {remCal:F0} kcal left today (this is {cal})";
+                    ShowRemainingToday = true;
+                }
+            }
         }
         catch
         {
             ShowGoalFit = false;
+            ShowRemainingToday = false;
         }
     }
 

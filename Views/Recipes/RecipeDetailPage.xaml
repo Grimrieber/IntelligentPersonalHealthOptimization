@@ -268,6 +268,10 @@
                                    TextColor="{Binding GoalFitColor}" />
                             <Label Text="{Binding GoalFitDetail}" FontSize="12"
                                    TextColor="{StaticResource Gray500}" LineBreakMode="WordWrap" />
+                            <Label Text="{Binding RemainingTodayText}" FontSize="12" FontAttributes="Bold"
+                                   IsVisible="{Binding ShowRemainingToday}"
+                                   TextColor="{Binding RemainingTodayColor}"
+                                   LineBreakMode="WordWrap" Margin="0,2,0,0" />
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
