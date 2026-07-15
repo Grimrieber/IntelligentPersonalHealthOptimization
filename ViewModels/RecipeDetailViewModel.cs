@@ -591,6 +591,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             SetMyPersonal(savedRow?.MyRating ?? 0, savedRow?.MyNote);
 
             RecordRecentView();
+            await LoadSimilarRecipesAsync();
         }
         catch (Exception ex)
         {
@@ -684,6 +685,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             SetMyPersonal(saved.MyRating, saved.MyNote);
 
             RecordRecentView();
+            await LoadSimilarRecipesAsync();
 
             // Mark as saved
             IsSaved = true;
@@ -735,6 +737,42 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private void RecordRecentView()
     {
         Data.RecentRecipes.Add(TargetSavedId, RecipeName, ImageUrl, _currentTier, _baseCal);
+    }
+
+    // ---- "More like this" (similar recipes) ----
+    [ObservableProperty]
+    private ObservableCollection<Data.RecentRecipe> _similarRecipes = [];
+
+    [ObservableProperty]
+    private bool _hasSimilarRecipes;
+
+    /// <summary>Load recipes in the same category, nearest by calories, for the
+    /// "More like this" strip. Reuses the compact <see cref="Data.RecentRecipe"/>
+    /// card DTO.</summary>
+    private async Task LoadSimilarRecipesAsync()
+    {
+        HasSimilarRecipes = false;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(CategoryName)) return;
+            var items = await _recipeService.GetSimilarRecipesAsync(TargetSavedId, CategoryName, _baseCal, 10);
+            var cards = items
+                .Select(i => new Data.RecentRecipe(i.RecipeID, i.RecipeName, i.ImageUrl, i.HealthTier, i.CaloriesPerServing))
+                .ToList();
+            SimilarRecipes = new ObservableCollection<Data.RecentRecipe>(cards);
+            HasSimilarRecipes = cards.Count > 0;
+        }
+        catch
+        {
+            HasSimilarRecipes = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenSimilarAsync(Data.RecentRecipe similar)
+    {
+        if (similar == null || similar.Id <= 0) return;
+        await Shell.Current.GoToAsync($"RecipeDetail?recipeId={similar.Id}");
     }
 
     /// <summary>Set the health-tier badge from a classified row.</summary>

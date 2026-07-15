@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
              xmlns:recipe="clr-namespace:IntelligentPersonalHealthOptimization.Models.Recipe"
+             xmlns:data="clr-namespace:IntelligentPersonalHealthOptimization.Data"
              x:Class="IntelligentPersonalHealthOptimization.Views.Recipes.RecipeDetailPage"
              x:DataType="vm:RecipeDetailViewModel"
              Title="{Binding Title}">
@@ -423,6 +424,52 @@
                         Command="{Binding ToggleSaveCommand}"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,4,0,0" />
+            </VerticalStackLayout>
+
+            <!-- ===== MORE LIKE THIS ===== -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding HasSimilarRecipes}">
+                <Label Text="More like this"
+                       FontSize="20" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <HorizontalStackLayout Spacing="10"
+                                           BindableLayout.ItemsSource="{Binding SimilarRecipes}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="data:RecentRecipe">
+                                <Frame Style="{StaticResource CardFrame}" Padding="0" WidthRequest="130">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=OpenSimilarCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <Grid RowDefinitions="80,Auto" RowSpacing="0">
+                                        <Image Grid.Row="0"
+                                               Source="{Binding ImageUrl}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding HasImage}" />
+                                        <Border Grid.Row="0"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                                                StrokeThickness="0"
+                                                IsVisible="{Binding HasImage, Converter={StaticResource InverseBool}}">
+                                            <Label Text="&#x1F374;" FontSize="30"
+                                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Row="1" Padding="8,6" Spacing="2">
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="12" FontAttributes="Bold"
+                                                   LineBreakMode="TailTruncation" MaxLines="2"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding CaloriesText}"
+                                                   FontSize="11"
+                                                   TextColor="{StaticResource Gray500}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
             </VerticalStackLayout>
 
             <BoxView HeightRequest="20" Color="Transparent" />

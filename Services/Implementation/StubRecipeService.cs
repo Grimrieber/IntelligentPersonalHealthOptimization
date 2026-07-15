@@ -18,6 +18,7 @@ public class StubRecipeService : IRecipeService
     public Task<List<RecipeItem>> SearchRecipesAsync(string searchTerm) => Task.FromResult(new List<RecipeItem>());
 
     public Task<List<RecipeItem>> GetAllRecipesAsync() => Task.FromResult(new List<RecipeItem>());
+    public Task<List<RecipeItem>> GetSimilarRecipesAsync(int excludeId, string categoryName, int? calories, int take) => Task.FromResult(new List<RecipeItem>());
 
     public Task<RecipeDetail?> GetRecipeDetailAsync(int recipeId) => Task.FromResult<RecipeDetail?>(null);
 }

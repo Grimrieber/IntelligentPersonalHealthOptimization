@@ -58,6 +58,14 @@ public class ApiRecipeService : IRecipeService
         return result ?? [];
     }
 
+    public async Task<List<RecipeItem>> GetSimilarRecipesAsync(int excludeId, string categoryName, int? calories, int take)
+    {
+        var encoded = Uri.EscapeDataString(categoryName ?? string.Empty);
+        var result = await _http.GetFromJsonAsync<List<RecipeItem>>(
+            $"api/recipes/similar?excludeId={excludeId}&category={encoded}&take={take}", JsonOptions);
+        return result ?? [];
+    }
+
     public async Task<List<RecipeItem>> SearchRecipesAsync(string searchTerm)
     {
         var encoded = Uri.EscapeDataString(searchTerm);

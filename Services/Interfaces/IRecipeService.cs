@@ -14,6 +14,12 @@ public interface IRecipeService
 
     /// <summary>The entire catalog, for filtering/sorting across all categories at once.</summary>
     Task<List<RecipeItem>> GetAllRecipesAsync();
+
+    /// <summary>Recipes similar to a given one — same category, nearest by
+    /// per-serving calories — for the "More like this" strip. Excludes the
+    /// source recipe itself.</summary>
+    Task<List<RecipeItem>> GetSimilarRecipesAsync(int excludeId, string categoryName, int? calories, int take);
+
     Task<RecipeDetail?> GetRecipeDetailAsync(int recipeId);
     Task<bool> TestConnectionAsync();
 }

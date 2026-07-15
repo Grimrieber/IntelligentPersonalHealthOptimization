@@ -79,6 +79,24 @@ public class LocalRecipeService : IRecipeService
         }).ToList();
     }
 
+    public async Task<List<RecipeItem>> GetSimilarRecipesAsync(int excludeId, string categoryName, int? calories, int take)
+    {
+        if (take <= 0) return new List<RecipeItem>();
+        var conn = await _db.GetConnectionAsync();
+        var cat = string.IsNullOrWhiteSpace(categoryName) ? "Uncategorized" : categoryName;
+
+        var rows = await conn.Table<SavedRecipe>()
+            .Where(r => r.SourceProvider == BundledSource && r.CategoryName == cat && r.Id != excludeId)
+            .ToListAsync();
+
+        // Order by calorie proximity when we know the source's calories, else by name.
+        IEnumerable<SavedRecipe> ordered = calories is int target
+            ? rows.OrderBy(r => Math.Abs((r.CaloriesPerServing ?? int.MaxValue / 2) - target))
+            : rows.OrderBy(r => r.RecipeName);
+
+        return ordered.Take(take).Select(MapToRecipeItem).ToList();
+    }
+
     public async Task<List<RecipeItem>> SearchRecipesAsync(string searchTerm)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
