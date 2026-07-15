@@ -154,4 +154,22 @@ public class FoodService : IFoodService
         if (entry != null)
             await _databaseService.DeleteAsync(entry);
     }
+
+    public async Task UpdateFoodLogServingAsync(int id, double newServingG)
+    {
+        if (newServingG <= 0) return;
+        var entry = await _databaseService.GetByIdAsync<FoodLogEntry>(id);
+        if (entry == null || entry.ServingSizeG <= 0) return;
+
+        // Scale the stored macros by the serving change — works for any entry that
+        // has a real serving (LogFoodAsync stored macros ∝ serving), and avoids
+        // re-fetching the source food.
+        var factor = newServingG / entry.ServingSizeG;
+        entry.Calories = Math.Round(entry.Calories * factor, 1);
+        entry.ProteinG = Math.Round(entry.ProteinG * factor, 1);
+        entry.CarbsG = Math.Round(entry.CarbsG * factor, 1);
+        entry.FatG = Math.Round(entry.FatG * factor, 1);
+        entry.ServingSizeG = newServingG;
+        await _databaseService.UpdateAsync(entry);
+    }
 }

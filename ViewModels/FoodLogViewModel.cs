@@ -159,6 +159,7 @@ public partial class FoodLogViewModel : BaseViewModel
                         Id = entry.Id,
                         FoodName = name,
                         ServingSize = $"{entry.ServingSizeG:F0}g",
+                        ServingSizeG = entry.ServingSizeG,
                         Calories = $"{entry.Calories:F0} kcal",
                         ProteinG = $"{entry.ProteinG:F0}g",
                         CarbsG = $"{entry.CarbsG:F0}g",
@@ -340,6 +341,42 @@ public partial class FoodLogViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task EditEntryAsync(FoodLogEntryDisplayItem item)
+    {
+        if (item == null) return;
+        if (!item.CanEditServing)
+        {
+            await Shell.Current.DisplayAlert("Can't edit",
+                "This entry was logged from a recipe. Unlog it and log again to change the amount.", "OK");
+            return;
+        }
+
+        var input = await Shell.Current.DisplayPromptAsync(
+            "Edit serving",
+            $"New serving size for {item.FoodName} (grams):",
+            "Save", "Cancel",
+            initialValue: item.ServingSizeG.ToString("F0"),
+            keyboard: Keyboard.Numeric);
+
+        if (string.IsNullOrWhiteSpace(input)) return;
+        if (!double.TryParse(input.Trim(), out var grams) || grams <= 0)
+        {
+            await Shell.Current.DisplayAlert("Invalid amount", "Enter a serving size greater than 0.", "OK");
+            return;
+        }
+
+        try
+        {
+            await _foodService.UpdateFoodLogServingAsync(item.Id, grams);
+            await LoadDataAsync();
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("Edit entry serving", ex);
+        }
+    }
+
+    [RelayCommand]
     private async Task AddFoodToMealAsync(MealType mealType)
     {
         await Shell.Current.GoToAsync($"{RouteConstants.AddFoodEntry}?mealType={mealType}");
@@ -395,6 +432,9 @@ public class FoodLogEntryDisplayItem
     public int Id { get; set; }
     public string FoodName { get; set; } = string.Empty;
     public string ServingSize { get; set; } = string.Empty;
+    /// <summary>Numeric serving in grams (0 for recipe-logged entries) — drives inline edit.</summary>
+    public double ServingSizeG { get; set; }
+    public bool CanEditServing => ServingSizeG > 0;
     public string Calories { get; set; } = string.Empty;
     public string ProteinG { get; set; } = string.Empty;
     public string CarbsG { get; set; } = string.Empty;

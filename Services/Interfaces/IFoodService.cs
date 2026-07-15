@@ -19,4 +19,8 @@ public interface IFoodService
     Task<(double calories, double proteinG, double carbsG, double fatG)> GetDailyTotalsAsync(int userId, DateTime date);
     Task<(double avgCalories, double avgProteinG, double avgCarbsG, double avgFatG)> GetWeeklyAveragesAsync(int userId);
     Task DeleteFoodLogEntryAsync(int id);
+
+    /// <summary>Change a logged entry's serving size (grams), rescaling its stored
+    /// macros proportionally. No-op for entries with no real serving (recipe logs).</summary>
+    Task UpdateFoodLogServingAsync(int id, double newServingG);
 }

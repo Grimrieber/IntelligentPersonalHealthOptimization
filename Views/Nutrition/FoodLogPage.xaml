@@ -244,6 +244,14 @@
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate x:DataType="vm:FoodLogEntryDisplayItem">
                                             <SwipeView>
+                                                <SwipeView.LeftItems>
+                                                    <SwipeItems>
+                                                        <SwipeItem Text="Edit"
+                                                                   BackgroundColor="#5E5CE6"
+                                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FoodLogViewModel}}, Path=EditEntryCommand}"
+                                                                   CommandParameter="{Binding .}" />
+                                                    </SwipeItems>
+                                                </SwipeView.LeftItems>
                                                 <SwipeView.RightItems>
                                                     <SwipeItems>
                                                         <SwipeItem Text="Delete"
