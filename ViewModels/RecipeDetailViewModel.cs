@@ -16,15 +16,18 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private readonly IRecipeService _recipeService;
     private readonly ISavedRecipeService _savedRecipeService;
     private readonly IUserService _userService;
+    private readonly INutritionService _nutritionService;
 
     public RecipeDetailViewModel(
         IRecipeService recipeService,
         ISavedRecipeService savedRecipeService,
-        IUserService userService)
+        IUserService userService,
+        INutritionService nutritionService)
     {
         _recipeService = recipeService;
         _savedRecipeService = savedRecipeService;
         _userService = userService;
+        _nutritionService = nutritionService;
     }
 
     [ObservableProperty]
@@ -113,6 +116,79 @@ public partial class RecipeDetailViewModel : BaseViewModel
         CarbsPct = $"C {Math.Round(100 * c / total)}%";
         FatPct = $"F {Math.Round(100 * f / total)}%";
         HasMacroBar = true;
+    }
+
+    // ---- "Fits your goals" ----
+    [ObservableProperty]
+    private bool _showGoalFit;
+
+    [ObservableProperty]
+    private string _goalFitVerdict = string.Empty;
+
+    [ObservableProperty]
+    private string _goalFitDetail = string.Empty;
+
+    [ObservableProperty]
+    private Color _goalFitColor = Colors.Gray;
+
+    /// <summary>Fetch the user's targets and rate how this recipe fits their goal.</summary>
+    private async Task ApplyGoalFitAsync(int? calories, double? protein, string? tier)
+    {
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            var profile = user != null ? await _nutritionService.GetNutritionProfileAsync(user.Id) : null;
+            SetGoalFit(calories, protein, tier, profile);
+        }
+        catch
+        {
+            ShowGoalFit = false;
+        }
+    }
+
+    private void SetGoalFit(int? calories, double? protein, string? tier, Models.NutritionProfile? profile)
+    {
+        if (profile == null || profile.TargetCalories <= 0 || calories is not int cal || cal <= 0)
+        {
+            ShowGoalFit = false;
+            return;
+        }
+
+        var calShare = (int)Math.Round(100.0 * cal / profile.TargetCalories);
+        // Protein density (g per 100 kcal) — the fitness-relevant lens.
+        double? ppk = protein is double pr && pr > 0 ? pr * 100.0 / cal : null;
+
+        string verdict;
+        Color color;
+        if (tier == RecipeHealth.Healthy && ppk is >= 8)
+        {
+            verdict = "Great fit for your goals";
+            color = HealthBadgeStyle.ColorFor(RecipeHealth.Healthy);
+        }
+        else if (tier == RecipeHealth.Indulgent)
+        {
+            verdict = "Better as an occasional treat";
+            color = HealthBadgeStyle.ColorFor(RecipeHealth.Indulgent);
+        }
+        else if (ppk is < 5 && cal >= 500)
+        {
+            verdict = "Rich — mind the portion";
+            color = HealthBadgeStyle.ColorFor(RecipeHealth.Moderate);
+        }
+        else
+        {
+            verdict = "Fine in moderation";
+            color = HealthBadgeStyle.ColorFor(RecipeHealth.Moderate);
+        }
+
+        var detail = $"≈{calShare}% of your {profile.TargetCalories:N0} kcal day";
+        if (ppk is double d)
+            detail += $"  ·  {Math.Round(d)}g protein per 100 kcal";
+
+        GoalFitVerdict = verdict;
+        GoalFitColor = color;
+        GoalFitDetail = detail;
+        ShowGoalFit = true;
     }
 
     // Health-consciousness tier badge (see RecipeHealth).
@@ -233,6 +309,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
                 Sodium = n.SodiumMg.HasValue ? $"{n.SodiumMg:F1}mg" : "--";
                 ServingSizeNote = n.ServingSizeNote ?? string.Empty;
                 SetMacroBar((double?)n.ProteinGrams, (double?)n.TotalCarbsGrams, (double?)n.TotalFatGrams);
+                await ApplyGoalFitAsync(n.CaloriesPerServing, (double?)n.ProteinGrams, Recipe.Recipe?.HealthTier);
             }
 
             // Grouped ingredients and directions
@@ -300,6 +377,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             Cholesterol = "--";
             Sodium = "--";
             SetMacroBar(saved.ProteinGrams, saved.CarbsGrams, saved.FatGrams);
+            await ApplyGoalFitAsync(saved.CaloriesPerServing, saved.ProteinGrams, saved.HealthTier);
 
             // Load ingredients and directions from local DB
             var ingredients = await _savedRecipeService.GetSavedIngredientsAsync(SavedRecipeId);

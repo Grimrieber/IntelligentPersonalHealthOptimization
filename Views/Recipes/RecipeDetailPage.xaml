@@ -204,6 +204,21 @@
                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
                 <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
 
+                <!-- Fits your goals: verdict vs the user's calorie/macro targets -->
+                <Border IsVisible="{Binding ShowGoalFit}" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                        Padding="12" Margin="0,2,0,2">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Text="&#x1F3AF;" FontSize="22" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                            <Label Text="{Binding GoalFitVerdict}" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{Binding GoalFitColor}" />
+                            <Label Text="{Binding GoalFitDetail}" FontSize="12"
+                                   TextColor="{StaticResource Gray500}" LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
                 <!-- Macro split bar: protein / carbs / fat by calorie contribution -->
                 <VerticalStackLayout Spacing="6" IsVisible="{Binding HasMacroBar}" Margin="0,2,0,6">
                     <Border StrokeThickness="0" StrokeShape="RoundRectangle 7" HeightRequest="14"
