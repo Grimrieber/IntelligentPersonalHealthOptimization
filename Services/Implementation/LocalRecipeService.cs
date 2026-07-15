@@ -105,12 +105,20 @@ public class LocalRecipeService : IRecipeService
         var conn = await _db.GetConnectionAsync();
         // Use raw SQL with explicit LIKE + COLLATE NOCASE — sqlite-net's LINQ
         // translation of .Contains() in a compound Where is unreliable.
+        // Match on the recipe NAME *or* any of its ingredient descriptions, so the
+        // "Search recipes or ingredients" box does what it says (e.g. "salmon",
+        // "chickpeas" surfaces recipes that use them). Name matches sort first.
         var like = "%" + searchTerm.Trim() + "%";
         var rows = await conn.QueryAsync<SavedRecipe>(
             "SELECT * FROM SavedRecipe " +
-            "WHERE SourceProvider = ? AND RecipeName LIKE ? COLLATE NOCASE " +
-            "ORDER BY RecipeName LIMIT 200",
-            BundledSource, like);
+            "WHERE SourceProvider = ? AND ( " +
+            "  RecipeName LIKE ? COLLATE NOCASE " +
+            "  OR Id IN (SELECT DISTINCT SavedRecipeId FROM SavedRecipeIngredient " +
+            "            WHERE Description LIKE ? COLLATE NOCASE) " +
+            ") " +
+            "ORDER BY (CASE WHEN RecipeName LIKE ? COLLATE NOCASE THEN 0 ELSE 1 END), RecipeName " +
+            "LIMIT 200",
+            BundledSource, like, like, like);
 
         return await MapWithCountsAsync(conn, rows);
     }
