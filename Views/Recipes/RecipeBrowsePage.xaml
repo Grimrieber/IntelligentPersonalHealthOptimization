@@ -8,6 +8,36 @@
              x:DataType="vm:RecipeBrowseViewModel"
              Title="{Binding Title}">
 
+    <ContentPage.Resources>
+        <!-- Toggleable macro/diet filter chip. Purple fill when selected. -->
+        <DataTemplate x:Key="FilterChipTemplate" x:DataType="vm:FilterChip">
+            <Border Padding="12,6" Margin="0,0,8,8" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                    BackgroundColor="Transparent">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeBrowseViewModel}}, Path=ToggleChipCommand}"
+                        CommandParameter="{Binding .}" />
+                </Border.GestureRecognizers>
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Text="{Binding Label}" FontSize="13"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="Auto,*">
 
         <!-- Top Bar: Search + Back + Saved Toggle -->
@@ -45,24 +75,71 @@
                     Padding="0"
                     HorizontalOptions="Start" />
 
-            <!-- "Healthy only" filter — only meaningful on the recipe list. Hides
-                 Moderate/Indulgent dishes, leaving Healthy-tier meals + lean treats. -->
-            <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding IsShowingRecipeList}"
-                  Padding="2,0">
-                <Label Grid.Column="0" VerticalOptions="Center" FontSize="14">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="&#x1F957; " />
-                            <Span Text="Healthy only" FontAttributes="Bold"
-                                  TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <Switch Grid.Column="1"
-                        IsToggled="{Binding ShowHealthyOnly}"
-                        OnColor="{StaticResource Primary}"
-                        VerticalOptions="Center" />
-            </Grid>
+            <!-- Filter bar (recipe list only): Healthy toggle + expandable macro/diet filters. -->
+            <VerticalStackLayout IsVisible="{Binding IsShowingRecipeList}" Spacing="10" Padding="2,0">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                        <Label VerticalOptions="Center" FontSize="14">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="&#x1F957; " />
+                                    <Span Text="Healthy only" FontAttributes="Bold"
+                                          TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Switch IsToggled="{Binding ShowHealthyOnly}"
+                                OnColor="{StaticResource Primary}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <Button Grid.Column="1"
+                            Text="{Binding FilterButtonText}"
+                            Command="{Binding ToggleFiltersCommand}"
+                            FontSize="13" HeightRequest="38" Padding="14,0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                            TextColor="{StaticResource Primary}"
+                            VerticalOptions="Center" />
+                </Grid>
+
+                <!-- Expandable filter panel -->
+                <Border IsVisible="{Binding ShowFilters}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                        Padding="14">
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Sort -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Text="Sort" FontAttributes="Bold" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Picker Grid.Column="1"
+                                    ItemsSource="{Binding SortOptions}"
+                                    SelectedItem="{Binding SelectedSort}"
+                                    FontSize="14" />
+                        </Grid>
+
+                        <!-- Macro quick-filters -->
+                        <Label Text="MACROS" FontSize="11" FontAttributes="Bold"
+                               TextColor="{StaticResource Gray500}" />
+                        <FlexLayout Wrap="Wrap" Direction="Row"
+                                    BindableLayout.ItemsSource="{Binding MacroChips}"
+                                    BindableLayout.ItemTemplate="{StaticResource FilterChipTemplate}" />
+
+                        <!-- Diet -->
+                        <Label Text="DIET" FontSize="11" FontAttributes="Bold"
+                               TextColor="{StaticResource Gray500}" />
+                        <FlexLayout Wrap="Wrap" Direction="Row"
+                                    BindableLayout.ItemsSource="{Binding DietChips}"
+                                    BindableLayout.ItemTemplate="{StaticResource FilterChipTemplate}" />
+
+                        <Button Text="Clear filters"
+                                Command="{Binding ClearFiltersCommand}"
+                                IsVisible="{Binding HasActiveFilters}"
+                                FontSize="13" HeightRequest="36"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                HorizontalOptions="Start" Padding="0" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
 
             <!-- Connection warning -->
             <Label Text="{Binding ConnectionStatus}"

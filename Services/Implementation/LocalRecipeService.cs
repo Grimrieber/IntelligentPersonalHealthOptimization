@@ -207,6 +207,22 @@ public class LocalRecipeService : IRecipeService
             HealthTier = r.HealthTier,
             HealthScore = r.HealthScore,
             IsHealthyTreat = r.IsHealthyTreat,
+            // Per-serving macros + diet flags for cookbook filters/sort.
+            ProteinGrams = r.ProteinGrams,
+            CarbsGrams = r.CarbsGrams,
+            FatGrams = r.FatGrams,
+            FiberGrams = r.FiberGrams,
+            SugarGrams = r.SugarGrams,
+            IsVegetarian = r.IsVegetarian,
+            IsVegan = r.IsVegan,
+            IsPescatarian = r.IsPescatarian,
+            IsGlutenFree = r.IsGlutenFree,
+            IsDairyFree = r.IsDairyFree,
+            IsKeto = r.IsKeto,
+            IsPaleo = r.IsPaleo,
+            IsHalal = r.IsHalal,
+            IsKosher = r.IsKosher,
+            IsMediterranean = r.IsMediterranean,
             // Only surface per-serving calories on cards when a real Servings
             // value exists AND the figure is a real positive number — a 0/null
             // means nutrition couldn't be computed, so don't show "0 cal/serving".

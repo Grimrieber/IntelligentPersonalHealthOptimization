@@ -46,6 +46,26 @@ public class RecipeItem : INotifyPropertyChanged
     public int? HealthScore { get; set; }
     public bool IsHealthyTreat { get; set; }
 
+    // Per-serving macros for cookbook macro filters/sort (from SavedRecipe). Null
+    // when nutrition couldn't be computed — such recipes fall out of macro filters.
+    public double? ProteinGrams { get; set; }
+    public double? CarbsGrams { get; set; }
+    public double? FatGrams { get; set; }
+    public double? FiberGrams { get; set; }
+    public double? SugarGrams { get; set; }
+
+    // Precomputed diet-compatibility flags (from SavedRecipe) for cookbook diet filters.
+    public bool IsVegetarian { get; set; }
+    public bool IsVegan { get; set; }
+    public bool IsPescatarian { get; set; }
+    public bool IsGlutenFree { get; set; }
+    public bool IsDairyFree { get; set; }
+    public bool IsKeto { get; set; }
+    public bool IsPaleo { get; set; }
+    public bool IsHalal { get; set; }
+    public bool IsKosher { get; set; }
+    public bool IsMediterranean { get; set; }
+
     public bool IsHealthy => HealthTier == Data.RecipeHealth.Healthy;
     public bool ShowHealthBadge => Data.HealthBadgeStyle.ShouldShow(HealthTier);
 

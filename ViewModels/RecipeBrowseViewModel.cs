@@ -51,9 +51,81 @@ public partial class RecipeBrowseViewModel : BaseViewModel
     [ObservableProperty]
     private bool _showHealthyOnly;
 
-    // Unfiltered recipe list for the current category/search; ShowHealthyOnly
-    // filters this into the visible Recipes collection.
+    // Unfiltered recipe list for the current category/search; the filters below
+    // project this into the visible Recipes collection.
     private List<RecipeItem> _currentRecipes = new();
+
+    /// <summary>Whether the macro/diet filter panel is expanded on the recipe list.</summary>
+    [ObservableProperty]
+    private bool _showFilters;
+
+    /// <summary>Sort options for the recipe list.</summary>
+    public List<string> SortOptions { get; } = new()
+    {
+        "Default", "Highest protein", "Lowest calories",
+        "Highest fiber", "Lowest sugar", "Best health score",
+    };
+
+    [ObservableProperty]
+    private string _selectedSort = "Default";
+
+    partial void OnSelectedSortChanged(string value) => ApplyRecipeFilter();
+
+    /// <summary>Macro quick-filter chips (per serving). AND-combined with everything else.</summary>
+    public ObservableCollection<FilterChip> MacroChips { get; } = new()
+    {
+        new("High protein", r => r.ProteinGrams >= 20),
+        new("Low sugar", r => r.SugarGrams.HasValue && r.SugarGrams < 10),
+        new("Under 500 cal", r => r.CaloriesPerServing.HasValue && r.CaloriesPerServing < 500),
+        new("High fiber", r => r.FiberGrams >= 5),
+    };
+
+    /// <summary>Diet filter chips (multi-select, AND-combined). Backed by the
+    /// precomputed per-recipe diet flags.</summary>
+    public ObservableCollection<FilterChip> DietChips { get; } = new()
+    {
+        new("Vegetarian", r => r.IsVegetarian),
+        new("Vegan", r => r.IsVegan),
+        new("Pescatarian", r => r.IsPescatarian),
+        new("Gluten-Free", r => r.IsGlutenFree),
+        new("Dairy-Free", r => r.IsDairyFree),
+        new("Keto", r => r.IsKeto),
+        new("Paleo", r => r.IsPaleo),
+        new("Halal", r => r.IsHalal),
+        new("Kosher", r => r.IsKosher),
+        new("Mediterranean", r => r.IsMediterranean),
+    };
+
+    /// <summary>Number of active filters — drives the "Filters (N)" button label.</summary>
+    public int ActiveFilterCount =>
+        (ShowHealthyOnly ? 1 : 0)
+        + (SelectedSort != "Default" ? 1 : 0)
+        + MacroChips.Count(c => c.IsSelected)
+        + DietChips.Count(c => c.IsSelected);
+
+    public string FilterButtonText => ActiveFilterCount > 0 ? $"Filters ({ActiveFilterCount})" : "Filters";
+    public bool HasActiveFilters => ActiveFilterCount > 0;
+
+    [RelayCommand]
+    private void ToggleFilters() => ShowFilters = !ShowFilters;
+
+    [RelayCommand]
+    private void ToggleChip(FilterChip chip)
+    {
+        if (chip == null) return;
+        chip.IsSelected = !chip.IsSelected;
+        ApplyRecipeFilter();
+    }
+
+    [RelayCommand]
+    private void ClearFilters()
+    {
+        ShowHealthyOnly = false;
+        SelectedSort = "Default";
+        foreach (var c in MacroChips) c.IsSelected = false;
+        foreach (var c in DietChips) c.IsSelected = false;
+        ApplyRecipeFilter();
+    }
 
     /// <summary>Top level of the cookbook: the group grid.</summary>
     [ObservableProperty]
@@ -175,13 +247,35 @@ public partial class RecipeBrowseViewModel : BaseViewModel
     partial void OnShowHealthyOnlyChanged(bool value) => ApplyRecipeFilter();
 
     /// <summary>Project the current unfiltered list into the visible Recipes
-    /// collection, honoring the "Healthy only" chip (Healthy tier + lean treats).</summary>
+    /// collection, applying the Healthy toggle, macro/diet chips, and sort. All
+    /// filters AND-combine; they persist across category/search navigation.</summary>
     private void ApplyRecipeFilter()
     {
         IEnumerable<RecipeItem> src = _currentRecipes;
+
         if (ShowHealthyOnly)
             src = src.Where(r => r.IsHealthy || r.IsHealthyTreat);
+
+        // Macro + diet chips: every selected chip must match (AND).
+        foreach (var chip in MacroChips.Where(c => c.IsSelected))
+            src = src.Where(chip.Match);
+        foreach (var chip in DietChips.Where(c => c.IsSelected))
+            src = src.Where(chip.Match);
+
+        src = SelectedSort switch
+        {
+            "Highest protein" => src.OrderByDescending(r => r.ProteinGrams ?? -1),
+            "Lowest calories" => src.OrderBy(r => r.CaloriesPerServing ?? int.MaxValue),
+            "Highest fiber" => src.OrderByDescending(r => r.FiberGrams ?? -1),
+            "Lowest sugar" => src.OrderBy(r => r.SugarGrams ?? double.MaxValue),
+            "Best health score" => src.OrderByDescending(r => r.HealthScore ?? -1),
+            _ => src, // Default: keep the incoming order (alphabetical from the query).
+        };
+
         Recipes = new ObservableCollection<RecipeItem>(src);
+        OnPropertyChanged(nameof(ActiveFilterCount));
+        OnPropertyChanged(nameof(FilterButtonText));
+        OnPropertyChanged(nameof(HasActiveFilters));
     }
 
     private CancellationTokenSource? _searchDebounce;
@@ -408,5 +502,22 @@ public partial class RecipeBrowseViewModel : BaseViewModel
             ShowCategoriesForGroup(_selectedGroupName);   // back to the group's categories
         else
             ShowGroups();                                  // back to the top-level groups
+    }
+}
+
+/// <summary>A toggleable filter chip (macro quick-filter or diet) in the cookbook.
+/// <see cref="Match"/> is the predicate a recipe must satisfy when the chip is on.</summary>
+public partial class FilterChip : ObservableObject
+{
+    public string Label { get; }
+    public Func<RecipeItem, bool> Match { get; }
+
+    [ObservableProperty]
+    private bool _isSelected;
+
+    public FilterChip(string label, Func<RecipeItem, bool> match)
+    {
+        Label = label;
+        Match = match;
     }
 }
