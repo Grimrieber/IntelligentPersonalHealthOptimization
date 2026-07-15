@@ -55,6 +55,7 @@ public static class RouteConstants
     public const string ShoppingList = "shoppinglist";
     public const string CookMode = "cookmode";
     public const string NutritionTrends = "nutritiontrends";
+    public const string EditTargets = "edittargets";
 
     // Nutrition Assessment
     public const string NutriAssessIntro = "nutriassessintro";

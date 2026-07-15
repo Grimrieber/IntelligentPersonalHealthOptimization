@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.EditTargetsPage"
+             x:DataType="vm:EditTargetsViewModel"
+             Title="Adjust Targets">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Your Daily Targets" FontSize="22" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+
+            <Label Text="{Binding StatusText}" FontSize="13"
+                   TextColor="{StaticResource Gray500}" LineBreakMode="WordWrap" />
+
+            <Frame Style="{StaticResource CardFrame}" Padding="16">
+                <VerticalStackLayout Spacing="14">
+
+                    <!-- Calories -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                            <Label Text="Calories" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Label Text="kcal per day" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Entry Grid.Column="1" Text="{Binding Calories}" Keyboard="Numeric"
+                               WidthRequest="110" HorizontalTextAlignment="End" FontSize="18" FontAttributes="Bold" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1"
+                             Color="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+
+                    <!-- Protein -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                            <Label Text="Protein" FontSize="15" FontAttributes="Bold" TextColor="#2196F3" />
+                            <Label Text="grams per day" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Entry Grid.Column="1" Text="{Binding Protein}" Keyboard="Numeric"
+                               WidthRequest="110" HorizontalTextAlignment="End" FontSize="18" FontAttributes="Bold" />
+                    </Grid>
+
+                    <!-- Carbs -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                            <Label Text="Carbs" FontSize="15" FontAttributes="Bold" TextColor="#FF9800" />
+                            <Label Text="grams per day" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Entry Grid.Column="1" Text="{Binding Carbs}" Keyboard="Numeric"
+                               WidthRequest="110" HorizontalTextAlignment="End" FontSize="18" FontAttributes="Bold" />
+                    </Grid>
+
+                    <!-- Fat -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                            <Label Text="Fat" FontSize="15" FontAttributes="Bold" TextColor="#F44336" />
+                            <Label Text="grams per day" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Entry Grid.Column="1" Text="{Binding Fat}" Keyboard="Numeric"
+                               WidthRequest="110" HorizontalTextAlignment="End" FontSize="18" FontAttributes="Bold" />
+                    </Grid>
+
+                    <Label Text="{Binding MacroCalorieSummary}" FontSize="12"
+                           TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Use These Targets"
+                    Command="{Binding SaveCommand}"
+                    BackgroundColor="{StaticResource Primary}" TextColor="White"
+                    FontAttributes="Bold" />
+
+            <Button Text="Reset to Automatic"
+                    Command="{Binding ResetToAutoCommand}"
+                    IsVisible="{Binding IsManual}"
+                    Style="{StaticResource SecondaryButton}" />
+
+            <Label Text="Tip: aim for protein around 0.7–1 g per pound of bodyweight to hold onto muscle while training."
+                   FontSize="12" TextColor="{StaticResource Gray500}"
+                   LineBreakMode="WordWrap" Margin="0,4,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

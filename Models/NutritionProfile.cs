@@ -72,6 +72,12 @@ public class NutritionProfile
     public int TargetCarbsG { get; set; }
     public int TargetFatG { get; set; }
 
+    /// <summary>When true, the user has hand-set their calorie/macro targets and
+    /// the dashboard uses the stored Target* values verbatim instead of
+    /// recomputing them from the latest assessment each load. Reset via
+    /// "Reset to automatic" on the targets editor.</summary>
+    public bool UseManualTargets { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

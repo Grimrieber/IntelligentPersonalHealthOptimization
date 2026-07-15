@@ -116,6 +116,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ShoppingListViewModel>();
         builder.Services.AddTransient<CookModeViewModel>();
         builder.Services.AddTransient<NutritionTrendsViewModel>();
+        builder.Services.AddTransient<EditTargetsViewModel>();
         builder.Services.AddTransient<MealSelectionViewModel>();
         builder.Services.AddTransient<AddCustomFoodViewModel>();
 
@@ -203,6 +204,7 @@ public static class MauiProgram
         builder.Services.AddTransient<Views.Nutrition.ShoppingListPage>();
         builder.Services.AddTransient<Views.Recipes.CookModePage>();
         builder.Services.AddTransient<Views.Nutrition.NutritionTrendsPage>();
+        builder.Services.AddTransient<Views.Nutrition.EditTargetsPage>();
         builder.Services.AddTransient<MealSelectionPage>();
         builder.Services.AddTransient<AddCustomFoodPage>();
 

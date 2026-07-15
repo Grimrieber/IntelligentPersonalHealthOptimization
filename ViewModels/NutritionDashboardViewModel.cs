@@ -164,7 +164,9 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 // Recompute targets fresh from CURRENT User.WeightKg + ActivityLevel
                 // and the latest assessment inputs. If the user updates their weight
                 // on the Goals page, the dashboard reflects it on next load.
-                if (latestAssess != null && user.WeightKg > 0)
+                // Skipped entirely when the user has hand-set their targets — then
+                // the stored values win (see the else branch).
+                if (!profile.UseManualTargets && latestAssess != null && user.WeightKg > 0)
                 {
                     var bmrLive = _nutritionService.CalculateBMR(user);
                     var tdeeLive = _nutritionService.CalculateTDEE(bmrLive, user.ActivityLevel);
@@ -641,6 +643,12 @@ public partial class NutritionDashboardViewModel : BaseViewModel
     private async Task ViewTrendsAsync()
     {
         await Shell.Current.GoToAsync(RouteConstants.NutritionTrends);
+    }
+
+    [RelayCommand]
+    private async Task EditTargetsAsync()
+    {
+        await Shell.Current.GoToAsync(RouteConstants.EditTargets);
     }
 
     [RelayCommand]
