@@ -359,6 +359,43 @@ public partial class RecipeDetailViewModel : BaseViewModel
         OnPropertyChanged(nameof(CanDecreaseServings));
     }
 
+    // Allergen warning (ingredients matching the user's allergies / foods-to-avoid).
+    [ObservableProperty]
+    private bool _hasAllergenWarning;
+
+    [ObservableProperty]
+    private string _allergenWarningText = string.Empty;
+
+    /// <summary>Flag ingredient lines that hit the user's allergies/avoid-list. Call
+    /// BEFORE assigning IngredientGroups so the flags are set at bind time (the
+    /// RecipeIngredient flag is a plain property with no change notification).</summary>
+    private async Task ApplyAllergenFlagsAsync(IEnumerable<IngredientGrouping> groups)
+    {
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            var profile = user != null ? await _nutritionService.GetNutritionProfileAsync(user.Id) : null;
+            var terms = Data.AllergenMatcher.Build(profile?.Allergies, profile?.FoodsToAvoid);
+            var labels = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var g in groups)
+                foreach (var ing in g.Items)
+                {
+                    var label = terms.Count == 0 ? null : Data.AllergenMatcher.Match(ing.Description, terms);
+                    ing.AllergenFlag = label != null;
+                    ing.AllergenLabel = label;
+                    if (label != null) labels.Add(label);
+                }
+            HasAllergenWarning = labels.Count > 0;
+            AllergenWarningText = labels.Count > 0
+                ? "Contains foods on your avoid list: " + string.Join(", ", labels)
+                : string.Empty;
+        }
+        catch
+        {
+            HasAllergenWarning = false;
+        }
+    }
+
     // Grouped data for display
     [ObservableProperty]
     private ObservableCollection<IngredientGrouping> _ingredientGroups = [];
@@ -425,7 +462,9 @@ public partial class RecipeDetailViewModel : BaseViewModel
             }
 
             // Grouped ingredients and directions
-            IngredientGroups = new ObservableCollection<IngredientGrouping>(Recipe.GroupedIngredients);
+            var ingGroups = Recipe.GroupedIngredients.ToList();
+            await ApplyAllergenFlagsAsync(ingGroups);
+            IngredientGroups = new ObservableCollection<IngredientGrouping>(ingGroups);
             DirectionGroups = new ObservableCollection<DirectionGrouping>(Recipe.GroupedDirections);
 
             // Cookbook recipes are favorited in place: RecipeId is the catalog
@@ -503,7 +542,9 @@ public partial class RecipeDetailViewModel : BaseViewModel
                         Description = i.Description
                     }).ToList()
                 ));
-            IngredientGroups = new ObservableCollection<IngredientGrouping>(ingredientGrouped);
+            var savedIngGroups = ingredientGrouped.ToList();
+            await ApplyAllergenFlagsAsync(savedIngGroups);
+            IngredientGroups = new ObservableCollection<IngredientGrouping>(savedIngGroups);
 
             // Group directions
             var directionGrouped = directions

@@ -10,4 +10,10 @@ public class RecipeIngredient
     public int SortOrder { get; set; }
     public string? IngredientGroup { get; set; }
     public string Description { get; set; } = string.Empty;
+
+    // Transient: set on the recipe detail page when this line hits the user's
+    // allergies / foods-to-avoid (see AllergenMatcher). Not from the DB.
+    public bool AllergenFlag { get; set; }
+    public string? AllergenLabel { get; set; }
 }
+

@@ -102,6 +102,18 @@
 
                 <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
 
+                <!-- Allergen / foods-to-avoid warning -->
+                <Border IsVisible="{Binding HasAllergenWarning}" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 10" Padding="12" Margin="0,2,0,4"
+                        BackgroundColor="{AppThemeBinding Light=#FDECEA, Dark=#3A1B1B}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Text="&#x26A0;" FontSize="20" TextColor="#D9534F" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding AllergenWarningText}" FontSize="13"
+                               FontAttributes="Bold" TextColor="#D9534F"
+                               LineBreakMode="WordWrap" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
                 <!-- Using BindableLayout instead of nested CollectionView to avoid MAUI crash -->
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding IngredientGroups}" Spacing="4">
                     <BindableLayout.ItemTemplate>
@@ -118,8 +130,22 @@
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate x:DataType="recipe:RecipeIngredient">
                                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Padding="8,4">
-                                                <Label Text="&#x2022;" FontSize="14" TextColor="{StaticResource Primary}" VerticalOptions="Start" />
-                                                <Label Grid.Column="1" Text="{Binding Description}" FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Start" />
+                                                <Label Text="&#x2022;" FontSize="14" TextColor="{StaticResource Primary}" VerticalOptions="Start">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding AllergenFlag}" Value="True">
+                                                            <Setter Property="Text" Value="&#x26A0;" />
+                                                            <Setter Property="TextColor" Value="#D9534F" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                                <Label Grid.Column="1" Text="{Binding Description}" FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Start">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding AllergenFlag}" Value="True">
+                                                            <Setter Property="TextColor" Value="#D9534F" />
+                                                            <Setter Property="FontAttributes" Value="Bold" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
                                             </Grid>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
