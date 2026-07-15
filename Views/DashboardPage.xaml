@@ -108,6 +108,9 @@
                             <Label Text="{Binding CaloriesText}" FontSize="13" FontAttributes="Bold" Grid.Column="1" />
                         </Grid>
                         <ProgressBar Progress="{Binding CaloriesProgress}" ProgressColor="{StaticResource Primary}" />
+                        <Label Text="{Binding CaloriesRemainingText}"
+                               TextColor="{Binding CaloriesRemainingColor}"
+                               FontSize="13" FontAttributes="Bold" Margin="0,2,0,0" />
                     </VerticalStackLayout>
 
                     <!-- Macros Row -->

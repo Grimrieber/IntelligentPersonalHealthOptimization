@@ -92,6 +92,13 @@ public partial class DashboardViewModel : BaseViewModel
     [ObservableProperty]
     private string _caloriesText = "0 / 2000 kcal";
 
+    // Remaining-focused framing to match the Nutrition Coach ring ("X kcal left").
+    [ObservableProperty]
+    private string _caloriesRemainingText = string.Empty;
+
+    [ObservableProperty]
+    private Microsoft.Maui.Graphics.Color _caloriesRemainingColor = Microsoft.Maui.Graphics.Colors.Gray;
+
     [ObservableProperty]
     private int _proteinConsumed;
 
@@ -277,6 +284,22 @@ public partial class DashboardViewModel : BaseViewModel
 
             CaloriesProgress = CaloriesTarget > 0 ? Math.Min((double)CaloriesConsumed / CaloriesTarget, 1.0) : 0;
             CaloriesText = $"{CaloriesConsumed} / {CaloriesTarget} kcal";
+
+            // "X kcal left" (or "over") — same actionable framing as the N. Coach ring.
+            if (CaloriesTarget > 0)
+            {
+                var remaining = CaloriesTarget - CaloriesConsumed;
+                CaloriesRemainingText = remaining >= 0
+                    ? $"{remaining:N0} kcal left today"
+                    : $"{Math.Abs(remaining):N0} kcal over budget";
+                CaloriesRemainingColor = remaining >= 0
+                    ? Microsoft.Maui.Graphics.Color.FromArgb("#1F8A4C")
+                    : Microsoft.Maui.Graphics.Color.FromArgb("#BB5340");
+            }
+            else
+            {
+                CaloriesRemainingText = string.Empty;
+            }
             ProteinProgress = ProteinTarget > 0 ? Math.Min((double)ProteinConsumed / ProteinTarget, 1.0) : 0;
             CarbsProgress = CarbsTarget > 0 ? Math.Min((double)CarbsConsumed / CarbsTarget, 1.0) : 0;
             FatProgress = FatTarget > 0 ? Math.Min((double)FatConsumed / FatTarget, 1.0) : 0;
