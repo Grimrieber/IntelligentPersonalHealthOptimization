@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using IntelligentPersonalHealthOptimization.Data;
 using IntelligentPersonalHealthOptimization.Models.Recipe;
 using IntelligentPersonalHealthOptimization.Services.Interfaces;
+using Microsoft.Maui;
 using Microsoft.Maui.Graphics;
 
 namespace IntelligentPersonalHealthOptimization.ViewModels;
@@ -74,6 +75,45 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _hasNutrition;
+
+    // Macro split bar (protein/carbs/fat by calorie contribution).
+    [ObservableProperty]
+    private bool _hasMacroBar;
+
+    [ObservableProperty]
+    private GridLength _proteinStar = new(1, GridUnitType.Star);
+
+    [ObservableProperty]
+    private GridLength _carbsStar = new(1, GridUnitType.Star);
+
+    [ObservableProperty]
+    private GridLength _fatStar = new(1, GridUnitType.Star);
+
+    [ObservableProperty]
+    private string _proteinPct = string.Empty;
+
+    [ObservableProperty]
+    private string _carbsPct = string.Empty;
+
+    [ObservableProperty]
+    private string _fatPct = string.Empty;
+
+    /// <summary>Compute the macro-calorie split (P·4, C·4, F·9) for the split bar.</summary>
+    private void SetMacroBar(double? protein, double? carbs, double? fat)
+    {
+        var p = Math.Max(0, protein ?? 0) * 4.0;
+        var c = Math.Max(0, carbs ?? 0) * 4.0;
+        var f = Math.Max(0, fat ?? 0) * 9.0;
+        var total = p + c + f;
+        if (total <= 0) { HasMacroBar = false; return; }
+        ProteinStar = new GridLength(Math.Max(p, 0.001), GridUnitType.Star);
+        CarbsStar = new GridLength(Math.Max(c, 0.001), GridUnitType.Star);
+        FatStar = new GridLength(Math.Max(f, 0.001), GridUnitType.Star);
+        ProteinPct = $"P {Math.Round(100 * p / total)}%";
+        CarbsPct = $"C {Math.Round(100 * c / total)}%";
+        FatPct = $"F {Math.Round(100 * f / total)}%";
+        HasMacroBar = true;
+    }
 
     // Health-consciousness tier badge (see RecipeHealth).
     [ObservableProperty]
@@ -192,6 +232,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
                 Cholesterol = n.CholesterolMg.HasValue ? $"{n.CholesterolMg:F1}mg" : "--";
                 Sodium = n.SodiumMg.HasValue ? $"{n.SodiumMg:F1}mg" : "--";
                 ServingSizeNote = n.ServingSizeNote ?? string.Empty;
+                SetMacroBar((double?)n.ProteinGrams, (double?)n.TotalCarbsGrams, (double?)n.TotalFatGrams);
             }
 
             // Grouped ingredients and directions
@@ -258,6 +299,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             SaturatedFat = "--";
             Cholesterol = "--";
             Sodium = "--";
+            SetMacroBar(saved.ProteinGrams, saved.CarbsGrams, saved.FatGrams);
 
             // Load ingredients and directions from local DB
             var ingredients = await _savedRecipeService.GetSavedIngredientsAsync(SavedRecipeId);

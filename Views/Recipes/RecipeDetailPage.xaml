@@ -204,6 +204,37 @@
                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
                 <BoxView HeightRequest="2" Color="{StaticResource Primary}" HorizontalOptions="Fill" />
 
+                <!-- Macro split bar: protein / carbs / fat by calorie contribution -->
+                <VerticalStackLayout Spacing="6" IsVisible="{Binding HasMacroBar}" Margin="0,2,0,6">
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 7" HeightRequest="14"
+                            HorizontalOptions="Fill">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding ProteinStar}" />
+                                <ColumnDefinition Width="{Binding CarbsStar}" />
+                                <ColumnDefinition Width="{Binding FatStar}" />
+                            </Grid.ColumnDefinitions>
+                            <BoxView Grid.Column="0" Color="#3B82F6" />
+                            <BoxView Grid.Column="1" Color="#F59E0B" />
+                            <BoxView Grid.Column="2" Color="#EF4444" />
+                        </Grid>
+                    </Border>
+                    <FlexLayout Wrap="Wrap" JustifyContent="Center">
+                        <HorizontalStackLayout Spacing="5" Margin="8,0" VerticalOptions="Center">
+                            <BoxView WidthRequest="9" HeightRequest="9" CornerRadius="2" Color="#3B82F6" VerticalOptions="Center" />
+                            <Label Text="{Binding ProteinPct}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5" Margin="8,0" VerticalOptions="Center">
+                            <BoxView WidthRequest="9" HeightRequest="9" CornerRadius="2" Color="#F59E0B" VerticalOptions="Center" />
+                            <Label Text="{Binding CarbsPct}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5" Margin="8,0" VerticalOptions="Center">
+                            <BoxView WidthRequest="9" HeightRequest="9" CornerRadius="2" Color="#EF4444" VerticalOptions="Center" />
+                            <Label Text="{Binding FatPct}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </HorizontalStackLayout>
+                    </FlexLayout>
+                </VerticalStackLayout>
+
                 <Frame Style="{StaticResource CardFrame}" Padding="16">
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="16">
                         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2" HorizontalOptions="Center">
