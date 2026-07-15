@@ -64,6 +64,19 @@
 
                     <Label Text="{Binding MacroCalorieSummary}" FontSize="12"
                            TextColor="{StaticResource Gray500}" HorizontalOptions="End" />
+
+                    <BoxView HeightRequest="1"
+                             Color="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+
+                    <!-- Water -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                            <Label Text="Water" FontSize="15" FontAttributes="Bold" TextColor="#29B6F6" />
+                            <Label Text="glasses per day" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Entry Grid.Column="1" Text="{Binding WaterGlasses}" Keyboard="Numeric"
+                               WidthRequest="110" HorizontalTextAlignment="End" FontSize="18" FontAttributes="Bold" />
+                    </Grid>
                 </VerticalStackLayout>
             </Frame>
 

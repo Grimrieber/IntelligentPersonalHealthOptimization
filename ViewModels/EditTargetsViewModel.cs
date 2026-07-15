@@ -48,6 +48,9 @@ public partial class EditTargetsViewModel : BaseViewModel
     private string _fat = string.Empty;
 
     [ObservableProperty]
+    private string _waterGlasses = string.Empty;
+
+    [ObservableProperty]
     private bool _isManual;
 
     [ObservableProperty]
@@ -79,6 +82,7 @@ public partial class EditTargetsViewModel : BaseViewModel
             Protein = _profile.TargetProteinG.ToString();
             Carbs = _profile.TargetCarbsG.ToString();
             Fat = _profile.TargetFatG.ToString();
+            WaterGlasses = _profile.DailyWaterGlasses.ToString();
             IsManual = _profile.UseManualTargets;
             StatusText = IsManual
                 ? "Your targets are set manually."
@@ -117,6 +121,8 @@ public partial class EditTargetsViewModel : BaseViewModel
         _profile.TargetProteinG = p;
         _profile.TargetCarbsG = c;
         _profile.TargetFatG = f;
+        var water = ParseInt(WaterGlasses);
+        if (water is >= 1 and <= 30) _profile.DailyWaterGlasses = water;
         _profile.UseManualTargets = true;
         _profile.UpdatedAt = DateTime.UtcNow;
         await _databaseService.UpdateAsync(_profile);
@@ -137,6 +143,10 @@ public partial class EditTargetsViewModel : BaseViewModel
             "Reset", "Cancel");
         if (!confirm) return;
 
+        // Water goal is independent of the calorie/macro auto-calc — keep the
+        // user's value even when handing macros back to automatic.
+        var water = ParseInt(WaterGlasses);
+        if (water is >= 1 and <= 30) _profile.DailyWaterGlasses = water;
         _profile.UseManualTargets = false;
         _profile.UpdatedAt = DateTime.UtcNow;
         await _databaseService.UpdateAsync(_profile);
