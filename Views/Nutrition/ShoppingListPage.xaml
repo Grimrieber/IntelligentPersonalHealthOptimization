@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             x:Class="IntelligentPersonalHealthOptimization.Views.Nutrition.ShoppingListPage"
+             x:DataType="vm:ShoppingListViewModel"
+             Title="Shopping List">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header: summary + clear -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="20,14,20,8" ColumnSpacing="10">
+            <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                <Label Text="Shopping List" FontSize="22" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                <Label Text="{Binding Summary}" FontSize="13" TextColor="{StaticResource Gray500}" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="Clear"
+                    Command="{Binding ClearChecksCommand}"
+                    IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}"
+                    FontSize="13" HeightRequest="36" Padding="14,0"
+                    BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                    VerticalOptions="Center" />
+        </Grid>
+
+        <!-- Empty state -->
+        <VerticalStackLayout Grid.Row="1" IsVisible="{Binding IsEmpty}"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Padding="40" Spacing="10">
+            <Label Text="&#x1F6D2;" FontSize="44" HorizontalOptions="Center" />
+            <Label Text="No meal plan to shop for"
+                   FontSize="17" FontAttributes="Bold"
+                   TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+            <Label Text="Generate a meal plan in the Nutrition Coach and your ingredients will show up here, grouped by aisle."
+                   FontSize="13" TextColor="{StaticResource Gray500}"
+                   HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- The list -->
+        <ScrollView Grid.Row="1" IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}">
+            <VerticalStackLayout Padding="16,4,16,24" Spacing="4"
+                                 BindableLayout.ItemsSource="{Binding Aisles}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:GroceryAisle">
+                        <VerticalStackLayout Spacing="6">
+                            <!-- Aisle header -->
+                            <Label Margin="4,12,0,2" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Emoji}" />
+                                        <Span Text="  " />
+                                        <Span Text="{Binding Name}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <!-- Items -->
+                            <Border StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                                    Padding="10,4">
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}" Spacing="0">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:GroceryItem">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Padding="2,9">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListViewModel}}, Path=ToggleItemCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Grid.GestureRecognizers>
+
+                                                <!-- Check box -->
+                                                <Border Grid.Column="0" WidthRequest="26" HeightRequest="26"
+                                                        StrokeShape="RoundRectangle 13" StrokeThickness="2"
+                                                        Stroke="{StaticResource Gray400}" BackgroundColor="Transparent"
+                                                        VerticalOptions="Center">
+                                                    <Label Text="&#x2713;" FontSize="15" FontAttributes="Bold"
+                                                           TextColor="White" IsVisible="{Binding IsChecked}"
+                                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                                    <Border.Triggers>
+                                                        <DataTrigger TargetType="Border" Binding="{Binding IsChecked}" Value="True">
+                                                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                            <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                        </DataTrigger>
+                                                    </Border.Triggers>
+                                                </Border>
+
+                                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                                    <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold"
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}">
+                                                        <Label.Triggers>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding IsChecked}" Value="True">
+                                                                <Setter Property="TextDecorations" Value="Strikethrough" />
+                                                                <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                                                            </DataTrigger>
+                                                        </Label.Triggers>
+                                                    </Label>
+                                                    <Label Text="{Binding Detail}" FontSize="12"
+                                                           TextColor="{StaticResource Gray500}" LineBreakMode="WordWrap" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           Color="{StaticResource Primary}" />
+    </Grid>
+</ContentPage>

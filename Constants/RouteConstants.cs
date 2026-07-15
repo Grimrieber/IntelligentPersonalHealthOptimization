@@ -52,6 +52,7 @@ public static class RouteConstants
     public const string MealPlanView = "mealplanview";
     public const string MealSelection = "mealselection";
     public const string AddCustomFood = "addcustomfood";
+    public const string ShoppingList = "shoppinglist";
 
     // Nutrition Assessment
     public const string NutriAssessIntro = "nutriassessintro";

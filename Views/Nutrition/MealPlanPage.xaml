@@ -220,12 +220,16 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Regenerate Button -->
-        <Button Text="Regenerate Plan"
-                Grid.Row="1"
-                Command="{Binding RegeneratePlanCommand}"
-                IsVisible="{Binding HasMealPlan}"
-                Style="{StaticResource SecondaryButton}"
-                Margin="20,8,20,20" />
+        <!-- Actions: Shopping List + Regenerate -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10"
+              IsVisible="{Binding HasMealPlan}" Margin="20,8,20,20">
+            <Button Grid.Column="0" Text="🛒 Shopping List"
+                    Command="{Binding ShoppingListCommand}"
+                    BackgroundColor="{StaticResource Primary}" TextColor="White"
+                    FontAttributes="Bold" />
+            <Button Grid.Column="1" Text="Regenerate Plan"
+                    Command="{Binding RegeneratePlanCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+        </Grid>
     </Grid>
 </ContentPage>

@@ -468,6 +468,10 @@ public partial class MealPlanViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task ShoppingListAsync()
+        => await Shell.Current.GoToAsync(Constants.RouteConstants.ShoppingList);
+
+    [RelayCommand]
     private async Task SwapMealAsync(MealPlanMealGroup group)
     {
         if (group == null || _activePlan == null) return;
