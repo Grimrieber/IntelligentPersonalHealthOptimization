@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels"
+             xmlns:controls="clr-namespace:IntelligentPersonalHealthOptimization.Controls"
              x:Class="IntelligentPersonalHealthOptimization.Views.DashboardPage"
              x:DataType="vm:DashboardViewModel"
              Title="Dashboard">
@@ -101,53 +102,67 @@
                         </Label>
                     </Grid>
 
-                    <!-- Calories -->
-                    <VerticalStackLayout Spacing="4">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Calories" FontSize="13" TextColor="{StaticResource Gray500}" />
-                            <Label Text="{Binding CaloriesText}" FontSize="13" FontAttributes="Bold" Grid.Column="1" />
-                        </Grid>
-                        <ProgressBar Progress="{Binding CaloriesProgress}" ProgressColor="{StaticResource Primary}" />
-                        <Label Text="{Binding CaloriesRemainingText}"
-                               TextColor="{Binding CaloriesRemainingColor}"
-                               FontSize="13" FontAttributes="Bold" Margin="0,2,0,0" />
-                    </VerticalStackLayout>
+                    <!-- Calorie ring: centre shows remaining (more actionable) -->
+                    <Grid WidthRequest="160" HeightRequest="160" HorizontalOptions="Center" Margin="0,4">
+                        <controls:ProgressRing Progress="{Binding CaloriesProgress}"
+                                               RingColor="{StaticResource Primary}"
+                                               TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                               Thickness="14" />
+                        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="0">
+                            <Label Text="{Binding CaloriesRemainingValue}"
+                                   FontSize="32" FontAttributes="Bold" HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding CaloriesRemainingCaption}" FontSize="12" HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding CaloriesText}" FontSize="10" HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                    </Grid>
 
-                    <!-- Macros Row -->
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                        <!-- Protein -->
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Protein" FontSize="11" TextColor="{StaticResource Gray500}" />
-                            <ProgressBar Progress="{Binding ProteinProgress}" ProgressColor="#2196F3" />
-                            <Label FontSize="11" TextColor="#2196F3" FontAttributes="Bold">
+                    <!-- Macro mini-rings: Protein / Carbs / Fat -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4" HorizontalOptions="Center">
+                            <Grid WidthRequest="62" HeightRequest="62" HorizontalOptions="Center">
+                                <controls:ProgressRing Progress="{Binding ProteinProgress}" RingColor="#2196F3" Thickness="6"
+                                                       TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                <Label Text="P" FontSize="15" FontAttributes="Bold" TextColor="#2196F3"
+                                       VerticalOptions="Center" HorizontalOptions="Center" />
+                            </Grid>
+                            <Label FontSize="11" FontAttributes="Bold" TextColor="#2196F3" HorizontalOptions="Center">
                                 <Label.Text>
-                                    <MultiBinding StringFormat="{}{0}g / {1}g">
+                                    <MultiBinding StringFormat="{}{0}/{1}g">
                                         <Binding Path="ProteinConsumed" />
                                         <Binding Path="ProteinTarget" />
                                     </MultiBinding>
                                 </Label.Text>
                             </Label>
                         </VerticalStackLayout>
-                        <!-- Carbs -->
-                        <VerticalStackLayout Spacing="2" Grid.Column="1">
-                            <Label Text="Carbs" FontSize="11" TextColor="{StaticResource Gray500}" />
-                            <ProgressBar Progress="{Binding CarbsProgress}" ProgressColor="#FF9800" />
-                            <Label FontSize="11" TextColor="#FF9800" FontAttributes="Bold">
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="Center">
+                            <Grid WidthRequest="62" HeightRequest="62" HorizontalOptions="Center">
+                                <controls:ProgressRing Progress="{Binding CarbsProgress}" RingColor="#FF9800" Thickness="6"
+                                                       TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                <Label Text="C" FontSize="15" FontAttributes="Bold" TextColor="#FF9800"
+                                       VerticalOptions="Center" HorizontalOptions="Center" />
+                            </Grid>
+                            <Label FontSize="11" FontAttributes="Bold" TextColor="#FF9800" HorizontalOptions="Center">
                                 <Label.Text>
-                                    <MultiBinding StringFormat="{}{0}g / {1}g">
+                                    <MultiBinding StringFormat="{}{0}/{1}g">
                                         <Binding Path="CarbsConsumed" />
                                         <Binding Path="CarbsTarget" />
                                     </MultiBinding>
                                 </Label.Text>
                             </Label>
                         </VerticalStackLayout>
-                        <!-- Fat -->
-                        <VerticalStackLayout Spacing="2" Grid.Column="2">
-                            <Label Text="Fat" FontSize="11" TextColor="{StaticResource Gray500}" />
-                            <ProgressBar Progress="{Binding FatProgress}" ProgressColor="#F44336" />
-                            <Label FontSize="11" TextColor="#F44336" FontAttributes="Bold">
+                        <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="Center">
+                            <Grid WidthRequest="62" HeightRequest="62" HorizontalOptions="Center">
+                                <controls:ProgressRing Progress="{Binding FatProgress}" RingColor="#F44336" Thickness="6"
+                                                       TrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                <Label Text="F" FontSize="15" FontAttributes="Bold" TextColor="#F44336"
+                                       VerticalOptions="Center" HorizontalOptions="Center" />
+                            </Grid>
+                            <Label FontSize="11" FontAttributes="Bold" TextColor="#F44336" HorizontalOptions="Center">
                                 <Label.Text>
-                                    <MultiBinding StringFormat="{}{0}g / {1}g">
+                                    <MultiBinding StringFormat="{}{0}/{1}g">
                                         <Binding Path="FatConsumed" />
                                         <Binding Path="FatTarget" />
                                     </MultiBinding>
@@ -156,6 +171,50 @@
                         </VerticalStackLayout>
                     </Grid>
                 </VerticalStackLayout>
+            </Frame>
+
+            <!-- ===== UP NEXT MEAL ===== -->
+            <Frame Style="{StaticResource CardFrame}" Padding="0" IsVisible="{Binding HasUpNextMeal}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ViewUpNextCommand}" />
+                </Frame.GestureRecognizers>
+                <Grid RowDefinitions="130,Auto">
+                    <!-- Hero photo (or emoji tile) -->
+                    <Border Grid.Row="0" StrokeThickness="0" StrokeShape="RoundRectangle 12,12,0,0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}">
+                        <Grid>
+                            <Label Text="{Binding UpNextEmoji}" FontSize="48"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Image Source="{Binding UpNextImageUrl}" Aspect="AspectFill"
+                                   IsVisible="{Binding HasUpNextImage}" />
+                        </Grid>
+                    </Border>
+                    <!-- "UP NEXT · LUNCH" ribbon -->
+                    <Border Grid.Row="0" VerticalOptions="Start" HorizontalOptions="Start" Margin="10"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 6"
+                            BackgroundColor="#CC5E5CE6" Padding="8,3">
+                        <Label FontSize="10" FontAttributes="Bold" TextColor="White">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}UP NEXT · {0}">
+                                    <Binding Path="UpNextMealTypeText" />
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </Border>
+
+                    <Grid Grid.Row="1" Padding="14,10" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding UpNextName}"
+                               FontSize="16" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="1"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding UpNextCalories}"
+                               FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center" />
+                        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Log it"
+                                Command="{Binding LogUpNextCommand}"
+                                BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                FontAttributes="Bold" HeightRequest="40" Margin="0,8,0,0" />
+                    </Grid>
+                </Grid>
             </Frame>
 
             <!-- Active Goals Card -->

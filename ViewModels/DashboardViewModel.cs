@@ -99,6 +99,46 @@ public partial class DashboardViewModel : BaseViewModel
     [ObservableProperty]
     private Microsoft.Maui.Graphics.Color _caloriesRemainingColor = Microsoft.Maui.Graphics.Colors.Gray;
 
+    // Big centre value for the calorie ring (mirrors N. Coach).
+    [ObservableProperty]
+    private string _caloriesRemainingValue = "0";
+
+    [ObservableProperty]
+    private string _caloriesRemainingCaption = "kcal left";
+
+    // ---- "Up Next" meal (next unlogged planned meal today) ----
+    [ObservableProperty]
+    private bool _hasUpNextMeal;
+
+    [ObservableProperty]
+    private string _upNextName = string.Empty;
+
+    [ObservableProperty]
+    private string _upNextMealTypeText = string.Empty;
+
+    [ObservableProperty]
+    private string _upNextCalories = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasUpNextImage))]
+    private string? _upNextImageUrl;
+
+    public bool HasUpNextImage => !string.IsNullOrEmpty(UpNextImageUrl);
+
+    [ObservableProperty]
+    private string _upNextEmoji = "\U0001F37D";  // 🍽
+
+    [ObservableProperty]
+    private string _upNextTier = string.Empty;
+
+    [ObservableProperty]
+    private bool _upNextHasTier;
+
+    private int _upNextSavedRecipeId;
+    private Models.Enums.MealType _upNextMealType;
+    private double _upNextCal, _upNextP, _upNextC, _upNextF;
+    private string _upNextLogName = string.Empty;
+
     [ObservableProperty]
     private int _proteinConsumed;
 
@@ -295,11 +335,17 @@ public partial class DashboardViewModel : BaseViewModel
                 CaloriesRemainingColor = remaining >= 0
                     ? Microsoft.Maui.Graphics.Color.FromArgb("#1F8A4C")
                     : Microsoft.Maui.Graphics.Color.FromArgb("#BB5340");
+                CaloriesRemainingValue = $"{Math.Abs(remaining):N0}";
+                CaloriesRemainingCaption = remaining >= 0 ? "kcal left" : "kcal over";
             }
             else
             {
                 CaloriesRemainingText = string.Empty;
+                CaloriesRemainingValue = $"{CaloriesConsumed}";
+                CaloriesRemainingCaption = "kcal eaten";
             }
+
+            await LoadUpNextMealAsync(userId);
             ProteinProgress = ProteinTarget > 0 ? Math.Min((double)ProteinConsumed / ProteinTarget, 1.0) : 0;
             CarbsProgress = CarbsTarget > 0 ? Math.Min((double)CarbsConsumed / CarbsTarget, 1.0) : 0;
             FatProgress = FatTarget > 0 ? Math.Min((double)FatConsumed / FatTarget, 1.0) : 0;
@@ -309,6 +355,122 @@ public partial class DashboardViewModel : BaseViewModel
             HasNutritionData = false;
         }
     }
+
+    /// <summary>Find the next unlogged planned meal for today and surface it as a
+    /// hero card (dish photo, name, calories, quick log).</summary>
+    private async Task LoadUpNextMealAsync(int userId)
+    {
+        try
+        {
+            HasUpNextMeal = false;
+            var items = await _nutritionService.GetTodaysMealPlanItemsAsync(userId);
+            if (items == null || items.Count == 0) return;
+
+            var todayLog = await _foodService.GetFoodLogAsync(userId, DateTime.Today);
+            var loggedNames = todayLog
+                .Where(l => !string.IsNullOrEmpty(l.Notes))
+                .Select(l => l.Notes!)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            // Group the plan into one entry per meal type (template meals span rows).
+            var meals = items
+                .GroupBy(i => i.MealType)
+                .Select(g => new
+                {
+                    MealType = g.Key,
+                    Name = g.First().MealName,
+                    SavedRecipeId = g.FirstOrDefault(x => x.SavedRecipeId > 0)?.SavedRecipeId ?? 0,
+                    Cal = g.Sum(x => x.Calories),
+                    P = g.Sum(x => x.ProteinG),
+                    C = g.Sum(x => x.CarbsG),
+                    F = g.Sum(x => x.FatG),
+                })
+                .OrderBy(m => (int)m.MealType)
+                .ToList();
+
+            var next = meals.FirstOrDefault(m => !loggedNames.Contains(m.Name));
+            if (next == null) return;  // everything logged — hide the card
+
+            // Dish photo + tier (same source the meal cards use).
+            string? img = null, tier = null;
+            if (next.SavedRecipeId > 0)
+            {
+                var meta = await _nutritionService.GetRecipeCardMetaAsync(new[] { next.SavedRecipeId });
+                if (meta.TryGetValue(next.SavedRecipeId, out var m)) { img = m.ImageUrl; tier = m.HealthTier; }
+            }
+
+            UpNextName = next.Name;
+            UpNextMealTypeText = FormatMealType(next.MealType).ToUpperInvariant();
+            UpNextCalories = $"{next.Cal:F0} kcal";
+            UpNextImageUrl = img;
+            UpNextEmoji = next.Name.Contains("Shake", StringComparison.OrdinalIgnoreCase) ? "\U0001F964" : "\U0001F37D";
+            UpNextTier = tier ?? string.Empty;
+            UpNextHasTier = !string.IsNullOrEmpty(tier);
+
+            _upNextSavedRecipeId = next.SavedRecipeId;
+            _upNextMealType = next.MealType;
+            _upNextCal = next.Cal; _upNextP = next.P; _upNextC = next.C; _upNextF = next.F;
+            _upNextLogName = next.Name;
+            HasUpNextMeal = true;
+        }
+        catch
+        {
+            HasUpNextMeal = false;
+        }
+    }
+
+    /// <summary>Open the Up Next recipe.</summary>
+    [RelayCommand]
+    private async Task ViewUpNextAsync()
+    {
+        if (_upNextSavedRecipeId > 0)
+            await Shell.Current.GoToAsync($"RecipeDetail?savedRecipeId={_upNextSavedRecipeId}");
+    }
+
+    /// <summary>Log the Up Next meal to today (mirrors the N. Coach "Log It" action).</summary>
+    [RelayCommand]
+    private async Task LogUpNextAsync()
+    {
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            if (user == null) return;
+
+            var entry = new FoodLogEntry
+            {
+                UserId = user.Id,
+                LogDate = DateTime.Today,
+                MealType = _upNextMealType,
+                SavedRecipeId = _upNextSavedRecipeId,
+                Calories = _upNextCal,
+                ProteinG = _upNextP,
+                CarbsG = _upNextC,
+                FatG = _upNextF,
+                Notes = _upNextLogName,
+            };
+            await _databaseService.InsertAsync(entry);
+
+            // Refresh nutrition + advance to the next meal.
+            await LoadNutritionSummaryAsync(user.Id);
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("Log up-next meal", ex);
+        }
+    }
+
+    private static string FormatMealType(Models.Enums.MealType mealType) => mealType switch
+    {
+        Models.Enums.MealType.Breakfast => "Breakfast",
+        Models.Enums.MealType.MorningSnack => "Morning Snack",
+        Models.Enums.MealType.Lunch => "Lunch",
+        Models.Enums.MealType.AfternoonSnack => "Afternoon Snack",
+        Models.Enums.MealType.Dinner => "Dinner",
+        Models.Enums.MealType.EveningSnack => "Evening Snack",
+        Models.Enums.MealType.PreWorkout => "Pre-Workout",
+        Models.Enums.MealType.PostWorkout => "Post-Workout",
+        _ => mealType.ToString()
+    };
 
     private async Task LoadGoalsSummaryAsync(int userId)
     {
