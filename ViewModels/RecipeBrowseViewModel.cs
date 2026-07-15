@@ -86,7 +86,7 @@ public partial class RecipeBrowseViewModel : BaseViewModel
     /// <summary>Sort options for the recipe list.</summary>
     public List<string> SortOptions { get; } = new()
     {
-        "Default", "Highest protein", "Lowest calories",
+        "Default", "Highest protein", "Best protein ratio", "Lowest calories",
         "Highest fiber", "Lowest sugar", "Best health score", "My rating",
     };
 
@@ -289,6 +289,7 @@ public partial class RecipeBrowseViewModel : BaseViewModel
         src = SelectedSort switch
         {
             "Highest protein" => src.OrderByDescending(r => r.ProteinGrams ?? -1),
+            "Best protein ratio" => src.OrderByDescending(r => r.ProteinDensity),
             "Lowest calories" => src.OrderBy(r => r.CaloriesPerServing ?? int.MaxValue),
             "Highest fiber" => src.OrderByDescending(r => r.FiberGrams ?? -1),
             "Lowest sugar" => src.OrderBy(r => r.SugarGrams ?? double.MaxValue),

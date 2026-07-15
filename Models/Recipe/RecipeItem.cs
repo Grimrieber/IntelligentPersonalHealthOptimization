@@ -46,6 +46,12 @@ public class RecipeItem : INotifyPropertyChanged
     public int? HealthScore { get; set; }
     public bool IsHealthyTreat { get; set; }
 
+    /// <summary>Protein per 100 kcal — the fitness-relevant "protein efficiency"
+    /// of a recipe. -1 when nutrition is unknown (sorts to the bottom).</summary>
+    public double ProteinDensity =>
+        CaloriesPerServing is int c && c > 0 && ProteinGrams is double p && p > 0
+            ? p * 100.0 / c : -1;
+
     // Per-serving macros for cookbook macro filters/sort (from SavedRecipe). Null
     // when nutrition couldn't be computed — such recipes fall out of macro filters.
     public double? ProteinGrams { get; set; }
