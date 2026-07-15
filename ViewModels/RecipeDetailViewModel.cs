@@ -290,6 +290,84 @@ public partial class RecipeDetailViewModel : BaseViewModel
         ShowGoalFit = true;
     }
 
+    // ---- Personal rating & notes ----
+    // Persisted on the recipe's SavedRecipe row (MyRating / MyNote). The star row
+    // is five tappable glyphs whose colour is driven by Star1..5Color; MyNoteText
+    // is the two-way-bound editor text, saved explicitly.
+    private static readonly Color StarOn = Color.FromArgb("#F2B01E");
+    private static readonly Color StarOff = Color.FromArgb("#4A4A4A");
+
+    [ObservableProperty]
+    private int _myRating;
+
+    [ObservableProperty]
+    private string _myNoteText = string.Empty;
+
+    [ObservableProperty]
+    private string _ratingSummary = "Tap to rate";
+
+    [ObservableProperty]
+    private Color _star1Color = StarOff;
+    [ObservableProperty]
+    private Color _star2Color = StarOff;
+    [ObservableProperty]
+    private Color _star3Color = StarOff;
+    [ObservableProperty]
+    private Color _star4Color = StarOff;
+    [ObservableProperty]
+    private Color _star5Color = StarOff;
+
+    private int TargetSavedId => RecipeId > 0 ? RecipeId : SavedRecipeId;
+
+    private void PaintStars(int rating)
+    {
+        Star1Color = rating >= 1 ? StarOn : StarOff;
+        Star2Color = rating >= 2 ? StarOn : StarOff;
+        Star3Color = rating >= 3 ? StarOn : StarOff;
+        Star4Color = rating >= 4 ? StarOn : StarOff;
+        Star5Color = rating >= 5 ? StarOn : StarOff;
+        RatingSummary = rating <= 0
+            ? "Tap to rate"
+            : $"You rated this {rating}/5";
+    }
+
+    private void SetMyPersonal(int rating, string? note)
+    {
+        MyRating = Math.Clamp(rating, 0, 5);
+        MyNoteText = note ?? string.Empty;
+        PaintStars(MyRating);
+    }
+
+    /// <summary>Tap a star to set the rating (tapping the current rating clears it).</summary>
+    [RelayCommand]
+    private async Task SetRatingAsync(string? value)
+    {
+        if (!int.TryParse(value, out var stars)) return;
+        if (TargetSavedId <= 0) return;
+
+        // Tapping the same star again clears the rating.
+        var newRating = stars == MyRating ? 0 : stars;
+        MyRating = newRating;
+        PaintStars(newRating);
+        try { await _savedRecipeService.SetMyRatingAsync(TargetSavedId, newRating); }
+        catch { /* non-critical */ }
+    }
+
+    [RelayCommand]
+    private async Task SaveNoteAsync()
+    {
+        if (TargetSavedId <= 0) return;
+        try
+        {
+            await _savedRecipeService.SetMyNoteAsync(TargetSavedId, MyNoteText);
+            await Shell.Current.DisplayAlert("Saved", "Your note was saved.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", $"Could not save note: {ex.Message}", "OK");
+        }
+    }
+
     // Health-consciousness tier badge (see RecipeHealth).
     [ObservableProperty]
     private bool _showHealthBadge;
@@ -507,6 +585,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
             SetHealthBadge(Recipe.Recipe?.HealthTier, Recipe.Recipe?.IsHealthyTreat ?? false);
             IsSaved = await _savedRecipeService.IsFavoriteAsync(RecipeId);
             UpdateSaveButton();
+
+            // Personal rating & notes live on the catalog SavedRecipe row (Id == RecipeId).
+            var savedRow = await _savedRecipeService.GetSavedRecipeAsync(RecipeId);
+            SetMyPersonal(savedRow?.MyRating ?? 0, savedRow?.MyNote);
         }
         catch (Exception ex)
         {
@@ -597,6 +679,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             DirectionGroups = new ObservableCollection<DirectionGrouping>(directionGrouped);
 
             SetHealthBadge(saved.HealthTier, saved.IsHealthyTreat);
+            SetMyPersonal(saved.MyRating, saved.MyNote);
 
             // Mark as saved
             IsSaved = true;

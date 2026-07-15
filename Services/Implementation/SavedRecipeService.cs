@@ -166,4 +166,24 @@ public class SavedRecipeService : ISavedRecipeService
         return await conn.QueryAsync<SavedRecipe>(
             "SELECT * FROM SavedRecipe WHERE IsFavorite = 1 ORDER BY RecipeName");
     }
+
+    public async Task SetMyRatingAsync(int savedRecipeId, int rating)
+    {
+        var conn = await _db.GetConnectionAsync();
+        var saved = await conn.FindAsync<SavedRecipe>(savedRecipeId);
+        if (saved == null) return;
+
+        saved.MyRating = Math.Clamp(rating, 0, 5);
+        await conn.UpdateAsync(saved);
+    }
+
+    public async Task SetMyNoteAsync(int savedRecipeId, string? note)
+    {
+        var conn = await _db.GetConnectionAsync();
+        var saved = await conn.FindAsync<SavedRecipe>(savedRecipeId);
+        if (saved == null) return;
+
+        saved.MyNote = string.IsNullOrWhiteSpace(note) ? null : note.Trim();
+        await conn.UpdateAsync(saved);
+    }
 }

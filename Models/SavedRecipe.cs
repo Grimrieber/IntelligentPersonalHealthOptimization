@@ -47,6 +47,15 @@ public class SavedRecipe
     public int? Rating { get; set; }
     public bool IsFavorite { get; set; }
 
+    /// <summary>Personal 1-5 star rating the user gave this recipe after cooking
+    /// it. 0 = unrated. Distinct from <see cref="Rating"/> (source-imported).</summary>
+    public int MyRating { get; set; }
+
+    /// <summary>Personal free-text notes the user attached to this recipe
+    /// (tweaks, substitutions, reminders). Distinct from <see cref="Notes"/>,
+    /// which holds the source recipe's own notes.</summary>
+    public string? MyNote { get; set; }
+
     // Nutrition snapshot
     public int? CaloriesPerServing { get; set; }
     public double? ProteinGrams { get; set; }

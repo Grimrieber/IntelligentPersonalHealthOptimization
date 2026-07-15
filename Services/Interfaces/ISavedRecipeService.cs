@@ -24,4 +24,10 @@ public interface ISavedRecipeService
     Task<bool> IsFavoriteAsync(int savedRecipeId);
     Task ToggleFavoriteAsync(int savedRecipeId);
     Task<List<SavedRecipe>> GetFavoriteRecipesAsync();
+
+    // --- Personal rating & notes ------------------------------------------
+    // Persisted on the recipe's own SavedRecipe row (MyRating / MyNote), keyed
+    // by SavedRecipe.Id (== RecipeItem.RecipeID for catalog recipes).
+    Task SetMyRatingAsync(int savedRecipeId, int rating);
+    Task SetMyNoteAsync(int savedRecipeId, string? note);
 }
