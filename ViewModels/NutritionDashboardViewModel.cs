@@ -877,7 +877,6 @@ public partial class PlannedMealItem : ObservableObject
     // Logged state
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LogButtonText))]
-    [NotifyPropertyChangedFor(nameof(CardColor))]
     [NotifyPropertyChangedFor(nameof(SortOrder))]
     private bool _isLogged;
 
@@ -886,9 +885,6 @@ public partial class PlannedMealItem : ObservableObject
     private int _foodLogEntryId;
 
     public string LogButtonText => IsLogged ? "Unlog" : "Log It";
-    public Color CardColor => IsLogged
-        ? Color.FromArgb("#F0FFF4")
-        : Color.FromArgb("#00000000");
     public int SortOrder => IsLogged ? 1 : 0;
 
     // Thumbnail — mirrors the Recipes-tab card: dish photo (when known) over an
