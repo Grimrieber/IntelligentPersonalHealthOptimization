@@ -89,7 +89,12 @@
             <Frame Style="{StaticResource CardFrame}" IsVisible="{Binding HasNutritionData}">
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Today's Nutrition" Style="{StaticResource SectionHeader}" />
+                        <!-- Tap the title to open the full Nutrition Coach view -->
+                        <Label Text="Today's Nutrition  ›" Style="{StaticResource SectionHeader}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewNutritionCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
                         <Label Text="Log Food"
                                TextColor="{StaticResource Primary}"
                                FontSize="13"
@@ -209,10 +214,17 @@
                         <Label Grid.Row="0" Grid.Column="1" Text="{Binding UpNextCalories}"
                                FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Primary}"
                                VerticalOptions="Center" />
-                        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Log it"
-                                Command="{Binding LogUpNextCommand}"
-                                BackgroundColor="{StaticResource Primary}" TextColor="White"
-                                FontAttributes="Bold" HeightRequest="40" Margin="0,8,0,0" />
+                        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                              ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,8,0,0">
+                            <Button Grid.Column="0" Text="Skip"
+                                    Command="{Binding SkipUpNextCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    HeightRequest="40" Padding="18,0" />
+                            <Button Grid.Column="1" Text="Log it"
+                                    Command="{Binding LogUpNextCommand}"
+                                    BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                    FontAttributes="Bold" HeightRequest="40" />
+                        </Grid>
                     </Grid>
                 </Grid>
             </Frame>

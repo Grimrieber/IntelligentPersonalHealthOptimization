@@ -138,6 +138,8 @@ public partial class DashboardViewModel : BaseViewModel
     private Models.Enums.MealType _upNextMealType;
     private double _upNextCal, _upNextP, _upNextC, _upNextF;
     private string _upNextLogName = string.Empty;
+    // Meals the user "skipped" this session — cycles the Up Next card to a different meal.
+    private readonly HashSet<Models.Enums.MealType> _skippedMeals = new();
 
     [ObservableProperty]
     private int _proteinConsumed;
@@ -388,8 +390,12 @@ public partial class DashboardViewModel : BaseViewModel
                 .OrderBy(m => (int)m.MealType)
                 .ToList();
 
-            var next = meals.FirstOrDefault(m => !loggedNames.Contains(m.Name));
-            if (next == null) return;  // everything logged — hide the card
+            // Unlogged meals are candidates; prefer ones not skipped this session.
+            // If every unlogged meal has been skipped, loop back (clear skips).
+            var candidates = meals.Where(m => !loggedNames.Contains(m.Name)).ToList();
+            if (candidates.Count == 0) return;  // everything logged — hide the card
+            var next = candidates.FirstOrDefault(m => !_skippedMeals.Contains(m.MealType));
+            if (next == null) { _skippedMeals.Clear(); next = candidates[0]; }
 
             // Dish photo + tier (same source the meal cards use).
             string? img = null, tier = null;
@@ -425,6 +431,15 @@ public partial class DashboardViewModel : BaseViewModel
     {
         if (_upNextSavedRecipeId > 0)
             await Shell.Current.GoToAsync($"RecipeDetail?savedRecipeId={_upNextSavedRecipeId}");
+    }
+
+    /// <summary>Skip the current Up Next meal and cycle to a different one.</summary>
+    [RelayCommand]
+    private async Task SkipUpNextAsync()
+    {
+        _skippedMeals.Add(_upNextMealType);
+        var user = await _userService.GetCurrentUserAsync();
+        if (user != null) await LoadUpNextMealAsync(user.Id);
     }
 
     /// <summary>Log the Up Next meal to today (mirrors the N. Coach "Log It" action).</summary>
