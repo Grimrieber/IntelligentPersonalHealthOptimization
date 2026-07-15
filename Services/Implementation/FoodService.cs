@@ -95,6 +95,27 @@ public class FoodService : IFoodService
             .ToListAsync();
     }
 
+    public async Task<List<Food>> GetRecentlyLoggedFoodsAsync(int userId, int take = 8)
+    {
+        var db = await _databaseService.GetConnectionAsync();
+        // Most-recent-first log rows for real foods (FoodId > 0 excludes recipe-based
+        // entries, which carry SavedRecipeId instead). Dedupe by FoodId, resolve to Food.
+        var rows = await db.QueryAsync<FoodLogEntry>(
+            "SELECT * FROM FoodLogEntry WHERE UserId = ? AND FoodId > 0 ORDER BY CreatedAt DESC LIMIT 200",
+            userId);
+
+        var seen = new HashSet<int>();
+        var result = new List<Food>();
+        foreach (var e in rows)
+        {
+            if (!seen.Add(e.FoodId)) continue;
+            var food = await _databaseService.GetByIdAsync<Food>(e.FoodId);
+            if (food != null && food.IsActive) result.Add(food);
+            if (result.Count >= take) break;
+        }
+        return result;
+    }
+
     public async Task<(double calories, double proteinG, double carbsG, double fatG)> GetDailyTotalsAsync(int userId, DateTime date)
     {
         var entries = await GetFoodLogAsync(userId, date);

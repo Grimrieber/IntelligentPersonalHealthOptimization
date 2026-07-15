@@ -47,6 +47,37 @@
                     </Grid>
                 </Frame>
 
+                <!-- Recent foods — one-tap re-add of things you log often -->
+                <VerticalStackLayout IsVisible="{Binding ShowRecentFoods}" Spacing="8">
+                    <Label Text="Recent" Style="{StaticResource SectionHeader}" />
+                    <VerticalStackLayout Spacing="4" BindableLayout.ItemsSource="{Binding RecentFoods}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:FoodSearchResult">
+                                <Frame Style="{StaticResource CardFrame}" Margin="0,2" Padding="12">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddFoodEntryViewModel}}, Path=SelectFoodCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                        <Label Grid.Column="0" Text="&#x1F551;" FontSize="16" VerticalOptions="Center" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding DisplayName}"
+                                                   FontSize="15" FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding DefaultServingLabel, StringFormat='Serving: {0}'}"
+                                                   FontSize="12" TextColor="{StaticResource Gray500}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2" Text="{Binding CaloriesDisplay}"
+                                               FontSize="14" FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}" VerticalOptions="Center" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
                 <!-- Search Results -->
                 <VerticalStackLayout IsVisible="{Binding HasSearched}" Spacing="8">
                     <Label Text="Search Results" Style="{StaticResource SectionHeader}" />

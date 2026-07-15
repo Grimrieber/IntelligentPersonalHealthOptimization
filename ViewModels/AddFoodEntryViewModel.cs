@@ -43,13 +43,27 @@ public partial class AddFoodEntryViewModel : BaseViewModel
     private bool _hasSearchResults;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowRecentFoods))]
     private bool _hasSearched;
 
     [ObservableProperty]
     private FoodSearchResult? _selectedFood;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowRecentFoods))]
     private bool _isFoodSelected;
+
+    // Recently-logged foods for one-tap re-add (shown only when idle: no active
+    // search text and nothing selected yet).
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowRecentFoods))]
+    private ObservableCollection<FoodSearchResult> _recentFoods = new();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowRecentFoods))]
+    private bool _hasRecentFoods;
+
+    public bool ShowRecentFoods => HasRecentFoods && !HasSearched && !IsFoodSelected;
 
     [ObservableProperty]
     private double _servingSize = 100;
@@ -175,20 +189,7 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         try
         {
             var results = await _foodService.SearchFoodsAsync(SearchQuery);
-            var displayResults = results.Select(f => new FoodSearchResult
-            {
-                FoodId = f.Id,
-                Name = f.Name,
-                Brand = f.Brand ?? string.Empty,
-                CaloriesPer100g = f.CaloriesPer100g,
-                ProteinPer100g = f.ProteinPer100g,
-                CarbsPer100g = f.CarbsPer100g,
-                FatPer100g = f.FatPer100g,
-                DefaultServingSize = f.DefaultServingSize,
-                DefaultServingLabel = f.DefaultServingLabel,
-                CaloriesDisplay = $"{f.CaloriesPer100g:F0} kcal/100g",
-                DisplayName = string.IsNullOrEmpty(f.Brand) ? f.Name : $"{f.Name} ({f.Brand})"
-            }).ToList();
+            var displayResults = results.Select(ToResult).ToList();
 
             SearchResults = new ObservableCollection<FoodSearchResult>(displayResults);
             HasSearchResults = displayResults.Count > 0;
@@ -200,6 +201,38 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private static FoodSearchResult ToResult(Food f) => new()
+    {
+        FoodId = f.Id,
+        Name = f.Name,
+        Brand = f.Brand ?? string.Empty,
+        CaloriesPer100g = f.CaloriesPer100g,
+        ProteinPer100g = f.ProteinPer100g,
+        CarbsPer100g = f.CarbsPer100g,
+        FatPer100g = f.FatPer100g,
+        DefaultServingSize = f.DefaultServingSize,
+        DefaultServingLabel = f.DefaultServingLabel,
+        CaloriesDisplay = $"{f.CaloriesPer100g:F0} kcal/100g",
+        DisplayName = string.IsNullOrEmpty(f.Brand) ? f.Name : $"{f.Name} ({f.Brand})"
+    };
+
+    /// <summary>Load the user's recently-logged foods for the one-tap re-add list.</summary>
+    private async Task LoadRecentFoodsAsync()
+    {
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            if (user == null) return;
+            var recent = await _foodService.GetRecentlyLoggedFoodsAsync(user.Id, 8);
+            RecentFoods = new ObservableCollection<FoodSearchResult>(recent.Select(ToResult));
+            HasRecentFoods = RecentFoods.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("Load recent foods", ex);
         }
     }
 
@@ -239,6 +272,9 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         {
             var user = await _userService.GetCurrentUserAsync();
             if (user == null) return;
+
+            // Recent-foods list is independent of goal context — load it regardless.
+            await LoadRecentFoodsAsync();
 
             var profile = await _nutritionService.GetNutritionProfileAsync(user.Id);
             if (profile == null || profile.TargetCalories <= 0)
