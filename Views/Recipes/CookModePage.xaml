@@ -28,22 +28,31 @@
         </Border>
 
         <!-- Controls -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12">
-            <Button Grid.Column="0" Text="‹ Previous"
-                    Command="{Binding PreviousCommand}"
-                    IsEnabled="{Binding CanGoPrevious}"
-                    Style="{StaticResource SecondaryButton}"
-                    HeightRequest="54" />
-            <Button Grid.Column="1" Text="Next ›"
-                    Command="{Binding NextCommand}"
-                    IsVisible="{Binding IsLastStep, Converter={StaticResource InverseBool}}"
+        <VerticalStackLayout Grid.Row="2" Spacing="10">
+            <!-- You just cooked it — log it to today's food log in one tap -->
+            <Button Text="&#x1F37D;  Log to Today"
+                    Command="{Binding LogToTodayCommand}"
+                    IsVisible="{Binding ShowLogButton}"
                     BackgroundColor="{StaticResource Primary}" TextColor="White"
                     FontAttributes="Bold" HeightRequest="54" />
-            <Button Grid.Column="1" Text="&#x2713;  Done"
-                    Command="{Binding FinishCommand}"
-                    IsVisible="{Binding IsLastStep}"
-                    BackgroundColor="{StaticResource Primary}" TextColor="White"
-                    FontAttributes="Bold" HeightRequest="54" />
-        </Grid>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Button Grid.Column="0" Text="‹ Previous"
+                        Command="{Binding PreviousCommand}"
+                        IsEnabled="{Binding CanGoPrevious}"
+                        Style="{StaticResource SecondaryButton}"
+                        HeightRequest="54" />
+                <Button Grid.Column="1" Text="Next ›"
+                        Command="{Binding NextCommand}"
+                        IsVisible="{Binding IsLastStep, Converter={StaticResource InverseBool}}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        FontAttributes="Bold" HeightRequest="54" />
+                <!-- On the last step, Done is secondary when 'Log to Today' is the primary CTA -->
+                <Button Grid.Column="1" Text="&#x2713;  Done"
+                        Command="{Binding FinishCommand}"
+                        IsVisible="{Binding IsLastStep}"
+                        Style="{StaticResource SecondaryButton}"
+                        HeightRequest="54" />
+            </Grid>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

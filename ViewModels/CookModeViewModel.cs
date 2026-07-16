@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IntelligentPersonalHealthOptimization.Models;
+using IntelligentPersonalHealthOptimization.Models.Enums;
 using IntelligentPersonalHealthOptimization.Services.Interfaces;
 
 namespace IntelligentPersonalHealthOptimization.ViewModels;
@@ -12,12 +14,27 @@ namespace IntelligentPersonalHealthOptimization.ViewModels;
 public partial class CookModeViewModel : BaseViewModel
 {
     private readonly IRecipeService _recipeService;
+    private readonly IUserService _userService;
+    private readonly IDatabaseService _databaseService;
 
-    public CookModeViewModel(IRecipeService recipeService)
+    public CookModeViewModel(IRecipeService recipeService, IUserService userService, IDatabaseService databaseService)
     {
         _recipeService = recipeService;
+        _userService = userService;
+        _databaseService = databaseService;
         Title = "Cook Mode";
     }
+
+    // Recipe nutrition captured on load, for the "Log to Today" finish action.
+    private int? _cal;
+    private double _protein, _carbs, _fat;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowLogButton))]
+    private bool _hasNutrition;
+
+    /// <summary>Show the "Log to Today" CTA only on the final step and when we have nutrition.</summary>
+    public bool ShowLogButton => IsLastStep && HasNutrition;
 
     [ObservableProperty]
     private int _recipeId = -1;
@@ -43,6 +60,7 @@ public partial class CookModeViewModel : BaseViewModel
     private bool _canGoPrevious;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowLogButton))]
     private bool _isLastStep;
 
     private int _index;
@@ -60,6 +78,16 @@ public partial class CookModeViewModel : BaseViewModel
             var detail = await _recipeService.GetRecipeDetailAsync(RecipeId);
             RecipeName = detail?.Recipe?.RecipeName ?? "Recipe";
             Title = RecipeName;
+
+            var n = detail?.Nutrition;
+            if (n != null)
+            {
+                _cal = n.CaloriesPerServing;
+                _protein = (double?)n.ProteinGrams ?? 0;
+                _carbs = (double?)n.TotalCarbsGrams ?? 0;
+                _fat = (double?)n.TotalFatGrams ?? 0;
+                HasNutrition = _cal is > 0;
+            }
             _steps = detail?.Directions?
                 .OrderBy(d => d.StepNumber)
                 .Select(d => d.Instruction ?? string.Empty)
@@ -91,6 +119,52 @@ public partial class CookModeViewModel : BaseViewModel
 
     [RelayCommand]
     private async Task FinishAsync() => await Shell.Current.GoToAsync("..");
+
+    /// <summary>You just cooked it — log it to today's food log in one step.</summary>
+    [RelayCommand]
+    private async Task LogToTodayAsync()
+    {
+        if (_cal is not int cal || cal <= 0) { await Shell.Current.GoToAsync(".."); return; }
+
+        var choice = await Shell.Current.DisplayActionSheet(
+            "Log to today as…", "Cancel", null, "Breakfast", "Lunch", "Dinner", "Snack");
+        if (string.IsNullOrEmpty(choice) || choice == "Cancel") return;
+
+        var mealType = choice switch
+        {
+            "Breakfast" => MealType.Breakfast,
+            "Lunch" => MealType.Lunch,
+            "Dinner" => MealType.Dinner,
+            _ => MealType.AfternoonSnack,
+        };
+
+        try
+        {
+            var user = await _userService.GetCurrentUserAsync();
+            if (user == null) return;
+
+            var entry = new FoodLogEntry
+            {
+                UserId = user.Id,
+                LogDate = DateTime.Today,
+                MealType = mealType,
+                SavedRecipeId = RecipeId,
+                Calories = cal,
+                ProteinG = _protein,
+                CarbsG = _carbs,
+                FatG = _fat,
+                Notes = RecipeName,
+            };
+            await _databaseService.InsertAsync(entry);
+
+            await Shell.Current.DisplayAlert("Logged", $"{RecipeName} added to today.", "OK");
+            await Shell.Current.GoToAsync("..");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", $"Could not log: {ex.Message}", "OK");
+        }
+    }
 
     private void ShowStep(int i)
     {
