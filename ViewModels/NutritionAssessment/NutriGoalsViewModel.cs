@@ -116,6 +116,25 @@ public partial class NutriGoalsViewModel : BaseViewModel
     partial void OnSelectedTimelineChanged(GoalTimeline value) => EvaluateSafetyWarning();
     partial void OnSelectedPrimaryGoalChanged(PrimaryNutritionGoal value) => EvaluateSafetyWarning();
 
+    // Precise ±0.1 kg nudges — the slider spans 30-200 kg so dragging flies past
+    // the exact value; the -/+ buttons let you dial it in. Setting the property
+    // re-syncs the slider thumb (see NutriGoalsPage.OnViewModelPropertyChanged).
+    [RelayCommand]
+    private void NudgeCurrentWeight(string delta)
+    {
+        if (CurrentWeight <= 0) return;
+        if (double.TryParse(delta, System.Globalization.CultureInfo.InvariantCulture, out var d))
+            CurrentWeight = Math.Clamp(Math.Round(CurrentWeight + d, 1), 30, 200);
+    }
+
+    [RelayCommand]
+    private void NudgeTargetWeight(string delta)
+    {
+        if (TargetWeight <= 0) return;
+        if (double.TryParse(delta, System.Globalization.CultureInfo.InvariantCulture, out var d))
+            TargetWeight = Math.Clamp(Math.Round(TargetWeight + d, 1), 30, 200);
+    }
+
     public async Task LoadCurrentWeightAsync()
     {
         _currentUser = await _userService.GetCurrentUserAsync();

@@ -52,19 +52,34 @@
                         <Label Text="Current Weight" FontSize="16" FontAttributes="Bold" />
                         <Label Text="Slide to set your weight today. This drives your calorie calculation."
                                FontSize="13" TextColor="{StaticResource Gray500}" />
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
-                            <VerticalStackLayout Spacing="2" Grid.Column="0" HorizontalOptions="Center">
-                                <Label Text="{Binding CurrentWeightKgDisplay}"
-                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                <Label Text="kg" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" Grid.Column="1" HorizontalOptions="Center">
-                                <Label Text="{Binding CurrentWeightLbDisplay}"
-                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                <Label Text="lb" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-                            </VerticalStackLayout>
+                        <!-- -/+ steppers for exact 0.1 kg control (slider alone flies past it) -->
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Button Grid.Column="0" Text="&#x2212;"
+                                    Command="{Binding NudgeCurrentWeightCommand}" CommandParameter="-0.1"
+                                    WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0"
+                                    FontSize="22" FontAttributes="Bold" VerticalOptions="Center"
+                                    BackgroundColor="Transparent"
+                                    BorderColor="{StaticResource Primary}" BorderWidth="1.5"
+                                    TextColor="{StaticResource Primary}" />
+                            <Grid Grid.Column="1" ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
+                                <VerticalStackLayout Spacing="2" Grid.Column="0" HorizontalOptions="Center">
+                                    <Label Text="{Binding CurrentWeightKgDisplay}"
+                                           FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    <Label Text="kg" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Spacing="2" Grid.Column="1" HorizontalOptions="Center">
+                                    <Label Text="{Binding CurrentWeightLbDisplay}"
+                                           FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    <Label Text="lb" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            <Button Grid.Column="2" Text="+"
+                                    Command="{Binding NudgeCurrentWeightCommand}" CommandParameter="0.1"
+                                    WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0"
+                                    FontSize="22" FontAttributes="Bold" VerticalOptions="Center"
+                                    BackgroundColor="{StaticResource Primary}" TextColor="White" />
                         </Grid>
                         <Slider x:Name="CurrentWeightSlider"
                                 Minimum="30"
@@ -108,19 +123,34 @@
                         <Label Text="Target Weight" FontSize="16" FontAttributes="Bold" />
                         <Label Text="Slide to set your goal weight."
                                FontSize="13" TextColor="{StaticResource Gray500}" />
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
-                            <VerticalStackLayout Spacing="2" Grid.Column="0" HorizontalOptions="Center">
-                                <Label Text="{Binding TargetWeightKgDisplay}"
-                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                <Label Text="kg" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" Grid.Column="1" HorizontalOptions="Center">
-                                <Label Text="{Binding TargetWeightLbDisplay}"
-                                       FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                <Label Text="lb" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
-                            </VerticalStackLayout>
+                        <!-- -/+ steppers for exact 0.1 kg control -->
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Button Grid.Column="0" Text="&#x2212;"
+                                    Command="{Binding NudgeTargetWeightCommand}" CommandParameter="-0.1"
+                                    WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0"
+                                    FontSize="22" FontAttributes="Bold" VerticalOptions="Center"
+                                    BackgroundColor="Transparent"
+                                    BorderColor="{StaticResource Primary}" BorderWidth="1.5"
+                                    TextColor="{StaticResource Primary}" />
+                            <Grid Grid.Column="1" ColumnDefinitions="*,*" ColumnSpacing="16" HorizontalOptions="Center">
+                                <VerticalStackLayout Spacing="2" Grid.Column="0" HorizontalOptions="Center">
+                                    <Label Text="{Binding TargetWeightKgDisplay}"
+                                           FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    <Label Text="kg" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Spacing="2" Grid.Column="1" HorizontalOptions="Center">
+                                    <Label Text="{Binding TargetWeightLbDisplay}"
+                                           FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    <Label Text="lb" FontSize="13" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            <Button Grid.Column="2" Text="+"
+                                    Command="{Binding NudgeTargetWeightCommand}" CommandParameter="0.1"
+                                    WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0"
+                                    FontSize="22" FontAttributes="Bold" VerticalOptions="Center"
+                                    BackgroundColor="{StaticResource Primary}" TextColor="White" />
                         </Grid>
                         <Slider x:Name="WeightSlider"
                                 Minimum="30"

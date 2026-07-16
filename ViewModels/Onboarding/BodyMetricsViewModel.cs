@@ -84,6 +84,14 @@ public partial class BodyMetricsViewModel : BaseViewModel
         _coordinator.Data.WeightKg = value;
     }
 
+    // Precise ±0.1 kg nudge — the 30-200 kg slider flies past the exact value.
+    [RelayCommand]
+    private void NudgeWeight(string delta)
+    {
+        if (double.TryParse(delta, System.Globalization.CultureInfo.InvariantCulture, out var d))
+            WeightKg = Math.Clamp(Math.Round(WeightKg + d, 1), 30, 200);
+    }
+
     [RelayCommand]
     private async Task NextAsync()
     {

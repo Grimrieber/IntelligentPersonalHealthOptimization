@@ -53,14 +53,14 @@ public partial class NutriGoalsPage : ContentPage
     {
         if (_isInitializingSlider) return;
         if (BindingContext is NutriGoalsViewModel vm)
-            vm.TargetWeight = e.NewValue;
+            vm.TargetWeight = System.Math.Round(e.NewValue, 1);  // snap to clean 0.1 kg
     }
 
     private void OnCurrentWeightSliderValueChanged(object? sender, ValueChangedEventArgs e)
     {
         if (_isInitializingSlider) return;
         if (BindingContext is NutriGoalsViewModel vm)
-            vm.CurrentWeight = e.NewValue;
+            vm.CurrentWeight = System.Math.Round(e.NewValue, 1);  // snap to clean 0.1 kg
     }
 
     /// <summary>Sync Slider positions when the VM updates the values programmatically.</summary>
