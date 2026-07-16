@@ -37,6 +37,72 @@ public partial class DietPlanViewModel : BaseViewModel
 
         foreach (var food in _coordinator.Data.FoodsToAvoid)
             FoodsToAvoid.Add(food);
+
+        // Inline toggle chips (tap to select/deselect) instead of add-picker + pills.
+        foreach (var a in AllAllergyOptions)
+            AllergyChips.Add(new Models.ToggleChip
+            {
+                Value = a,
+                Label = Helpers.EnumDisplay.Humanize(a.ToString()),
+                IsSelected = SelectedAllergies.Contains(a),
+            });
+        foreach (var f in AvoidableFoods)
+            FoodChips.Add(new Models.ToggleChip
+            {
+                Value = f,
+                Label = f,
+                IsSelected = FoodsToAvoid.Contains(f),
+            });
+    }
+
+    public ObservableCollection<Models.ToggleChip> AllergyChips { get; } = [];
+    public ObservableCollection<Models.ToggleChip> FoodChips { get; } = [];
+
+    /// <summary>Tap an allergy chip. "None" is mutually exclusive with the rest.</summary>
+    [RelayCommand]
+    private void ToggleAllergyChip(Models.ToggleChip? chip)
+    {
+        if (chip?.Value is not FoodAllergy allergy) return;
+        var select = !chip.IsSelected;
+
+        if (allergy == FoodAllergy.None)
+        {
+            if (select)
+            {
+                SelectedAllergies.Clear();
+                SelectedAllergies.Add(FoodAllergy.None);
+                foreach (var c in AllergyChips)
+                    c.IsSelected = c.Value is FoodAllergy fa && fa == FoodAllergy.None;
+            }
+            else
+            {
+                SelectedAllergies.Remove(FoodAllergy.None);
+                chip.IsSelected = false;
+            }
+            return;
+        }
+
+        if (select)
+        {
+            SelectedAllergies.Remove(FoodAllergy.None);
+            var noneChip = AllergyChips.FirstOrDefault(c => c.Value is FoodAllergy fa && fa == FoodAllergy.None);
+            if (noneChip != null) noneChip.IsSelected = false;
+            if (!SelectedAllergies.Contains(allergy)) SelectedAllergies.Add(allergy);
+            chip.IsSelected = true;
+        }
+        else
+        {
+            SelectedAllergies.Remove(allergy);
+            chip.IsSelected = false;
+        }
+    }
+
+    [RelayCommand]
+    private void ToggleFoodChip(Models.ToggleChip? chip)
+    {
+        if (chip?.Value is not string food) return;
+        if (chip.IsSelected) { FoodsToAvoid.Remove(food); chip.IsSelected = false; }
+        else { if (!FoodsToAvoid.Contains(food)) FoodsToAvoid.Add(food); chip.IsSelected = true; }
     }
 
     public string StepTitle => _coordinator.StepTitle;

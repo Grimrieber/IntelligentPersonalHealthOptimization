@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.NutritionAssessment"
              xmlns:enums="clr-namespace:IntelligentPersonalHealthOptimization.Models.Enums"
+             xmlns:models="clr-namespace:IntelligentPersonalHealthOptimization.Models"
              x:Class="IntelligentPersonalHealthOptimization.Views.NutritionAssessment.DietPlanPage"
              x:DataType="vm:DietPlanViewModel"
              Title="{Binding StepTitle}"
@@ -174,77 +175,79 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Food Allergies -->
+                <!-- Food Allergies — tap chips to select/deselect (no popup, no ✕) -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Food Allergies" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Tap any that apply." FontSize="13" TextColor="{StaticResource Gray500}" />
 
                         <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start" AlignItems="Center"
-                                    BindableLayout.ItemsSource="{Binding SelectedAllergies}">
+                                    BindableLayout.ItemsSource="{Binding AllergyChips}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="enums:FoodAllergy">
-                                    <!-- Whole pill is tappable to remove (big target) -->
+                                <DataTemplate x:DataType="models:ToggleChip">
                                     <Border StrokeShape="RoundRectangle 16"
-                                            Stroke="{StaticResource Primary}"
-                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                            Stroke="{StaticResource Primary}" StrokeThickness="1"
+                                            BackgroundColor="Transparent"
                                             Padding="14,9" Margin="4">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=RemoveAllergyCommand}"
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=ToggleAllergyChipCommand}"
                                                                   CommandParameter="{Binding .}" />
                                         </Border.GestureRecognizers>
-                                        <HorizontalStackLayout Spacing="8">
-                                            <Label Text="{Binding ., Converter={StaticResource EnumToString}}" FontSize="14" VerticalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                            <Label Text="&#x2715;" FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
-                                                   TextColor="{StaticResource Gray500}" />
-                                        </HorizontalStackLayout>
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding Label}" FontSize="14" VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
-
-                        <Button Text="+ Add Allergy"
-                                Command="{Binding AddAllergyCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                FontSize="14" HeightRequest="40" />
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Foods to Avoid -->
+                <!-- Foods to Avoid — tap chips to select/deselect -->
                 <Frame Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Foods to Avoid" FontSize="16" FontAttributes="Bold" />
-                        <Label Text="Select any foods you prefer not to eat."
-                               FontSize="13" TextColor="{StaticResource Gray500}" />
+                        <Label Text="Tap any foods you prefer not to eat." FontSize="13" TextColor="{StaticResource Gray500}" />
 
                         <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start" AlignItems="Center"
-                                    BindableLayout.ItemsSource="{Binding FoodsToAvoid}">
+                                    BindableLayout.ItemsSource="{Binding FoodChips}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <!-- Whole pill is tappable to remove (big target) -->
+                                <DataTemplate x:DataType="models:ToggleChip">
                                     <Border StrokeShape="RoundRectangle 16"
-                                            Stroke="{StaticResource Primary}"
-                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
+                                            Stroke="{StaticResource Primary}" StrokeThickness="1"
+                                            BackgroundColor="Transparent"
                                             Padding="14,9" Margin="4">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=RemoveFoodToAvoidCommand}"
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=ToggleFoodChipCommand}"
                                                                   CommandParameter="{Binding .}" />
                                         </Border.GestureRecognizers>
-                                        <HorizontalStackLayout Spacing="8">
-                                            <Label Text="{Binding .}" FontSize="14" VerticalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                            <Label Text="&#x2715;" FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
-                                                   TextColor="{StaticResource Gray500}" />
-                                        </HorizontalStackLayout>
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding Label}" FontSize="14" VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
-
-                        <Button Text="+ Add Food to Avoid"
-                                Command="{Binding AddFoodToAvoidCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                FontSize="14" HeightRequest="40" />
                     </VerticalStackLayout>
                 </Frame>
 
