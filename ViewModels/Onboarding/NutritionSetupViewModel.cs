@@ -27,8 +27,50 @@ public partial class NutritionSetupViewModel : BaseViewModel
         foreach (var allergy in _coordinator.Data.Allergies)
             SelectedAllergies.Add(allergy);
 
+        // Inline toggle chips (tap to select/deselect) instead of add-picker + pills.
+        foreach (var a in AllAllergyOptions)
+            AllergyChips.Add(new Models.ToggleChip
+            {
+                Value = a,
+                Label = Helpers.EnumDisplay.Humanize(a.ToString()),
+                IsSelected = SelectedAllergies.Contains(a),
+            });
+
         // Calculate nutrition summary from earlier wizard steps
         CalculateNutritionSummary();
+    }
+
+    public ObservableCollection<Models.ToggleChip> AllergyChips { get; } = [];
+
+    /// <summary>Tap an allergy chip. "None" is mutually exclusive with the rest.</summary>
+    [RelayCommand]
+    private void ToggleAllergyChip(Models.ToggleChip? chip)
+    {
+        if (chip?.Value is not FoodAllergy allergy) return;
+        var select = !chip.IsSelected;
+
+        if (allergy == FoodAllergy.None)
+        {
+            if (select)
+            {
+                SelectedAllergies.Clear();
+                SelectedAllergies.Add(FoodAllergy.None);
+                foreach (var c in AllergyChips)
+                    c.IsSelected = c.Value is FoodAllergy fa && fa == FoodAllergy.None;
+            }
+            else { SelectedAllergies.Remove(FoodAllergy.None); chip.IsSelected = false; }
+            return;
+        }
+
+        if (select)
+        {
+            SelectedAllergies.Remove(FoodAllergy.None);
+            var noneChip = AllergyChips.FirstOrDefault(c => c.Value is FoodAllergy fa && fa == FoodAllergy.None);
+            if (noneChip != null) noneChip.IsSelected = false;
+            if (!SelectedAllergies.Contains(allergy)) SelectedAllergies.Add(allergy);
+            chip.IsSelected = true;
+        }
+        else { SelectedAllergies.Remove(allergy); chip.IsSelected = false; }
     }
 
     public string StepTitle => _coordinator.StepTitle;

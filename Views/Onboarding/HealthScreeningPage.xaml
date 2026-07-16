@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:IntelligentPersonalHealthOptimization.ViewModels.Onboarding"
+             xmlns:models="clr-namespace:IntelligentPersonalHealthOptimization.Models"
              x:Class="IntelligentPersonalHealthOptimization.Views.Onboarding.HealthScreeningPage"
              x:DataType="vm:HealthScreeningViewModel"
              Title="{Binding StepTitle}"
@@ -41,40 +42,32 @@
                                     Direction="Row"
                                     JustifyContent="Start"
                                     AlignItems="Center"
-                                    BindableLayout.ItemsSource="{Binding SelectedConditions}">
+                                    BindableLayout.ItemsSource="{Binding ConditionChips}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <!-- Whole pill is tappable to remove (big target) -->
-                                    <Border StrokeShape="RoundRectangle 16"
-                                            Stroke="{StaticResource Primary}"
-                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
-                                            Padding="14,9"
-                                            Margin="4">
+                                <DataTemplate x:DataType="models:ToggleChip">
+                                    <Border StrokeShape="RoundRectangle 16" Stroke="{StaticResource Primary}" StrokeThickness="1"
+                                            BackgroundColor="Transparent" Padding="14,9" Margin="4">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HealthScreeningViewModel}}, Path=RemoveConditionCommand}"
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HealthScreeningViewModel}}, Path=ToggleConditionChipCommand}"
                                                                   CommandParameter="{Binding .}" />
                                         </Border.GestureRecognizers>
-                                        <HorizontalStackLayout Spacing="8">
-                                            <Label Text="{Binding .}"
-                                                   FontSize="14"
-                                                   VerticalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                            <Label Text="&#x2715;"
-                                                   FontSize="15"
-                                                   FontAttributes="Bold"
-                                                   VerticalOptions="Center"
-                                                   TextColor="{StaticResource Gray500}" />
-                                        </HorizontalStackLayout>
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding Label}" FontSize="14" VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
-
-                        <Button Text="+ Add Condition"
-                                Command="{Binding AddConditionCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                FontSize="14"
-                                HeightRequest="40" />
                     </VerticalStackLayout>
                 </Frame>
 
@@ -91,40 +84,32 @@
                                     Direction="Row"
                                     JustifyContent="Start"
                                     AlignItems="Center"
-                                    BindableLayout.ItemsSource="{Binding SelectedInjuries}">
+                                    BindableLayout.ItemsSource="{Binding InjuryChips}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <!-- Whole pill is tappable to remove (big target) -->
-                                    <Border StrokeShape="RoundRectangle 16"
-                                            Stroke="{StaticResource Primary}"
-                                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
-                                            Padding="14,9"
-                                            Margin="4">
+                                <DataTemplate x:DataType="models:ToggleChip">
+                                    <Border StrokeShape="RoundRectangle 16" Stroke="{StaticResource Primary}" StrokeThickness="1"
+                                            BackgroundColor="Transparent" Padding="14,9" Margin="4">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HealthScreeningViewModel}}, Path=RemoveInjuryCommand}"
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HealthScreeningViewModel}}, Path=ToggleInjuryChipCommand}"
                                                                   CommandParameter="{Binding .}" />
                                         </Border.GestureRecognizers>
-                                        <HorizontalStackLayout Spacing="8">
-                                            <Label Text="{Binding .}"
-                                                   FontSize="14"
-                                                   VerticalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                            <Label Text="&#x2715;"
-                                                   FontSize="15"
-                                                   FontAttributes="Bold"
-                                                   VerticalOptions="Center"
-                                                   TextColor="{StaticResource Gray500}" />
-                                        </HorizontalStackLayout>
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding Label}" FontSize="14" VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
-
-                        <Button Text="+ Add Injury Area"
-                                Command="{Binding AddInjuryCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                FontSize="14"
-                                HeightRequest="40" />
                     </VerticalStackLayout>
                 </Frame>
 

@@ -20,6 +20,54 @@ public partial class HealthScreeningViewModel : BaseViewModel
 
         foreach (var injury in _coordinator.Data.InjuryAreas)
             SelectedInjuries.Add(injury);
+
+        // Inline toggle chips (tap to select/deselect) instead of add-picker + pills.
+        foreach (var c in AvailableConditions)
+            ConditionChips.Add(new Models.ToggleChip { Value = c, Label = c, IsSelected = SelectedConditions.Contains(c) });
+        foreach (var i in AvailableInjuries)
+            InjuryChips.Add(new Models.ToggleChip { Value = i, Label = i, IsSelected = SelectedInjuries.Contains(i) });
+    }
+
+    public ObservableCollection<Models.ToggleChip> ConditionChips { get; } = [];
+    public ObservableCollection<Models.ToggleChip> InjuryChips { get; } = [];
+
+    /// <summary>Tap a condition chip. "None" is mutually exclusive with the rest.</summary>
+    [RelayCommand]
+    private void ToggleConditionChip(Models.ToggleChip? chip) =>
+        ToggleStringChip(chip, SelectedConditions, ConditionChips, SyncConditions);
+
+    [RelayCommand]
+    private void ToggleInjuryChip(Models.ToggleChip? chip) =>
+        ToggleStringChip(chip, SelectedInjuries, InjuryChips, SyncInjuries);
+
+    // Shared toggle logic for the string-list multi-selects (conditions/injuries).
+    private static void ToggleStringChip(Models.ToggleChip? chip,
+        ObservableCollection<string> selected, ObservableCollection<Models.ToggleChip> chips, Action sync)
+    {
+        if (chip?.Value is not string value) return;
+        var select = !chip.IsSelected;
+
+        if (value == "None")
+        {
+            if (select)
+            {
+                selected.Clear();
+                selected.Add("None");
+                foreach (var c in chips) c.IsSelected = (string?)c.Value == "None";
+            }
+            else { selected.Remove("None"); chip.IsSelected = false; }
+        }
+        else if (select)
+        {
+            selected.Remove("None");
+            var none = chips.FirstOrDefault(c => (string?)c.Value == "None");
+            if (none != null) none.IsSelected = false;
+            if (!selected.Contains(value)) selected.Add(value);
+            chip.IsSelected = true;
+        }
+        else { selected.Remove(value); chip.IsSelected = false; }
+
+        sync();
     }
 
     public string StepTitle => _coordinator.StepTitle;

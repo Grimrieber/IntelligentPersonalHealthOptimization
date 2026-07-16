@@ -52,6 +52,33 @@ public partial class BehavioralReadinessViewModel : BaseViewModel
 
         foreach (var c in _coordinator.Data.SelectedChallenges)
             SelectedChallenges.Add(c);
+
+        // Inline toggle chips (tap to select/deselect) instead of add-picker + pills.
+        foreach (var m in Enum.GetValues<NutritionMotivation>())
+            MotivationChips.Add(new Models.ToggleChip
+            { Value = m, Label = GetMotivationLabel(m), IsSelected = SelectedMotivations.Contains(m) });
+        foreach (var c in Enum.GetValues<NutritionChallenge>())
+            ChallengeChips.Add(new Models.ToggleChip
+            { Value = c, Label = GetChallengeLabel(c), IsSelected = SelectedChallenges.Contains(c) });
+    }
+
+    public ObservableCollection<Models.ToggleChip> MotivationChips { get; } = [];
+    public ObservableCollection<Models.ToggleChip> ChallengeChips { get; } = [];
+
+    [RelayCommand]
+    private void ToggleMotivationChip(Models.ToggleChip? chip)
+    {
+        if (chip?.Value is not NutritionMotivation m) return;
+        if (chip.IsSelected) { SelectedMotivations.Remove(m); chip.IsSelected = false; }
+        else { if (!SelectedMotivations.Contains(m)) SelectedMotivations.Add(m); chip.IsSelected = true; }
+    }
+
+    [RelayCommand]
+    private void ToggleChallengeChip(Models.ToggleChip? chip)
+    {
+        if (chip?.Value is not NutritionChallenge c) return;
+        if (chip.IsSelected) { SelectedChallenges.Remove(c); chip.IsSelected = false; }
+        else { if (!SelectedChallenges.Contains(c)) SelectedChallenges.Add(c); chip.IsSelected = true; }
     }
 
     public string StepTitle => _coordinator.StepTitle;

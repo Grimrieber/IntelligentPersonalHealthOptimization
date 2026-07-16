@@ -26,6 +26,11 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
         foreach (var eq in _coordinator.Data.AvailableEquipment)
             SelectedEquipment.Add(eq);
 
+        // Inline toggle chips (tap to select/deselect) instead of add-picker + pills.
+        foreach (var e in AllEquipment)
+            EquipmentChips.Add(new Models.ToggleChip
+            { Value = e, Label = Helpers.EnumDisplay.Humanize(e.ToString()), IsSelected = SelectedEquipment.Contains(e) });
+
         // Seed the day selector CSV (assign the backing field so we don't trigger a save here).
         _availableDaysCsv = string.Join(",", _coordinator.Data.AvailableDays);
     }
@@ -71,6 +76,23 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
     public string DurationDisplay => $"{SessionDurationMinutes} minutes";
 
     public ObservableCollection<EquipmentType> SelectedEquipment { get; } = [];
+    public ObservableCollection<Models.ToggleChip> EquipmentChips { get; } = [];
+
+    [RelayCommand]
+    private void ToggleEquipmentChip(Models.ToggleChip? chip)
+    {
+        if (chip?.Value is not EquipmentType e) return;
+        if (chip.IsSelected) { SelectedEquipment.Remove(e); chip.IsSelected = false; }
+        else { if (!SelectedEquipment.Contains(e)) SelectedEquipment.Add(e); chip.IsSelected = true; }
+        SyncEquipment();
+    }
+
+    // Re-point each chip's selected state at SelectedEquipment (after location auto-fill).
+    private void SyncEquipmentChips()
+    {
+        foreach (var c in EquipmentChips)
+            c.IsSelected = c.Value is EquipmentType e && SelectedEquipment.Contains(e);
+    }
 
     partial void OnSelectedTrainingLocationChanged(PickerItem<TrainingLocation> value)
     {
@@ -136,6 +158,7 @@ public partial class TrainingBackgroundViewModel : BaseViewModel
         foreach (var eq in suggested)
             SelectedEquipment.Add(eq);
 
+        SyncEquipmentChips();
         SyncEquipment();
     }
 
