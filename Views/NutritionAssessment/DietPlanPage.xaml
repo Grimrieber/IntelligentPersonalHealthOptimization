@@ -183,20 +183,20 @@
                                     BindableLayout.ItemsSource="{Binding SelectedAllergies}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="enums:FoodAllergy">
+                                    <!-- Whole pill is tappable to remove (big target) -->
                                     <Border StrokeShape="RoundRectangle 16"
                                             Stroke="{StaticResource Primary}"
                                             BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
-                                            Padding="12,6" Margin="4">
-                                        <HorizontalStackLayout Spacing="6">
-                                            <Label Text="{Binding ., Converter={StaticResource EnumToString}}" FontSize="13" VerticalOptions="Center"
+                                            Padding="14,9" Margin="4">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=RemoveAllergyCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <HorizontalStackLayout Spacing="8">
+                                            <Label Text="{Binding ., Converter={StaticResource EnumToString}}" FontSize="14" VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                            <Label Text="x" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"
-                                                   TextColor="{StaticResource Gray500}">
-                                                <Label.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=RemoveAllergyCommand}"
-                                                                          CommandParameter="{Binding .}" />
-                                                </Label.GestureRecognizers>
-                                            </Label>
+                                            <Label Text="&#x2715;" FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                                   TextColor="{StaticResource Gray500}" />
                                         </HorizontalStackLayout>
                                     </Border>
                                 </DataTemplate>
@@ -221,20 +221,20 @@
                                     BindableLayout.ItemsSource="{Binding FoodsToAvoid}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="x:String">
+                                    <!-- Whole pill is tappable to remove (big target) -->
                                     <Border StrokeShape="RoundRectangle 16"
                                             Stroke="{StaticResource Primary}"
                                             BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
-                                            Padding="12,6" Margin="4">
-                                        <HorizontalStackLayout Spacing="6">
-                                            <Label Text="{Binding .}" FontSize="13" VerticalOptions="Center"
+                                            Padding="14,9" Margin="4">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=RemoveFoodToAvoidCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <HorizontalStackLayout Spacing="8">
+                                            <Label Text="{Binding .}" FontSize="14" VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                                            <Label Text="x" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"
-                                                   TextColor="{StaticResource Gray500}">
-                                                <Label.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DietPlanViewModel}}, Path=RemoveFoodToAvoidCommand}"
-                                                                          CommandParameter="{Binding .}" />
-                                                </Label.GestureRecognizers>
-                                            </Label>
+                                            <Label Text="&#x2715;" FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                                   TextColor="{StaticResource Gray500}" />
                                         </HorizontalStackLayout>
                                     </Border>
                                 </DataTemplate>
