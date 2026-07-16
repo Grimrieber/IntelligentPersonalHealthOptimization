@@ -65,7 +65,7 @@
                                             <Label Text="{Binding DisplayName}"
                                                    FontSize="15" FontAttributes="Bold"
                                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                                            <Label Text="{Binding DefaultServingLabel, StringFormat='Serving: {0}'}"
+                                            <Label Text="{Binding MacrosDisplay}"
                                                    FontSize="12" TextColor="{StaticResource Gray500}" />
                                         </VerticalStackLayout>
                                         <Label Grid.Column="2" Text="{Binding CaloriesDisplay}"
@@ -107,7 +107,7 @@
                                                    FontSize="15"
                                                    FontAttributes="Bold"
                                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                                            <Label Text="{Binding DefaultServingLabel, StringFormat='Serving: {0}'}"
+                                            <Label Text="{Binding MacrosDisplay}"
                                                    FontSize="12"
                                                    TextColor="{StaticResource Gray500}" />
                                         </VerticalStackLayout>
@@ -218,6 +218,24 @@
                                 <Label Text="Fat"
                                        FontSize="11"
                                        HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Fiber + Net carbs (net = carbs − fiber, what low-carb tracks) -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="4" Margin="0,4,0,0">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                                <Label Text="{Binding EstimatedFiber}"
+                                       FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="#26A69A" />
+                                <Label Text="Fiber" FontSize="11" HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                <Label Text="{Binding EstimatedNetCarbs}"
+                                       FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="#FF9800" />
+                                <Label Text="Net Carbs" FontSize="11" HorizontalOptions="Center"
                                        TextColor="{StaticResource Gray500}" />
                             </VerticalStackLayout>
                         </Grid>

@@ -138,6 +138,15 @@ public partial class CookModeViewModel : BaseViewModel
             _ => MealType.AfternoonSnack,
         };
 
+        // How much of it did you actually eat? Defaults to one serving.
+        var servingsInput = await Shell.Current.DisplayPromptAsync(
+            "How many servings?",
+            "Log the number of servings you had (the recipe is per serving).",
+            "Log", "Cancel", initialValue: "1", keyboard: Keyboard.Numeric);
+        if (string.IsNullOrWhiteSpace(servingsInput)) return;
+        if (!double.TryParse(servingsInput.Trim(), out var servings) || servings <= 0)
+            servings = 1;
+
         try
         {
             var user = await _userService.GetCurrentUserAsync();
@@ -149,15 +158,16 @@ public partial class CookModeViewModel : BaseViewModel
                 LogDate = DateTime.Today,
                 MealType = mealType,
                 SavedRecipeId = RecipeId,
-                Calories = cal,
-                ProteinG = _protein,
-                CarbsG = _carbs,
-                FatG = _fat,
+                Calories = Math.Round(cal * servings, 1),
+                ProteinG = Math.Round(_protein * servings, 1),
+                CarbsG = Math.Round(_carbs * servings, 1),
+                FatG = Math.Round(_fat * servings, 1),
                 Notes = RecipeName,
             };
             await _databaseService.InsertAsync(entry);
 
-            await Shell.Current.DisplayAlert("Logged", $"{RecipeName} added to today.", "OK");
+            var label = servings == 1 ? "1 serving" : $"{servings:0.##} servings";
+            await Shell.Current.DisplayAlert("Logged", $"{RecipeName} ({label}) added to today.", "OK");
             await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)

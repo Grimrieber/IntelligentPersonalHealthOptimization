@@ -86,6 +86,14 @@ public partial class AddFoodEntryViewModel : BaseViewModel
     [ObservableProperty]
     private string _estimatedFat = "0g";
 
+    [ObservableProperty]
+    private string _estimatedFiber = "0g";
+
+    // Net carbs = carbs − fiber (fiber isn't digested like other carbs), the number
+    // low-carb/keto users actually track.
+    [ObservableProperty]
+    private string _estimatedNetCarbs = "0g";
+
     // Goal context — how this food lands against today's remaining calories.
     [ObservableProperty]
     private bool _hasGoalContext;
@@ -154,6 +162,7 @@ public partial class AddFoodEntryViewModel : BaseViewModel
                 ProteinPer100g = f.ProteinPer100g,
                 CarbsPer100g = f.CarbsPer100g,
                 FatPer100g = f.FatPer100g,
+                FiberPer100g = f.FiberPer100g,
                 DefaultServingSize = f.DefaultServingSize,
                 DefaultServingLabel = f.DefaultServingLabel,
                 CaloriesDisplay = $"{f.CaloriesPer100g:F0} kcal/100g",
@@ -213,6 +222,7 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         ProteinPer100g = f.ProteinPer100g,
         CarbsPer100g = f.CarbsPer100g,
         FatPer100g = f.FatPer100g,
+        FiberPer100g = f.FiberPer100g,
         DefaultServingSize = f.DefaultServingSize,
         DefaultServingLabel = f.DefaultServingLabel,
         CaloriesDisplay = $"{f.CaloriesPer100g:F0} kcal/100g",
@@ -256,11 +266,14 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         double pro = SelectedFood.ProteinPer100g * factor;
         double carb = SelectedFood.CarbsPer100g * factor;
         double fat = SelectedFood.FatPer100g * factor;
+        double fiber = SelectedFood.FiberPer100g * factor;
 
         EstimatedCalories = $"{cal:F0} kcal";
         EstimatedProtein = $"{pro:F1}g";
         EstimatedCarbs = $"{carb:F1}g";
         EstimatedFat = $"{fat:F1}g";
+        EstimatedFiber = $"{fiber:F1}g";
+        EstimatedNetCarbs = $"{Math.Max(0, carb - fiber):F1}g";
 
         UpdateRemaining();
     }
@@ -366,6 +379,8 @@ public partial class AddFoodEntryViewModel : BaseViewModel
         EstimatedProtein = "0g";
         EstimatedCarbs = "0g";
         EstimatedFat = "0g";
+        EstimatedFiber = "0g";
+        EstimatedNetCarbs = "0g";
         UpdateRemaining();
     }
 }
@@ -380,7 +395,12 @@ public class FoodSearchResult
     public double ProteinPer100g { get; set; }
     public double CarbsPer100g { get; set; }
     public double FatPer100g { get; set; }
+    public double FiberPer100g { get; set; }
     public double DefaultServingSize { get; set; } = 100;
     public string DefaultServingLabel { get; set; } = "100g";
     public string CaloriesDisplay { get; set; } = string.Empty;
+
+    /// <summary>Macros per 100 g, e.g. "P 31 · C 0 · F 4" — shown on the search cards
+    /// so the user compares protein/carbs/fat, not just calories.</summary>
+    public string MacrosDisplay => $"P {ProteinPer100g:F0}  ·  C {CarbsPer100g:F0}  ·  F {FatPer100g:F0}  /100g";
 }
