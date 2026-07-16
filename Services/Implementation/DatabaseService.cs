@@ -97,6 +97,7 @@ public class DatabaseService : IDatabaseService
         await _connection.CreateTableAsync<MealPlanDay>();
         await _connection.CreateTableAsync<MealPlanItem>();
         await _connection.CreateTableAsync<FoodLogEntry>();
+        await _connection.CreateTableAsync<WaterLog>();
 
         // Nutrition Assessment
         await _connection.CreateTableAsync<NutritionAssessment>();

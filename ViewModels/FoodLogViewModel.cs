@@ -394,6 +394,27 @@ public partial class FoodLogViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{RouteConstants.AddFoodEntry}?mealType={mealType}");
     }
 
+    /// <summary>Copy the previous day's entire log onto the selected day.</summary>
+    [RelayCommand]
+    private async Task CopyYesterdayAsync()
+    {
+        try
+        {
+            var count = await _foodService.CopyLogDayAsync(_userId, SelectedDate.AddDays(-1), SelectedDate);
+            if (count == 0)
+            {
+                await Shell.Current.DisplayAlert("Nothing to copy",
+                    "There's nothing logged the day before to copy.", "OK");
+                return;
+            }
+            await LoadDataAsync();
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLogger.Log("Copy yesterday", ex);
+        }
+    }
+
     [RelayCommand]
     private void PreviousDay()
     {

@@ -220,6 +220,20 @@ public partial class NutritionDashboardViewModel : BaseViewModel
                 WaterTarget = profile.DailyWaterGlasses;
             }
 
+            // Persisted daily water — load today's count so it survives app restarts.
+            _waterUserId = user.Id;
+            try
+            {
+                var wdb = await _databaseService.GetConnectionAsync();
+                var today = DateTime.Today;
+                var wl = await wdb.Table<Models.WaterLog>()
+                    .Where(w => w.UserId == user.Id && w.LogDate == today)
+                    .FirstOrDefaultAsync();
+                WaterGlasses = wl?.Glasses ?? 0;
+                WaterLabel = $"{WaterGlasses} / {WaterTarget} glasses";
+            }
+            catch (Exception ex) { Services.CrashLogger.Log("Load water", ex); }
+
             // Get DB connection for progress queries
             var db = await _databaseService.GetConnectionAsync();
 
@@ -619,18 +633,40 @@ public partial class NutritionDashboardViewModel : BaseViewModel
         _ => mealType.ToString()
     };
 
+    private int _waterUserId;
+
     [RelayCommand]
-    private void AddWater()
+    private async Task AddWater()
     {
         WaterGlasses = Math.Min(WaterGlasses + 1, 20);
         WaterLabel = $"{WaterGlasses} / {WaterTarget} glasses";
+        await SaveWaterAsync();
     }
 
     [RelayCommand]
-    private void RemoveWater()
+    private async Task RemoveWater()
     {
         WaterGlasses = Math.Max(WaterGlasses - 1, 0);
         WaterLabel = $"{WaterGlasses} / {WaterTarget} glasses";
+        await SaveWaterAsync();
+    }
+
+    /// <summary>Upsert today's water count so it survives app restarts.</summary>
+    private async Task SaveWaterAsync()
+    {
+        if (_waterUserId <= 0) return;
+        try
+        {
+            var db = await _databaseService.GetConnectionAsync();
+            var today = DateTime.Today;
+            var wl = await db.Table<Models.WaterLog>()
+                .Where(w => w.UserId == _waterUserId && w.LogDate == today)
+                .FirstOrDefaultAsync();
+            if (wl == null)
+                await db.InsertAsync(new Models.WaterLog { UserId = _waterUserId, LogDate = today, Glasses = WaterGlasses });
+            else { wl.Glasses = WaterGlasses; await db.UpdateAsync(wl); }
+        }
+        catch (Exception ex) { Services.CrashLogger.Log("Save water", ex); }
     }
 
     [RelayCommand]

@@ -117,6 +117,30 @@ public class FoodService : IFoodService
         return result;
     }
 
+    public async Task<int> CopyLogDayAsync(int userId, DateTime fromDate, DateTime toDate)
+    {
+        var entries = await GetFoodLogAsync(userId, fromDate);
+        foreach (var e in entries)
+        {
+            await _databaseService.InsertAsync(new FoodLogEntry
+            {
+                UserId = userId,
+                FoodId = e.FoodId,
+                SavedRecipeId = e.SavedRecipeId,
+                LogDate = toDate.Date,
+                MealType = e.MealType,
+                ServingSizeG = e.ServingSizeG,
+                Calories = e.Calories,
+                ProteinG = e.ProteinG,
+                CarbsG = e.CarbsG,
+                FatG = e.FatG,
+                FiberG = e.FiberG,
+                Notes = e.Notes,
+            });
+        }
+        return entries.Count;
+    }
+
     public async Task<(double calories, double proteinG, double carbsG, double fatG)> GetDailyTotalsAsync(int userId, DateTime date)
     {
         var entries = await GetFoodLogAsync(userId, date);

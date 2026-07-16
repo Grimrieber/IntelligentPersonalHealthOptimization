@@ -23,4 +23,8 @@ public interface IFoodService
     /// <summary>Change a logged entry's serving size (grams), rescaling its stored
     /// macros proportionally. No-op for entries with no real serving (recipe logs).</summary>
     Task UpdateFoodLogServingAsync(int id, double newServingG);
+
+    /// <summary>Copy every food-log entry from one day to another (for "log the same
+    /// as yesterday"). Returns how many entries were copied.</summary>
+    Task<int> CopyLogDayAsync(int userId, DateTime fromDate, DateTime toDate);
 }

@@ -160,6 +160,10 @@
                            TextColor="{StaticResource Gray500}"
                            HorizontalTextAlignment="Center"
                            Margin="20,0" />
+                    <Button Text="&#x1F4CB;  Copy yesterday"
+                            Command="{Binding CopyYesterdayCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            HeightRequest="40" Margin="0,6,0,0" />
                 </VerticalStackLayout>
             </Frame>
 
