@@ -73,6 +73,13 @@ public partial class FoodLogViewModel : BaseViewModel
     [ObservableProperty]
     private double _fatBar;
 
+    // Fiber + net carbs (net = carbs − fiber) for the day.
+    [ObservableProperty]
+    private string _fiberDisplay = "0g";
+
+    [ObservableProperty]
+    private string _netCarbsDisplay = "0g";
+
     // Meal groups
     [ObservableProperty]
     private ObservableCollection<FoodLogMealGroup> _mealGroups = new();
@@ -127,6 +134,11 @@ public partial class FoodLogViewModel : BaseViewModel
 
             // Update nutrition progress
             UpdateNutritionProgress(dailyTotals);
+
+            // Fiber + net carbs for the day (fiber isn't stored in the totals tuple).
+            var fiberTotal = entries.Sum(e => e.FiberG);
+            FiberDisplay = $"{fiberTotal:F0}g";
+            NetCarbsDisplay = $"{Math.Max(0, dailyTotals.carbsG - fiberTotal):F0}g";
 
             // Collect active meal types (from plan + logged entries)
             var activeMealTypes = new HashSet<MealType>();

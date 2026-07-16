@@ -403,6 +403,8 @@
                         <VerticalStackLayout Grid.Row="2" Grid.Column="1" HorizontalOptions="Center">
                             <Label Text="Carbs" FontSize="12" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
                             <Label Text="{Binding Carbs}" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="{Binding NetCarbs, StringFormat='net {0}'}" FontSize="11"
+                                   TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Row="3" Grid.Column="0" HorizontalOptions="Center">

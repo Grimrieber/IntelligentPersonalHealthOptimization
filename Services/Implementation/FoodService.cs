@@ -77,7 +77,8 @@ public class FoodService : IFoodService
             Calories = Math.Round(food.CaloriesPer100g * factor, 1),
             ProteinG = Math.Round(food.ProteinPer100g * factor, 1),
             CarbsG = Math.Round(food.CarbsPer100g * factor, 1),
-            FatG = Math.Round(food.FatPer100g * factor, 1)
+            FatG = Math.Round(food.FatPer100g * factor, 1),
+            FiberG = Math.Round(food.FiberPer100g * factor, 1)
         };
 
         await _databaseService.InsertAsync(entry);

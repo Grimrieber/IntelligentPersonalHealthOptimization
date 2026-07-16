@@ -27,7 +27,7 @@ public partial class CookModeViewModel : BaseViewModel
 
     // Recipe nutrition captured on load, for the "Log to Today" finish action.
     private int? _cal;
-    private double _protein, _carbs, _fat;
+    private double _protein, _carbs, _fat, _fiber;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowLogButton))]
@@ -86,6 +86,7 @@ public partial class CookModeViewModel : BaseViewModel
                 _protein = (double?)n.ProteinGrams ?? 0;
                 _carbs = (double?)n.TotalCarbsGrams ?? 0;
                 _fat = (double?)n.TotalFatGrams ?? 0;
+                _fiber = (double?)n.FiberGrams ?? 0;
                 HasNutrition = _cal is > 0;
             }
             _steps = detail?.Directions?
@@ -162,6 +163,7 @@ public partial class CookModeViewModel : BaseViewModel
                 ProteinG = Math.Round(_protein * servings, 1),
                 CarbsG = Math.Round(_carbs * servings, 1),
                 FatG = Math.Round(_fat * servings, 1),
+                FiberG = Math.Round(_fiber * servings, 1),
                 Notes = RecipeName,
             };
             await _databaseService.InsertAsync(entry);

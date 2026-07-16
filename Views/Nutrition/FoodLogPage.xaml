@@ -131,6 +131,18 @@
                                    IsVisible="{Binding IsFatOver}" />
                         </VerticalStackLayout>
                     </Grid>
+
+                    <!-- Fiber + Net carbs (net = carbs − fiber) -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,6,0,0">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
+                            <Label Text="Fiber" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding FiberDisplay}" FontSize="12" FontAttributes="Bold" TextColor="#26A69A" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Column="1" Spacing="6" HorizontalOptions="Center">
+                            <Label Text="Net Carbs" FontSize="12" TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding NetCarbsDisplay}" FontSize="12" FontAttributes="Bold" TextColor="#FF9800" />
+                        </HorizontalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
             </Frame>
 

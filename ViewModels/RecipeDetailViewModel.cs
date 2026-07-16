@@ -105,6 +105,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
                 ProteinG = (_baseProtein ?? 0) * m,
                 CarbsG = (_baseCarbs ?? 0) * m,
                 FatG = (_baseFat ?? 0) * m,
+                FiberG = (_baseFiber ?? 0) * m,
                 Notes = RecipeName,
             };
             await _databaseService.InsertAsync(entry);
@@ -424,6 +425,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private string _fiber = string.Empty;
 
+    // Net carbs = carbs − fiber (what low-carb/keto users track).
+    [ObservableProperty]
+    private string _netCarbs = string.Empty;
+
     [ObservableProperty]
     private string _sugar = string.Empty;
 
@@ -484,6 +489,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
         Carbs = _baseCarbs.HasValue ? $"{_baseCarbs.Value * m:F1}g" : "--";
         Fat = _baseFat.HasValue ? $"{_baseFat.Value * m:F1}g" : "--";
         Fiber = _baseFiber.HasValue ? $"{_baseFiber.Value * m:F1}g" : "--";
+        NetCarbs = _baseCarbs.HasValue ? $"{Math.Max(0, (_baseCarbs.Value - (_baseFiber ?? 0)) * m):F1}g" : "--";
         Sugar = _baseSugar.HasValue ? $"{_baseSugar.Value * m:F1}g" : "--";
         SaturatedFat = _baseSatFat.HasValue ? $"{_baseSatFat.Value * m:F1}g" : "--";
         Sodium = _baseSodium.HasValue ? $"{_baseSodium.Value * m:F1}mg" : "--";

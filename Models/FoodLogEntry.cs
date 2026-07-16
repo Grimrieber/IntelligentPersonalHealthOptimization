@@ -26,6 +26,7 @@ public class FoodLogEntry
     public double ProteinG { get; set; }
     public double CarbsG { get; set; }
     public double FatG { get; set; }
+    public double FiberG { get; set; }
 
     [MaxLength(500)]
     public string? Notes { get; set; }
